@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C.R.E.D. "2Days" セミナー｜超精緻な歯科治療の実践講座</title>
+<meta name="description" content="2014年から12年の実績。手術用顕微鏡を用いた超精緻な歯科治療の講義とハンズオンセミナー。定員3名の少人数制で徹底指導。">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;500;600&display=swap');
+
+  :root {
+    --brown-dark: #3C2415;
+    --brown: #6B4226;
+    --brown-light: #A67B5B;
+    --gold: #C5A059;
+    --gold-light: #E8D5A8;
+    --cream: #FAF6F0;
+    --cream-dark: #F0EBE3;
+    --white: #FFFFFF;
+    --text: #2D2D2D;
+    --text-light: #666666;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    color: var(--text);
+    background: var(--cream);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  /* ─── Navigation ─── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(250, 246, 240, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(107, 66, 38, 0.1);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.8rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-logo {
+    height: 40px;
+    opacity: 0.9;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--brown);
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ─── Hero ─── */
+  .hero {
+    height: 100vh;
+    min-height: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: var(--brown-dark);
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('images/group-overview.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.35;
+    filter: blur(1px);
+  }
+  .hero-content {
+    position: relative;
+    text-align: center;
+    color: var(--white);
+    padding: 2rem;
+  }
+  .hero-logo {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 2rem;
+    opacity: 0.95;
+  }
+  .hero-logo img { width: 100%; height: 100%; object-fit: contain; }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5rem;
+  }
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    margin-bottom: 2rem;
+    color: var(--gold-light);
+  }
+  .hero-tagline {
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    line-height: 2;
+    color: rgba(255,255,255,0.85);
+  }
+  .hero-cta {
+    display: inline-block;
+    padding: 1rem 3rem;
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    transition: all 0.4s;
+  }
+  .hero-cta:hover {
+    background: var(--gold);
+    color: var(--brown-dark);
+  }
+
+  /* ─── Sections ─── */
+  section { padding: 6rem 2rem; }
+  .container { max-width: 1000px; margin: 0 auto; }
+
+  .section-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .section-title {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 500;
+    color: var(--brown-dark);
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+  .section-line {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin-bottom: 3rem;
+  }
+
+  /* ─── About ─── */
+  .about { background: var(--white); }
+  .about-text {
+    font-size: 1rem;
+    line-height: 2.2;
+    color: var(--text);
+    max-width: 800px;
+  }
+  .about-text p + p { margin-top: 1.5rem; }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 4rem;
+    text-align: center;
+  }
+  .stat-item { padding: 2rem 1rem; }
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--brown);
+    line-height: 1;
+  }
+  .stat-unit {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--brown-light);
+  }
+  .stat-label {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 0.5rem;
+  }
+
+  /* ─── Philosophy ─── */
+  .philosophy { background: var(--brown-dark); color: var(--white); }
+  .philosophy .section-label { color: var(--gold-light); }
+  .philosophy .section-title { color: var(--white); }
+  .philosophy .section-line { background: var(--gold-light); }
+  .philosophy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .philosophy-text {
+    font-size: 1rem;
+    line-height: 2.2;
+    color: rgba(255,255,255,0.85);
+  }
+  .philosophy-text p + p { margin-top: 1.5rem; }
+  .philosophy-img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: 2px;
+  }
+
+  /* ─── Program ─── */
+  .program { background: var(--cream); }
+  .program-days {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 1rem;
+  }
+  .program-day {
+    background: var(--white);
+    padding: 3rem;
+    border-left: 3px solid var(--gold);
+  }
+  .day-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .day-title {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--brown-dark);
+    margin: 0.5rem 0 0.3rem;
+  }
+  .day-time {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+  }
+  .day-desc {
+    font-size: 0.95rem;
+    line-height: 2;
+    color: var(--text);
+  }
+
+  /* ─── Gallery ─── */
+  .gallery { background: var(--white); overflow: hidden; }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto;
+    gap: 8px;
+  }
+  .gallery-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 4/3;
+    transition: transform 0.5s, opacity 0.5s;
+    cursor: pointer;
+  }
+  .gallery-grid img:hover {
+    transform: scale(1.03);
+    opacity: 0.9;
+  }
+  .gallery-grid .wide {
+    grid-column: span 2;
+  }
+
+  /* ─── Instructors ─── */
+  .instructors { background: var(--cream-dark); }
+  .instructor-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+  .instructor-card {
+    background: var(--white);
+    padding: 3rem;
+  }
+  .instructor-name {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--brown-dark);
+    margin-bottom: 0.3rem;
+  }
+  .instructor-role {
+    font-size: 0.85rem;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+  }
+  .instructor-bio {
+    font-size: 0.9rem;
+    line-height: 2;
+    color: var(--text);
+  }
+
+  /* ─── Schedule ─── */
+  .schedule { background: var(--white); }
+  .schedule-list {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  .schedule-item {
+    background: var(--cream);
+    padding: 2.5rem 3rem;
+    text-align: center;
+    min-width: 220px;
+    position: relative;
+  }
+  .schedule-item.sold-out { opacity: 0.6; }
+  .schedule-item.sold-out::after {
+    content: '満席';
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--brown);
+    color: var(--white);
+    font-size: 0.7rem;
+    padding: 0.2rem 0.8rem;
+    letter-spacing: 0.1em;
+  }
+  .schedule-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--brown);
+    line-height: 1.2;
+  }
+  .schedule-month {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--brown-light);
+    letter-spacing: 0.1em;
+  }
+  .schedule-year {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 0.3rem;
+  }
+  .schedule-status {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    padding: 0.3rem 1.5rem;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+  }
+  .schedule-status.open { border-color: var(--brown); color: var(--brown); }
+
+  /* ─── Details ─── */
+  .details { background: var(--cream); }
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    background: var(--white);
+  }
+  .detail-item {
+    padding: 1.8rem 2.5rem;
+    border-bottom: 1px solid var(--cream);
+    display: flex;
+    gap: 2rem;
+  }
+  .detail-item:nth-child(odd) { border-right: 1px solid var(--cream); }
+  .detail-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--brown-light);
+    min-width: 80px;
+    flex-shrink: 0;
+    font-weight: 500;
+  }
+  .detail-value {
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    background: var(--brown-dark);
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+  .cta-section .section-title { color: var(--white); margin-bottom: 1rem; }
+  .cta-text {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.95rem;
+    margin-bottom: 2.5rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 2;
+  }
+  .cta-btn {
+    display: inline-block;
+    padding: 1.2rem 4rem;
+    background: var(--gold);
+    color: var(--brown-dark);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    transition: all 0.4s;
+  }
+  .cta-btn:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(197, 160, 89, 0.3);
+  }
+
+  /* ─── Footer ─── */
+  footer {
+    background: #1A1008;
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 3rem 2rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+  footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+  footer a:hover { color: var(--gold-light); }
+
+  /* ─── Lightbox ─── */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 200;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  .lightbox.active { display: flex; }
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .philosophy-grid,
+    .program-days,
+    .instructor-cards { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: 1fr; gap: 1rem; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .details-grid { grid-template-columns: 1fr; }
+    .detail-item:nth-child(odd) { border-right: none; }
+    .schedule-list { flex-direction: column; align-items: center; }
+    section { padding: 4rem 1.5rem; }
+  }
+
+  /* ─── Salon Divider ─── */
+  .salon-divider {
+    background: var(--cream-dark);
+    padding: 4rem 2rem;
+    text-align: center;
+    position: relative;
+  }
+  .salon-divider::before {
+    content: '';
+    display: block;
+    width: 120px;
+    height: 1px;
+    background: var(--brown-light);
+    margin: 0 auto 2rem;
+  }
+  .salon-divider-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    color: var(--brown-light);
+    text-transform: uppercase;
+  }
+
+  /* ─── Salon de CRED ─── */
+  .salon { background: #1C2833; color: var(--white); overflow: hidden; }
+  .salon .section-label { color: #7FB3D3; text-align: center; }
+  .salon .section-title { color: var(--white); text-align: center; font-size: clamp(1.8rem, 3.5vw, 2.8rem); }
+  .salon .section-line { background: #7FB3D3; margin: 0 auto 3rem; }
+  .salon-intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    margin-bottom: 3rem;
+  }
+  .salon-text {
+    font-size: 0.95rem;
+    line-height: 2.2;
+    color: rgba(255,255,255,0.85);
+  }
+  .salon-text p + p { margin-top: 1.5rem; }
+  .salon-hero-img {
+    width: 100%;
+    border-radius: 2px;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+  }
+  .salon-details-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin: 3rem 0;
+    text-align: center;
+  }
+  .salon-detail-item {
+    padding: 2rem 1rem;
+    border: 1px solid rgba(127, 179, 211, 0.3);
+  }
+  .salon-detail-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #A8D4E6;
+    line-height: 1.3;
+  }
+  .salon-detail-label {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: 0.3rem;
+  }
+  .salon-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 3rem;
+  }
+  .salon-thumbnails img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    border-radius: 2px;
+    transition: transform 0.4s, box-shadow 0.4s;
+    cursor: pointer;
+  }
+  .salon-thumbnails img:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .salon-cta-wrap {
+    text-align: center;
+    margin-top: 3rem;
+  }
+  .salon-cta {
+    display: inline-block;
+    padding: 1rem 3rem;
+    border: 1px solid #7FB3D3;
+    color: #A8D4E6;
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    transition: all 0.4s;
+  }
+  .salon-cta:hover {
+    background: #7FB3D3;
+    color: #1C2833;
+    border-color: #7FB3D3;
+  }
+
+  @media (max-width: 768px) {
+    .salon-intro { grid-template-columns: 1fr; }
+    .salon-details-row { grid-template-columns: 1fr; gap: 1rem; }
+    .salon-thumbnails { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ─── Fade-in Animation ─── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav id="nav">
+  <div class="nav-inner">
+    <img src="images/logo.jpg" alt="C.R.E.D." class="nav-logo">
+    <ul class="nav-links">
+      <li><a href="#about">セミナーについて</a></li>
+      <li><a href="#program">プログラム</a></li>
+      <li><a href="#gallery">セミナー風景</a></li>
+      <li><a href="#instructors">講師紹介</a></li>
+      <li><a href="#schedule">日程・申込</a></li>
+      <li><a href="#salon">Salon de CRED</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-logo"><img src="images/logo.jpg" alt="C.R.E.D."></div>
+    <h1>C.R.E.D.</h1>
+    <p class="hero-sub">"2Days" Seminar</p>
+    <p class="hero-tagline">
+      手術用顕微鏡を用いた超精緻な歯科治療<br>
+      定員3名の少人数制ハンズオンセミナー<br>
+      2014年から12年の実績
+    </p>
+    <a href="#schedule" class="hero-cta">2026年 開催日程を見る</a>
+  </div>
+</section>
+
+<!-- About -->
+<section class="about" id="about">
+  <div class="container fade-in">
+    <p class="section-label">About</p>
+    <h2 class="section-title">「治せる歯を、抜かない」ために</h2>
+    <div class="section-line"></div>
+    <div class="about-text">
+      <p>C.R.E.D.（Comprehensive Restorative & Esthetic Dentistry）セミナーは、歯髄保存と歯の保存に特化した2日間の実践講座です。「歯髄保存はできる」「安易な抜髄は必要ない」「長期予後のためにも予防のためにも咬合を無視できない」——そして「MTA神話の崩壊」「カリエスにプラークは関係ない！？」など、通説に切り込む独自の視点から、修復治療の本質に迫ります。</p>
+      <p>初日は7時間の講義で理論を体系的に学び、2日目は実際の臨床に即したハンズオン実習。部分断髄から天然前歯の審美レジン修復まで、手術用顕微鏡下での精緻な技術を、最大3名の少人数で徹底的に身につけます。</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-item">
+        <span class="stat-number">12</span><span class="stat-unit"> years</span>
+        <p class="stat-label">2014年からの開催実績</p>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">3</span><span class="stat-unit"> max</span>
+        <p class="stat-label">各回の最大受講者数</p>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">2</span><span class="stat-unit"> Days</span>
+        <p class="stat-label">講義7h＋ハンズオン実習</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Philosophy -->
+<section class="philosophy" id="philosophy">
+  <div class="container">
+    <div class="philosophy-grid fade-in">
+      <div>
+        <p class="section-label">Philosophy</p>
+        <h2 class="section-title">少人数だからこそ、<br>伝わる技術がある</h2>
+        <div class="section-line"></div>
+        <div class="philosophy-text">
+          <p>セミナーの定員は最大3名。大人数の講演では決して伝わらない、指先の微妙な感覚、器具の角度、顕微鏡のピント合わせ——そのすべてを、講師が一人ひとりに直接指導します。</p>
+          <p>受講者の手技を顕微鏡越しにリアルタイムで確認し、その場でフィードバック。「見て学ぶ」から「できるようになる」へ。それがC.R.E.D.セミナーの哲学です。</p>
+        </div>
+      </div>
+      <img src="images/individual-instruction.jpg" alt="個別指導の様子" class="philosophy-img">
+    </div>
+  </div>
+</section>
+
+<!-- Program -->
+<section class="program" id="program">
+  <div class="container fade-in">
+    <p class="section-label">Program</p>
+    <h2 class="section-title">2日間のカリキュラム</h2>
+    <div class="section-line"></div>
+    <div class="program-days">
+      <div class="program-day">
+        <p class="day-label">Day 1 — Saturday</p>
+        <h3 class="day-title">講義</h3>
+        <p class="day-time">11:00 – 19:00（7時間）</p>
+        <div class="day-desc">
+          歯髄保存と歯の保存、修復治療について体系的に講義。MTA神話の崩壊、カリエスとプラークの関係性など、エビデンスに基づく独自の知見を共有します。通説を覆す視点から、明日の臨床が変わる7時間。
+        </div>
+      </div>
+      <div class="program-day">
+        <p class="day-label">Day 2 — Sunday</p>
+        <h3 class="day-title">実習</h3>
+        <p class="day-time">9:30 – 17:00</p>
+        <div class="day-desc">
+          部分断髄と天然前歯の審美レジン修復をハンズオンで実践。わずか3名の受講生に対して講師が一人ひとりの手技を確実にサポート。「できた」という感動を伴うハンズオンセミナーを提供します。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section class="gallery" id="gallery">
+  <div class="container fade-in">
+    <p class="section-label">Gallery</p>
+    <h2 class="section-title">セミナー風景</h2>
+    <div class="section-line"></div>
+    <div class="gallery-grid">
+      <img src="images/lecture-scene.jpg" alt="講義風景" class="wide">
+      <img src="images/hero-handson-1.jpg" alt="顕微鏡ハンズオン">
+      <img src="images/peer-learning.jpg" alt="受講者同士の学び">
+      <img src="images/handson-closeup.jpg" alt="実習クローズアップ">
+      <img src="images/clinical-practice.jpg" alt="臨床実習">
+      <img src="images/session-nov.jpg" alt="実習風景" class="wide">
+      <img src="images/certificate-1.jpg" alt="修了証授与" class="wide">
+      <img src="images/certificate-2.jpg" alt="修了証授与">
+      <img src="images/certificate-3.jpg" alt="修了証授与">
+    </div>
+  </div>
+</section>
+
+<!-- Instructors -->
+<section class="instructors" id="instructors">
+  <div class="container fade-in">
+    <p class="section-label">Instructors</p>
+    <h2 class="section-title">講師紹介</h2>
+    <div class="section-line"></div>
+    <div class="instructor-cards">
+      <div class="instructor-card">
+        <h3 class="instructor-name">高田 光彦</h3>
+        <p class="instructor-role">高田歯科 院長</p>
+        <p class="instructor-bio">
+          日本臨床歯周病学会 理事、日本顕微鏡歯科学会 理事・指導医。歯科臨床研鑽会 会長。手術用顕微鏡を用いた精緻な治療を率先して実践し、2014年からCREDセミナーを主宰。TikTokフォロワー1.1万人超、ツイキャス1,300回超の配信で歯科臨床の知見を日々発信。
+        </p>
+      </div>
+      <div class="instructor-card">
+        <h3 class="instructor-name">高橋 規子</h3>
+        <p class="instructor-role">歯科衛生士</p>
+        <p class="instructor-bio">
+          日本顕微鏡歯科学会 理事・認定指導歯科衛生士、日本歯周病学会 認定歯科衛生士。顕微鏡下での精緻な衛生士業務のスペシャリストとして、セミナーでは実習指導を担当。受講者一人ひとりに寄り添った丁寧な指導に定評がある。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Schedule -->
+<section class="schedule" id="schedule">
+  <div class="container fade-in">
+    <p class="section-label">Schedule 2026</p>
+    <h2 class="section-title">開催日程</h2>
+    <div class="section-line"></div>
+    <div class="schedule-list">
+      <div class="schedule-item sold-out">
+        <p class="schedule-month">June</p>
+        <p class="schedule-date">6.7</p>
+        <p class="schedule-year">2026年 6月6日(土)・7日(日)</p>
+        <span class="schedule-status">満席</span>
+      </div>
+      <div class="schedule-item">
+        <p class="schedule-month">October</p>
+        <p class="schedule-date">3.4</p>
+        <p class="schedule-year">2026年 10月3日(土)・4日(日)</p>
+        <span class="schedule-status open">受付中</span>
+      </div>
+      <div class="schedule-item">
+        <p class="schedule-month">November</p>
+        <p class="schedule-date">14.15</p>
+        <p class="schedule-year">2026年 11月14日(土)・15日(日)</p>
+        <span class="schedule-status open">受付中</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Details (CREDセミナー開催概要) -->
+<section class="details" id="details">
+  <div class="container fade-in">
+    <p class="section-label">Details</p>
+    <h2 class="section-title">開催概要</h2>
+    <div class="section-line"></div>
+    <div class="details-grid">
+      <div class="detail-item">
+        <span class="detail-label">対象</span>
+        <span class="detail-value">歯科医師</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">定員</span>
+        <span class="detail-value">各回 3名（先着順）</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">参加費</span>
+        <span class="detail-value">253,000円（税込）<br><small style="font-size:0.85em;color:#555;">○ 歯科衛生士同伴 +66,000円（税込）</small></span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">会場</span>
+        <span class="detail-value">高田歯科（神戸市中央区）<br>および近隣会議室</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Day 1</span>
+        <span class="detail-value">土曜 11:00〜19:00（講義 7時間）</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Day 2</span>
+        <span class="detail-value">日曜 9:30〜17:00（実習）</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA (CREDセミナー用) -->
+<section class="cta-section">
+  <h2 class="section-title">C.R.E.D. セミナー お申込み・お問い合わせ</h2>
+  <p class="cta-text">
+    定員3名の少人数制のため、<br>お早めのお申込みをおすすめします。
+  </p>
+  <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSd0A5N2_yn_jDSCJi1hWiOkqQTh7L0yV78x60HpB_ElyTDUnw/viewform?usp=header" target="_blank" class="cta-btn">お申込みフォーム</a>
+    <a href="mailto:run-dom@takata-dc.jp" class="cta-btn" style="background: transparent; border: 1px solid var(--gold); color: var(--gold-light);">メールでお問い合わせ</a>
+  </div>
+  <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 1.5rem;">CREDセミナー事務局：株式会社ランダムコーポレーション（高田歯科内）｜run-dom@takata-dc.jp</p>
+</section>
+
+<!-- ════════════════════════════════════════ -->
+<!-- Salon de CRED（オンラインサロン・別事業） -->
+<!-- ════════════════════════════════════════ -->
+
+<div class="salon-divider">
+  <p class="salon-divider-text">Another way to learn from C.R.E.D.</p>
+</div>
+
+<section class="salon" id="salon">
+  <div class="container fade-in">
+    <p class="section-label">Online Salon</p>
+    <h2 class="section-title">Salon de CRED</h2>
+    <div class="section-line"></div>
+
+    <div class="salon-intro">
+      <div class="salon-text">
+        <p>C.R.E.D.セミナーから派生した、会員制のFacebookオンラインスタディグループです。歯科医師・歯科衛生士・その他歯科医療関係者が共に学べる空間をお届けします。</p>
+        <p>スピーカーは、高田光彦と歯科衛生士の高橋規子が交互に、日頃の臨床スタイル・物事の考え方・理念をお伝えします。さらに各分野のスペシャリストをゲストにお招きし、多彩なテーマで配信しています。</p>
+        <p>配信中はコメント欄でお気軽にご質問いただけます。院内勉強会・後輩育成・歯科医院のボトムアップにお役立てください。</p>
+      </div>
+      <img src="images/salon-main.jpg" alt="SALON de CRED" class="salon-hero-img">
+    </div>
+
+    <div class="salon-details-row">
+      <div class="salon-detail-item">
+        <p class="salon-detail-number">月1〜2回</p>
+        <p class="salon-detail-label">配信頻度</p>
+      </div>
+      <div class="salon-detail-item">
+        <p class="salon-detail-number">20:00〜</p>
+        <p class="salon-detail-label">60〜120分の配信</p>
+      </div>
+      <div class="salon-detail-item">
+        <p class="salon-detail-number">¥5,500<span style="font-size:0.7em">/月</span></p>
+        <p class="salon-detail-label">税込・1アカウント</p>
+      </div>
+    </div>
+
+    <p class="section-label" style="margin-top: 3rem;">Past Sessions</p>
+    <h3 style="color: var(--white); font-size: 1.2rem; font-weight: 400; margin-bottom: 0.5rem;">過去の配信テーマ</h3>
+
+    <div class="salon-thumbnails">
+      <img src="images/salon-02.jpg" alt="全然英語が出来ない私がどうやって海外でプレゼンしたのか？ — 高田光彦">
+      <img src="images/salon-04.jpg" alt="ドペリオと映えペリ — 大月基弘先生">
+      <img src="images/salon-05.jpg" alt="Apple Watchを用いたこれからの院内活用術 — 宇土武典先生">
+      <img src="images/salon-06.jpg" alt="インプラント治療時に知っておくと便利な小技 — 柴原清隆先生">
+      <img src="images/salon-07.jpg" alt="深在性う蝕に対するVPTの現在地 — 辺見浩一先生">
+      <img src="images/salon-09.jpg" alt="審美領域のインプラント治療 — 増田英人先生">
+      <img src="images/salon-01.jpg" alt="光の魔術師イルコ — Mr.ilko alexandroff">
+      <img src="images/salon-08.jpg" alt="医科歯科連携地域連携の必要性と始め方 — 押村憲昭先生">
+      <img src="images/salon-03.jpg" alt="高田光彦 — 海外プレゼンについて">
+    </div>
+
+    <div class="salon-cta-wrap">
+      <a href="https://www.takata-dc.jp/paypal-sub/" target="_blank" class="salon-cta">Salon de CRED 詳細・お申込み</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>&copy; 2026 C.R.E.D. Seminar — Comprehensive Restorative & Esthetic Dentistry</p>
+  <p style="margin-top: 0.5rem;">主催：株式会社ランダムコーポレーション（神戸市中央区 高田歯科内）｜<a href="mailto:run-dom@takata-dc.jp">run-dom@takata-dc.jp</a></p>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <img src="" alt="" id="lightbox-img">
+</div>
+
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Lightbox
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+
+  document.querySelectorAll('.gallery-grid img, .salon-thumbnails img').forEach(img => {
+    img.addEventListener('click', () => {
+      lightboxImg.src = img.src;
+      lightbox.classList.add('active');
+    });
+  });
+
+  lightbox.addEventListener('click', () => {
+    lightbox.classList.remove('active');
+  });
+</script>
+
+</body>
+</html>

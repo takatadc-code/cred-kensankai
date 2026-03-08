@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>歯科臨床研鑽会 | マイクロ臨床ハンズオン</title>
+<meta name="description" content="マイクロスコープ臨床を完璧に自身の臨床に落とし込むための基礎から応用までをたった2日間でマスターしていただけるKENSANKAIハンズオンです。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --navy: #1a2744;
+  --navy-dark: #0f1a2e;
+  --navy-light: #2a3d5c;
+  --teal: #3a7ca5;
+  --teal-light: #5ba4cf;
+  --gold: #c5a55a;
+  --white: #ffffff;
+  --gray-50: #f8f9fa;
+  --gray-100: #f0f2f5;
+  --gray-200: #e2e6eb;
+  --gray-600: #6b7280;
+  --gray-800: #1f2937;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--gray-800);
+  line-height: 1.8;
+  background: var(--white);
+  overflow-x: hidden;
+}
+
+/* ===== NAVIGATION ===== */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(26, 39, 68, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.3s ease;
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between; height: 64px;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--white);
+}
+.nav-logo img { height: 44px; width: 44px; object-fit: contain; border-radius: 4px; }
+.nav-logo-text {
+  font-family: 'Inter', sans-serif; font-weight: 900;
+  font-size: 13px; line-height: 1.1; letter-spacing: 0.05em;
+}
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a {
+  color: rgba(255,255,255,0.8); text-decoration: none;
+  font-size: 13px; font-weight: 500; letter-spacing: 0.03em; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--teal); color: var(--white) !important;
+  padding: 8px 20px; border-radius: 6px; font-weight: 600 !important; transition: background 0.2s;
+}
+.nav-cta:hover { background: var(--teal-light); }
+.mobile-menu-btn {
+  display: none; background: none; border: none;
+  color: var(--white); font-size: 24px; cursor: pointer; padding: 4px;
+}
+
+/* ===== HERO ===== */
+.hero {
+  position: relative; min-height: 100vh; display: flex; align-items: center;
+  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-light) 100%);
+  overflow: hidden; padding-top: 64px;
+}
+.hero::before {
+  content: ''; position: absolute; top: -50%; right: -20%; width: 80%; height: 200%;
+  background: url('images/wide_room_01.jpg') center/cover; opacity: 0.15;
+  clip-path: polygon(30% 0%, 100% 0%, 100% 100%, 10% 100%);
+}
+.hero-diamond-pattern {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.04;
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.5) 40px, rgba(255,255,255,0.5) 41px),
+    repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(255,255,255,0.5) 40px, rgba(255,255,255,0.5) 41px);
+}
+.hero-inner {
+  max-width: 1200px; margin: 0 auto; padding: 80px 24px; position: relative; z-index: 2;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+}
+.hero-content { color: var(--white); }
+.hero-badge {
+  display: inline-block; background: rgba(58,124,165,0.3); border: 1px solid rgba(58,124,165,0.5);
+  color: var(--teal-light); padding: 6px 16px; border-radius: 20px;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.05em; margin-bottom: 24px;
+}
+.hero-logo-block { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.hero-logo-img { width: 80px; height: 80px; object-fit: contain; border-radius: 8px; }
+h1.hero-title { font-size: 42px; font-weight: 900; line-height: 1.3; letter-spacing: 0.02em; }
+.hero-title-sub {
+  display: block; font-size: 20px; font-weight: 500;
+  color: rgba(255,255,255,0.7); margin-top: 8px; letter-spacing: 0.05em;
+}
+.hero-desc { font-size: 16px; line-height: 1.9; color: rgba(255,255,255,0.8); margin-top: 24px; max-width: 520px; }
+.hero-stats { display: flex; gap: 32px; margin-top: 36px; }
+.hero-stat { text-align: center; }
+.hero-stat-num { font-family: 'Inter', sans-serif; font-size: 36px; font-weight: 800; color: var(--teal-light); }
+.hero-stat-num span { font-size: 16px; font-weight: 500; }
+.hero-stat-label { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+.hero-buttons { display: flex; gap: 16px; margin-top: 40px; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--teal); color: var(--white); padding: 14px 32px; border-radius: 8px;
+  text-decoration: none; font-weight: 700; font-size: 15px;
+  transition: all 0.3s; border: none; cursor: pointer;
+}
+.btn-primary:hover { background: var(--teal-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(58,124,165,0.4); }
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: var(--white); padding: 14px 32px; border-radius: 8px;
+  text-decoration: none; font-weight: 600; font-size: 15px;
+  border: 1px solid rgba(255,255,255,0.3); transition: all 0.3s;
+}
+.btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.05); }
+.hero-images { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.hero-img { border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+.hero-img img { width: 100%; height: 200px; object-fit: cover; display: block; }
+.hero-img:first-child { grid-column: 1 / -1; }
+.hero-img:first-child img { height: 280px; }
+
+/* ===== SECTION COMMON ===== */
+.section { padding: 100px 24px; }
+.section-inner { max-width: 1100px; margin: 0 auto; }
+.section-label {
+  font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px;
+}
+.section-title { font-size: 32px; font-weight: 800; color: var(--navy); line-height: 1.4; margin-bottom: 16px; }
+.section-subtitle { font-size: 16px; color: var(--gray-600); max-width: 600px; line-height: 1.8; }
+.section-dark { background: var(--navy); color: var(--white); }
+.section-dark .section-label { color: var(--teal-light); }
+.section-dark .section-title { color: var(--white); }
+.section-dark .section-subtitle { color: rgba(255,255,255,0.7); }
+.section-gray { background: var(--gray-50); }
+
+/* ===== ABOUT ===== */
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 48px; align-items: center; }
+.about-text p { margin-bottom: 20px; font-size: 15px; line-height: 2; }
+.about-img { border-radius: 16px; overflow: hidden; box-shadow: 0 16px 48px rgba(26,39,68,0.15); }
+.about-img img { width: 100%; height: auto; display: block; }
+
+/* ===== FEATURES ===== */
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 48px; }
+.feature-card {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px; padding: 36px 28px; transition: all 0.3s;
+}
+.feature-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(58,124,165,0.3); transform: translateY(-4px); }
+.feature-icon {
+  width: 52px; height: 52px; background: rgba(58,124,165,0.2); border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+}
+.feature-icon svg { width: 24px; height: 24px; stroke: var(--teal-light); fill: none; stroke-width: 2; }
+.feature-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+.feature-desc { font-size: 14px; line-height: 1.8; color: rgba(255,255,255,0.7); }
+
+/* ===== PROGRAM ===== */
+.program-days { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; }
+.program-day { background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06); border: 1px solid var(--gray-200); }
+.program-day-header { background: var(--navy); color: var(--white); padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; }
+.program-day-title { font-size: 20px; font-weight: 700; }
+.program-day-time { font-size: 13px; color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 20px; }
+.program-item { padding: 20px 28px; border-bottom: 1px solid var(--gray-100); display: flex; gap: 16px; align-items: flex-start; }
+.program-item:last-child { border-bottom: none; }
+.program-type { flex-shrink: 0; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; margin-top: 3px; }
+.type-lecture { background: rgba(58,124,165,0.1); color: var(--teal); }
+.type-handson { background: rgba(197,165,90,0.15); color: #9a7b2f; }
+.program-item-content { flex: 1; }
+.program-item-title { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+.program-item-instructor { font-size: 13px; color: var(--gray-600); }
+
+/* ===== INSTRUCTORS ===== */
+.instructors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+.instructor-card {
+  background: var(--white); border-radius: 16px; padding: 32px 24px; text-align: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06); border: 1px solid var(--gray-200); transition: all 0.3s;
+}
+.instructor-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,0.1); }
+.instructor-card.lead { border-color: var(--teal); border-width: 2px; position: relative; }
+.instructor-lead-badge {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--teal); color: var(--white); padding: 4px 16px; border-radius: 12px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+}
+.instructor-avatar-wrap {
+  width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 16px;
+  position: relative; overflow: hidden; background: #e8edf3;
+}
+.instructor-avatar-wrap img {
+  display: block; width: 120px; height: 120px; border-radius: 50%;
+  object-fit: cover; object-position: center center;
+  position: absolute; top: 0; left: 0;
+  transition: opacity 0.4s ease;
+}
+.instructor-avatar-wrap .illust { opacity: 1; z-index: 2; }
+.instructor-avatar-wrap .photo { opacity: 0; z-index: 1; }
+.instructor-card:hover .instructor-avatar-wrap .illust { opacity: 0; }
+.instructor-card:hover .instructor-avatar-wrap .photo { opacity: 1; }
+.instructor-name { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.instructor-title { font-size: 12px; color: var(--gray-600); margin-bottom: 4px; }
+.instructor-location { font-size: 12px; color: var(--teal); font-weight: 500; margin-bottom: 16px; }
+.instructor-topic { font-size: 13px; line-height: 1.7; color: var(--gray-600); padding-top: 16px; border-top: 1px solid var(--gray-100); }
+
+/* ===== CAROUSEL ===== */
+.carousel-wrap { position: relative; margin-top: 48px; overflow: hidden; border-radius: 16px; }
+.carousel-track {
+  display: flex; transition: transform 0.6s ease;
+}
+.carousel-slide {
+  min-width: 100%; position: relative;
+}
+.carousel-slide img {
+  width: 100%; height: 480px; object-fit: cover; display: block;
+}
+.carousel-slide .carousel-caption {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 28px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.65));
+  color: var(--white); font-size: 14px; font-weight: 500;
+}
+.carousel-btn {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+  width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer;
+  background: rgba(255,255,255,0.85); color: var(--navy); font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15); transition: all 0.2s;
+}
+.carousel-btn:hover { background: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+.carousel-btn.prev { left: 16px; }
+.carousel-btn.next { right: 16px; }
+.carousel-dots {
+  display: flex; justify-content: center; gap: 8px; margin-top: 20px;
+}
+.carousel-dot {
+  width: 10px; height: 10px; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--gray-200); transition: all 0.3s;
+}
+.carousel-dot.active { background: var(--teal); width: 28px; border-radius: 5px; }
+/* Thumbnail strip */
+.carousel-thumbs {
+  display: flex; gap: 8px; margin-top: 16px; overflow-x: auto; padding-bottom: 4px;
+  scrollbar-width: thin; scrollbar-color: var(--gray-200) transparent;
+}
+.carousel-thumb {
+  flex-shrink: 0; width: 80px; height: 56px; border-radius: 8px; overflow: hidden;
+  cursor: pointer; opacity: 0.5; transition: all 0.3s; border: 2px solid transparent;
+}
+.carousel-thumb.active { opacity: 1; border-color: var(--teal); }
+.carousel-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (max-width: 768px) {
+  .carousel-slide img { height: 280px; }
+  .carousel-thumbs { display: none; }
+}
+
+/* ===== SCHEDULE ===== */
+.schedule-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+.schedule-card {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px; padding: 32px; transition: all 0.3s; position: relative; overflow: hidden;
+}
+.schedule-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--teal), var(--teal-light)); }
+.schedule-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+.schedule-year { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; color: var(--teal-light); letter-spacing: 0.1em; margin-bottom: 8px; }
+.schedule-dates { display: flex; flex-direction: column; gap: 16px; }
+.schedule-date-item { display: flex; align-items: center; gap: 16px; }
+.schedule-num {
+  flex-shrink: 0; width: 32px; height: 32px; background: rgba(58,124,165,0.2); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Inter', sans-serif; font-weight: 700; font-size: 13px; color: var(--teal-light);
+}
+.schedule-date-text { font-size: 16px; font-weight: 600; }
+.schedule-date-text small { display: block; font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.6); margin-top: 2px; }
+.schedule-venue { display: inline-block; margin-top: 12px; padding: 4px 12px; border-radius: 6px; font-size: 12px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); }
+.schedule-status { display: inline-block; margin-top: 12px; margin-left: 8px; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.status-open { background: rgba(46,160,67,0.2); color: #4ade80; }
+.status-soldout { background: rgba(239,68,68,0.2); color: #f87171; }
+.status-coming { background: rgba(197,165,90,0.2); color: var(--gold); }
+.status-done { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); }
+
+/* ===== DETAILS ===== */
+.details-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 48px; margin-top: 48px; }
+.details-table { width: 100%; border-collapse: collapse; }
+.details-table tr { border-bottom: 1px solid var(--gray-200); }
+.details-table th { text-align: left; font-weight: 600; font-size: 14px; color: var(--navy); padding: 16px 20px 16px 0; width: 120px; vertical-align: top; white-space: nowrap; }
+.details-table td { padding: 16px 0; font-size: 14px; line-height: 1.8; }
+.details-table td small { display: block; color: var(--gray-600); font-size: 12px; margin-top: 4px; line-height: 1.6; }
+.details-sidebar {
+  background: var(--navy); border-radius: 16px; padding: 36px; color: var(--white);
+  position: sticky; top: 88px;
+}
+.details-sidebar-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+.details-sidebar p { font-size: 14px; line-height: 1.8; color: rgba(255,255,255,0.8); margin-bottom: 24px; }
+.btn-apply {
+  display: block; width: 100%; text-align: center;
+  background: var(--teal); color: var(--white); padding: 16px 24px; border-radius: 8px;
+  text-decoration: none; font-weight: 700; font-size: 16px; transition: all 0.3s;
+}
+.btn-apply:hover { background: var(--teal-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(58,124,165,0.4); }
+.details-sidebar .contact-info {
+  margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.15);
+  font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.8;
+}
+.details-sidebar .contact-info a { color: var(--teal-light); text-decoration: none; }
+
+/* ===== INTERNATIONAL ===== */
+.intl-content { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px; align-items: center; }
+.intl-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.intl-photos img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; }
+.intl-text p { font-size: 15px; line-height: 2; color: rgba(255,255,255,0.8); margin-bottom: 16px; }
+
+/* ===== CTA ===== */
+.cta-section { background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%); padding: 80px 24px; text-align: center; color: var(--white); }
+.cta-title { font-size: 32px; font-weight: 800; margin-bottom: 16px; }
+.cta-desc { font-size: 16px; color: rgba(255,255,255,0.8); margin-bottom: 36px; max-width: 500px; margin-left: auto; margin-right: auto; }
+
+/* ===== FOOTER ===== */
+.footer { background: var(--navy-dark); color: var(--white); padding: 64px 24px 32px; }
+.footer-inner { max-width: 1100px; margin: 0 auto; }
+.footer-top { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+.footer-brand { display: flex; flex-direction: column; gap: 12px; }
+.footer-brand img { height: 52px; width: 52px; object-fit: contain; border-radius: 6px; }
+.footer-brand p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.8; }
+.footer-col-title { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 16px; color: rgba(255,255,255,0.5); }
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 8px; }
+.footer-col a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+.footer-col a:hover { color: var(--white); }
+.footer-bottom { padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+.footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.4); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+  .hero-images { order: -1; }
+  h1.hero-title { font-size: 34px; }
+  .program-days { grid-template-columns: 1fr; }
+  .instructors-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+  .gallery-item.large img { min-height: 300px; }
+  .details-grid { grid-template-columns: 1fr; }
+  .intl-content { grid-template-columns: 1fr; }
+  .schedule-cards { grid-template-columns: 1fr 1fr; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .mobile-menu-btn { display: block; }
+  .hero { min-height: auto; }
+  .hero-inner { padding: 60px 24px; }
+  h1.hero-title { font-size: 28px; }
+  .hero-images { grid-template-columns: 1fr; }
+  .hero-img:first-child img { height: 220px; }
+  .hero-img:not(:first-child) { display: none; }
+  .hero-stats { gap: 20px; }
+  .hero-stat-num { font-size: 28px; }
+  .hero-buttons { flex-direction: column; }
+  .section { padding: 64px 20px; }
+  .section-title { font-size: 26px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .about-grid { grid-template-columns: 1fr; }
+  .program-day [style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
+  .instructors-grid { grid-template-columns: 1fr; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery-item.large { grid-column: span 2; grid-row: span 1; }
+  .gallery-item.large img { min-height: 220px; }
+  .gallery-item:not(.large) img { height: 150px; }
+  .schedule-cards { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr; gap: 32px; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+}
+
+/* ===== TESTIMONIALS ===== */
+.testimonial-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 48px; margin-bottom: 48px; }
+.stat-box {
+  text-align: center; padding: 28px 16px; border-radius: 16px;
+  background: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid var(--gray-200);
+}
+.stat-box-num { font-family: 'Inter', sans-serif; font-size: 40px; font-weight: 800; color: var(--teal); line-height: 1; }
+.stat-box-num span { font-size: 18px; }
+.stat-box-label { font-size: 13px; color: var(--gray-600); margin-top: 8px; font-weight: 500; }
+.stat-bar-section { margin-bottom: 48px; }
+.stat-bar-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.stat-bar-label { width: 160px; flex-shrink: 0; font-size: 14px; font-weight: 600; color: var(--navy); text-align: right; }
+.stat-bar-track { flex: 1; height: 28px; background: var(--gray-100); border-radius: 14px; overflow: hidden; position: relative; }
+.stat-bar-fill {
+  height: 100%; border-radius: 14px; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px;
+  font-size: 12px; font-weight: 700; color: var(--white); transition: width 1.5s ease;
+}
+.stat-bar-fill.teal { background: linear-gradient(90deg, var(--teal), var(--teal-light)); }
+.stat-bar-fill.gold { background: linear-gradient(90deg, #b8942e, var(--gold)); }
+.testimonial-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.testimonial-card {
+  background: var(--white); border-radius: 14px; padding: 28px; position: relative;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.05); border: 1px solid var(--gray-200); transition: all 0.3s;
+}
+.testimonial-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.08); }
+.testimonial-card::before {
+  content: '\201C'; position: absolute; top: 12px; left: 20px;
+  font-size: 48px; color: var(--teal); opacity: 0.15; font-family: Georgia, serif; line-height: 1;
+}
+.testimonial-text { font-size: 14px; line-height: 1.9; color: var(--gray-800); margin-bottom: 12px; }
+.testimonial-meta { font-size: 12px; color: var(--gray-600); display: flex; justify-content: space-between; }
+.testimonial-role { font-weight: 600; color: var(--teal); }
+@media (max-width: 1024px) {
+  .testimonial-stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .testimonial-stats { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .stat-box { padding: 20px 12px; }
+  .stat-box-num { font-size: 32px; }
+  .testimonial-cards { grid-template-columns: 1fr; }
+  .stat-bar-row { flex-direction: column; gap: 4px; align-items: flex-start; }
+  .stat-bar-label { width: auto; text-align: left; }
+}
+
+.fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <img src="images/logo.jpg" alt="KENSANKAI">
+      <span class="nav-logo-text">KEN<br>SAN<br>KAI.</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">研鑽会について</a></li>
+      <li><a href="#program">カリキュラム</a></li>
+      <li><a href="#instructors">インストラクター</a></li>
+      <li><a href="#gallery">セミナーの様子</a></li>
+      <li><a href="#voice">受講生の声</a></li>
+      <li><a href="#schedule">開催日程</a></li>
+      <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSc2bY78VaCcOM4OCE1Dz9U9yeAmIJoeh5CODRfKzR2nMzZUJw/viewform?usp=header" target="_blank" class="nav-cta">お申し込み →</a></li>
+    </ul>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="メニュー">☰</button>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-diamond-pattern"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">2日間集中ハンズオン</div>
+      <div class="hero-logo-block">
+        <img src="images/logo.jpg" alt="KENSANKAI" class="hero-logo-img">
+      </div>
+      <h1 class="hero-title">
+        マイクロ臨床<br>ハンズオン
+        <span class="hero-title-sub">歯科臨床研鑽会 KENSANKAI</span>
+      </h1>
+      <p class="hero-desc">
+        マイクロスコープ臨床を完璧に自身の臨床に落とし込むための基礎から応用までを、たった2日間でマスターしていただけるKENSANKAIハンズオンです。
+      </p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num">26<span>回</span></div>
+          <div class="hero-stat-label">開催実績（2014年〜）</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">150<span>名+</span></div>
+          <div class="hero-stat-label">累計受講者数</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">6<span>名</span></div>
+          <div class="hero-stat-label">インストラクター</div>
+        </div>
+      </div>
+      <div class="hero-buttons">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSc2bY78VaCcOM4OCE1Dz9U9yeAmIJoeh5CODRfKzR2nMzZUJw/viewform?usp=header" target="_blank" class="btn-primary">受講を申し込む →</a>
+        <a href="#program" class="btn-outline">カリキュラムを見る</a>
+      </div>
+    </div>
+    <div class="hero-images">
+      <div class="hero-img"><img src="images/wide_room_01.jpg" alt="セミナー会場の様子" loading="eager"></div>
+      <div class="hero-img"><img src="images/group_01.jpg" alt="ハンズオン実習" loading="eager"></div>
+      <div class="hero-img"><img src="images/handson_03.jpg" alt="顕微鏡下での実習" loading="eager"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="section" id="about">
+  <div class="section-inner fade-in">
+    <div class="section-label">About</div>
+    <h2 class="section-title">歯科臨床研鑽会とは</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>歯科臨床研鑽会（KENSANKAI）は、2007年に顕微鏡歯科治療の第一線で活躍する臨床家が集結して発足しました。当初は小規模な勉強会や外来講師によるセミナーを重ねながら研鑽を積み、2014年10月に第1回のオリジナルハンズオンセミナーを開催。以来26回の開催を数え、150名を超える歯科医師が受講しています。</p>
+        <p>主宰の高田光彦を中心に、全国から選りすぐりの6名のインストラクターが、それぞれの専門分野で培った臨床経験とテクニックを惜しみなく伝授します。</p>
+        <p>歯科衛生士さんとご一緒に参加いただくことで、医院の大変革の第一歩にしていただけます。</p>
+      </div>
+      <div class="about-img"><img src="images/group_03.jpg" alt="研鑽会参加者の集合写真"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="section section-dark" id="features">
+  <div class="section-inner fade-in">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">研鑽会の特長</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
+        <h3 class="feature-title">マイクロスコープ完備</h3>
+        <p class="feature-desc">一人一台の手術用顕微鏡で実習。実際の臨床環境に近い形で技術を習得できます。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <h3 class="feature-title">少人数限定</h3>
+        <p class="feature-desc">少人数制で、インストラクターから直接きめ細やかな指導を受けられます。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+        <h3 class="feature-title">講義＋ハンズオン</h3>
+        <p class="feature-desc">各テーマごとに講義で理論を学び、直後に実習で手を動かす実践的なプログラムです。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3 class="feature-title">6名のエキスパート</h3>
+        <p class="feature-desc">全国各地で顕微鏡歯科治療を実践する6名の臨床家がインストラクターとして指導します。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div>
+        <h3 class="feature-title">DH / DA 同伴参加可</h3>
+        <p class="feature-desc">歯科衛生士・歯科助手1名まで同伴参加可能。2日目にはDH限定のランチミーティング＆マイクロ体験会を別室で開催します。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <h3 class="feature-title">懇親会で交流</h3>
+        <p class="feature-desc">初日終了後の懇親会で、インストラクターや受講生同士の交流・情報交換が可能です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROGRAM ===== -->
+<section class="section section-gray" id="program">
+  <div class="section-inner fade-in">
+    <div class="section-label">Program</div>
+    <h2 class="section-title">カリキュラム</h2>
+    <p class="section-subtitle">2日間で顕微鏡歯科治療の基礎から応用まで、体系的に学べるプログラムです。</p>
+    <div class="program-days">
+      <div class="program-day">
+        <div class="program-day-header">
+          <div class="program-day-title">Day 1 ─ 土曜日</div>
+          <div class="program-day-time">10:00 – 18:00</div>
+        </div>
+        <div class="program-item">
+          <span class="program-type type-lecture">講義&実習</span>
+          <div class="program-item-content">
+            <div class="program-item-title">バイオセラミックの活用と、その落とし穴</div>
+            <div class="program-item-instructor">実習：断髄 / 穿孔封鎖 ─ Dr. 高田光彦</div>
+          </div>
+        </div>
+        <div class="program-item">
+          <span class="program-type type-lecture">講義&実習</span>
+          <div class="program-item-content">
+            <div class="program-item-title">時短のためのマイクロエンド</div>
+            <div class="program-item-instructor">実習：透明根管模型 / 天然歯 ─ Dr. 荒木謙太郎</div>
+          </div>
+        </div>
+        <div class="program-item">
+          <span class="program-type type-handson">講義&実習</span>
+          <div class="program-item-content">
+            <div class="program-item-title">全身で身につく！マイクロ OHI</div>
+            <div class="program-item-instructor">DH 高橋規子</div>
+          </div>
+        </div>
+        <div class="program-item">
+          <span class="program-type type-lecture">講義&実習</span>
+          <div class="program-item-content">
+            <div class="program-item-title">ブランディングのための動画活用術</div>
+            <div class="program-item-instructor">実習：動画編集 ─ Dr. 吉岡秀樹</div>
+          </div>
+        </div>
+        <div class="program-item" style="background:rgba(26,39,68,0.03);">
+          <span class="program-type" style="background:rgba(197,165,90,0.15);color:#9a7b2f;">懇親会</span>
+          <div class="program-item-content">
+            <div class="program-item-title">懇親会</div>
+            <div class="program-item-instructor">18:30〜 インストラクター・受講者との交流</div>
+          </div>
+        </div>
+      </div>
+      <div class="program-day">
+        <div class="program-day-header">
+          <div class="program-day-title">Day 2 ─ 日曜日</div>
+          <div class="program-day-time">9:00 – 16:30</div>
+        </div>
+        <div class="program-item">
+          <span class="program-type type-handson">実習</span>
+          <div class="program-item-content">
+            <div class="program-item-title">ミラーテクニックの基本</div>
+            <div class="program-item-instructor">Dr. 高田光彦</div>
+          </div>
+        </div>
+        <div class="program-item">
+          <span class="program-type type-handson">実習</span>
+          <div class="program-item-content">
+            <div class="program-item-title">基本を極めるラバーダム</div>
+            <div class="program-item-instructor">実習：単独〜連続防湿 ─ Dr. 笠原明人</div>
+          </div>
+        </div>
+        <div class="program-item">
+          <span class="program-type type-lecture">講義&実習</span>
+          <div class="program-item-content">
+            <div class="program-item-title">自費化する！臼歯部2級ダイレクトボンディング</div>
+            <div class="program-item-instructor">実習：II級CR ─ Dr. 渡辺徹也</div>
+          </div>
+        </div>
+        <div class="program-item" style="background:rgba(58,124,165,0.05);">
+          <span class="program-type" style="background:rgba(58,124,165,0.12);color:var(--teal);">別室・DH限定</span>
+          <div class="program-item-content">
+            <div class="program-item-title">DH ランチミーティング＆マイクロ体験会</div>
+            <div class="program-item-instructor">DH 高橋規子 ─ 上記セッションと同時開催</div>
+            <div style="font-size:11px;color:var(--gray-600);margin-top:4px;line-height:1.7;">同伴歯科衛生士対象／ランチ交流 → 悩み相談 → マイクロスコープ体験</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INSTRUCTORS ===== -->
+<section class="section" id="instructors">
+  <div class="section-inner fade-in">
+    <div class="section-label">Instructors</div>
+    <h2 class="section-title">インストラクター</h2>
+    <p class="section-subtitle">全国各地で顕微鏡歯科治療を実践する精鋭の臨床家が直接指導します。</p>
+    <div class="instructors-grid">
+      <div class="instructor-card lead">
+        <span class="instructor-lead-badge">主宰</span>
+        <div class="instructor-avatar-wrap">
+          <img src="images/illust_takada.png" alt="高田光彦" class="illust">
+          <img src="images/prof_takada.png" alt="高田光彦" class="photo">
+        </div>
+        <div class="instructor-name">高田 光彦</div>
+        <div class="instructor-title">Dr.</div>
+        <div class="instructor-location"><a href="https://www.takata-dc.jp" target="_blank" style="color:inherit;text-decoration:none;">高田歯科</a> ─ 神戸市</div>
+        <div class="instructor-topic">バイオセラミックの活用と落とし穴（断髄/穿孔封鎖）、ミラーテクニックの基本</div>
+      </div>
+      <div class="instructor-card">
+        <div class="instructor-avatar-wrap">
+          <img src="images/illust_araki.png" alt="荒木謙太郎" class="illust">
+          <img src="images/prof_araki.png" alt="荒木謙太郎" class="photo">
+        </div>
+        <div class="instructor-name">荒木 謙太郎</div>
+        <div class="instructor-title">Dr.</div>
+        <div class="instructor-location"><a href="https://www.araki-dc.net" target="_blank" style="color:inherit;text-decoration:none;">あらきデンタルクリニック</a> ─ 香川県</div>
+        <div class="instructor-topic">時短のためのマイクロエンド（透明根管模型/天然歯）</div>
+      </div>
+      <div class="instructor-card">
+        <div class="instructor-avatar-wrap">
+          <img src="images/illust_takahashi.png" alt="高橋規子" class="illust">
+          <img src="images/prof_takahashi.png" alt="高橋規子" class="photo">
+        </div>
+        <div class="instructor-name">高橋 規子</div>
+        <div class="instructor-title">DH（歯科衛生士）</div>
+        <div class="instructor-location"><a href="https://www.takata-dc.jp" target="_blank" style="color:inherit;text-decoration:none;">高田歯科</a> ─ 神戸市</div>
+        <div class="instructor-topic">全身で身につく！マイクロ OHI</div>
+      </div>
+      <div class="instructor-card">
+        <div class="instructor-avatar-wrap">
+          <img src="images/illust_yoshioka.png" alt="吉岡秀樹" class="illust">
+          <img src="images/prof_yoshioka.png" alt="吉岡秀樹" class="photo">
+        </div>
+        <div class="instructor-name">吉岡 秀樹</div>
+        <div class="instructor-title">Dr.</div>
+        <div class="instructor-location"><a href="https://ortho.breath-design.com" target="_blank" style="color:inherit;text-decoration:none;">ブレス・デザイン デンタルオフィス</a> ─ 新潟県</div>
+        <div class="instructor-topic">ブランディングのための動画活用術（動画編集）</div>
+      </div>
+      <div class="instructor-card">
+        <div class="instructor-avatar-wrap">
+          <img src="images/illust_kasahara.png" alt="笠原明人" class="illust">
+          <img src="images/prof_kasahara.png" alt="笠原明人" class="photo">
+        </div>
+        <div class="instructor-name">笠原 明人</div>
+        <div class="instructor-title">Dr.</div>
+        <div class="instructor-location"><a href="https://www.kasahara-dc.com" target="_blank" style="color:inherit;text-decoration:none;">笠原デンタルオフィス</a> ─ 東京都</div>
+        <div class="instructor-topic">基本を極めるラバーダム（単独〜連続防湿）</div>
+      </div>
+      <div class="instructor-card">
+        <div class="instructor-avatar-wrap">
+          <img src="images/illust_watanabe.png" alt="渡辺徹也" class="illust">
+          <img src="images/prof_watanabe.png" alt="渡辺徹也" class="photo">
+        </div>
+        <div class="instructor-name">渡辺 徹也</div>
+        <div class="instructor-title">Dr.</div>
+        <div class="instructor-location"><a href="https://www.noahdental.com" target="_blank" style="color:inherit;text-decoration:none;">ノアデンタルクリニック</a> ─ 岐阜県</div>
+        <div class="instructor-topic">自費化する！臼歯部2級ダイレクトボンディング（II級CR）</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GALLERY ===== -->
+<section class="section section-gray" id="gallery">
+  <div class="section-inner fade-in">
+    <div class="section-label">Gallery</div>
+    <h2 class="section-title">セミナーの様子</h2>
+    <p class="section-subtitle">実際のセミナーの雰囲気をご覧ください。</p>
+    <div class="carousel-wrap" id="carousel">
+      <div class="carousel-track" id="carouselTrack">
+        <div class="carousel-slide"><img src="images/wide_room_01.jpg" alt="セミナー会場" loading="lazy"><div class="carousel-caption">セミナー会場 ─ 一人一台のマイクロスコープ完備</div></div>
+        <div class="carousel-slide"><img src="images/handson_01.jpg" alt="ハンズオン実習" loading="lazy"><div class="carousel-caption">マイクロスコープ下でのハンズオン実習</div></div>
+        <div class="carousel-slide"><img src="images/seminar_01.jpg" alt="講義" loading="lazy"><div class="carousel-caption">臨床に直結する講義</div></div>
+        <div class="carousel-slide"><img src="images/group_01.jpg" alt="マンツーマン指導" loading="lazy"><div class="carousel-caption">インストラクターによるマンツーマン指導</div></div>
+        <div class="carousel-slide"><img src="images/seminar_04.jpg" alt="講義の様子" loading="lazy"><div class="carousel-caption">講義風景 ─ 少人数制で質問しやすい環境</div></div>
+        <div class="carousel-slide"><img src="images/handson_03.jpg" alt="顕微鏡実習" loading="lazy"><div class="carousel-caption">顕微鏡下での実習 ─ 基礎から丁寧に指導</div></div>
+        <div class="carousel-slide"><img src="images/wide_room_02.jpg" alt="会場全景" loading="lazy"><div class="carousel-caption">セミナールーム全景</div></div>
+        <div class="carousel-slide"><img src="images/seminar_06.jpg" alt="セミナー" loading="lazy"><div class="carousel-caption">実症例を交えた実践的な講義</div></div>
+        <div class="carousel-slide"><img src="images/handson_05.jpg" alt="実習" loading="lazy"><div class="carousel-caption">手を動かして技術を習得</div></div>
+        <div class="carousel-slide"><img src="images/group_04.jpg" alt="集合写真" loading="lazy"><div class="carousel-caption">受講生・インストラクター集合写真</div></div>
+        <div class="carousel-slide"><img src="images/seminar_10.jpg" alt="講義" loading="lazy"><div class="carousel-caption">各分野のエキスパートが直接指導</div></div>
+        <div class="carousel-slide"><img src="images/handson_02.jpg" alt="実習" loading="lazy"><div class="carousel-caption">充実した実習機材</div></div>
+        <div class="carousel-slide"><img src="images/group_03.jpg" alt="メンバー" loading="lazy"><div class="carousel-caption">KENSANKAIインストラクター</div></div>
+        <div class="carousel-slide"><img src="images/dinner_01.jpg" alt="懇親会" loading="lazy"><div class="carousel-caption">懇親会 ─ インストラクターとの交流</div></div>
+        <div class="carousel-slide"><img src="images/seminar_12.jpg" alt="セミナー" loading="lazy"><div class="carousel-caption">2日間の集中コース</div></div>
+      </div>
+      <button class="carousel-btn prev" onclick="moveCarousel(-1)" aria-label="前へ">&#8249;</button>
+      <button class="carousel-btn next" onclick="moveCarousel(1)" aria-label="次へ">&#8250;</button>
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
+    <div class="carousel-thumbs" id="carouselThumbs"></div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="section" id="voice">
+  <div class="section-inner fade-in">
+    <div class="section-label">Voice</div>
+    <h2 class="section-title">受講生の声</h2>
+    <p class="section-subtitle">過去の受講生アンケートより（2022〜2024年・6回分・計58名の回答）</p>
+
+    <!-- Stats -->
+    <div class="testimonial-stats">
+      <div class="stat-box">
+        <div class="stat-box-num">150<span>名+</span></div>
+        <div class="stat-box-label">累計受講者数（全26回）</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-num">26<span>回</span></div>
+        <div class="stat-box-label">開催実績（2014年〜）</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-num">95<span>%+</span></div>
+        <div class="stat-box-label">実習が楽しかった</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-num">95<span>%+</span></div>
+        <div class="stat-box-label">講義がよく伝わった</div>
+      </div>
+    </div>
+
+    <!-- Bar Charts -->
+    <div class="stat-bar-section">
+      <h3 style="font-size:18px;font-weight:700;color:var(--navy);margin-bottom:20px;">受講後アンケートの結果</h3>
+      <div class="stat-bar-row">
+        <div class="stat-bar-label">実習が楽しかった</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill teal" style="width:95%;">95%</div></div>
+      </div>
+      <div class="stat-bar-row">
+        <div class="stat-bar-label">講義がわかりやすかった</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill teal" style="width:93%;">93%</div></div>
+      </div>
+      <div class="stat-bar-row">
+        <div class="stat-bar-label">講義レベルがちょうど良かった</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill gold" style="width:85%;">85%</div></div>
+      </div>
+      <div class="stat-bar-row">
+        <div class="stat-bar-label">実習時間がちょうど良かった</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill gold" style="width:82%;">82%</div></div>
+      </div>
+    </div>
+
+    <!-- Testimonial Cards -->
+    <h3 style="font-size:18px;font-weight:700;color:var(--navy);margin-bottom:20px;">受講生コメント</h3>
+    <div class="testimonial-cards">
+      <div class="testimonial-card">
+        <div class="testimonial-text">根本的な診査・診断から立ち返るように促していただける内容だったため、基本をしっかりとおさえて自分の治療をフィードバックできる内容だと思いました！</div>
+        <div class="testimonial-meta"><span class="testimonial-role">歯科医師</span><span>2023年受講</span></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">マイクロを使用してMB2をしっかりと見つけることができました。今までこれほど見つけることができていなかったのかと痛感しました。</div>
+        <div class="testimonial-meta"><span class="testimonial-role">歯科医師</span><span>2023年受講</span></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">我流でラバーをしていたので漏れることがありましたが改善しました。</div>
+        <div class="testimonial-meta"><span class="testimonial-role">歯科医師</span><span>2022年受講</span></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">他のセミナーでは聞いたことがない内容で非常に面白かった。自分で院内の説明動画を作ってみたかったのでこれを機にチャレンジしたい。</div>
+        <div class="testimonial-meta"><span class="testimonial-role">歯科医師</span><span>2022年受講</span></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">レジンの自費化は技術でないことを聞いてハードルが下がりました。</div>
+        <div class="testimonial-meta"><span class="testimonial-role">歯科医師</span><span>2022年受講</span></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">自分のことって意外に何も伝えられないなということがよく分かったので、ブランディングについて見直してみたいと思う。</div>
+        <div class="testimonial-meta"><span class="testimonial-role">歯科医師</span><span>2023年受講</span></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">コンタクトをしっかりピッタリするための前準備がとても大切だと実感しました。</div>
+        <div class="testimonial-meta"><span class="testimonial-role">歯科医師</span><span>2023年受講</span></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">複数歯のラバーダムは行なったことがなかったので勉強になりました。</div>
+        <div class="testimonial-meta"><span class="testimonial-role">歯科医師</span><span>2023年受講</span></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">講義の際に規格性のある口腔内写真とマイクロを利用した動画での施術説明がとてもわかりやすく感じました。患者さまの意識を高める為にも口腔内写真を強化したいと思いました。</div>
+        <div class="testimonial-meta"><span class="testimonial-role">歯科衛生士</span><span>2024年受講</span></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-text">一般臨床家が知りたいことを惜しげもなく提供してくださりありがとうございました。たくさんの材料をいただけてビックリしました。</div>
+        <div class="testimonial-meta"><span class="testimonial-role">歯科医師</span><span>2023年受講</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SCHEDULE ===== -->
+<section class="section section-dark" id="schedule">
+  <div class="section-inner fade-in">
+    <div class="section-label">Schedule</div>
+    <h2 class="section-title">開催日程</h2>
+    <p class="section-subtitle">少人数制のため、お早めにお申し込みください。</p>
+    <div class="schedule-cards" style="grid-template-columns: repeat(2, 1fr);">
+      <!-- 2026 -->
+      <div class="schedule-card">
+        <div class="schedule-year">2026</div>
+        <div class="schedule-dates">
+          <div class="schedule-date-item">
+            <div class="schedule-num">1</div>
+            <div class="schedule-date-text">
+              7月4日（土）・5日（日）
+              <small>新大阪会場</small>
+            </div>
+          </div>
+          <div class="schedule-date-item">
+            <div class="schedule-num">2</div>
+            <div class="schedule-date-text">
+              12月19日（土）・20日（日）
+              <small>新大阪会場</small>
+            </div>
+          </div>
+        </div>
+        <span class="schedule-status status-open">受付中</span>
+      </div>
+      <!-- 2027 -->
+      <div class="schedule-card">
+        <div class="schedule-year">2027</div>
+        <div class="schedule-dates">
+          <div class="schedule-date-item">
+            <div class="schedule-num">3</div>
+            <div class="schedule-date-text">
+              7月3日（土）・4日（日）
+              <small>東京会場</small>
+            </div>
+          </div>
+          <div class="schedule-date-item">
+            <div class="schedule-num">4</div>
+            <div class="schedule-date-text">
+              11月27日（土）・28日（日）
+              <small>東京会場</small>
+            </div>
+          </div>
+        </div>
+        <span class="schedule-status status-coming">近日公開</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DETAILS ===== -->
+<section class="section" id="details">
+  <div class="section-inner fade-in">
+    <div class="section-label">Details</div>
+    <h2 class="section-title">開催概要</h2>
+    <div class="details-grid">
+      <table class="details-table">
+        <tr>
+          <th>会場</th>
+          <td>
+            ペントロンジャパン（株）セミナールーム<br>
+            <strong>新大阪会場</strong>：新大阪駅徒歩5分<br>
+            <strong>東京会場</strong>：品川区大井
+          </td>
+        </tr>
+        <tr>
+          <th>対象</th>
+          <td>歯科医師<small>同伴DH / DA 1名まで参加可</small></td>
+        </tr>
+        <tr>
+          <th>定員</th>
+          <td>各回 8〜10名</td>
+        </tr>
+        <tr>
+          <th>受講料</th>
+          <td>
+            200,000円＋税（税込 220,000円）<br>
+            <small>
+              ○ 別途材料費 20,000円＋税（税込 22,000円）<br>
+              ○ 同伴歯科衛生士 30,000円＋税（税込 33,000円）<br>
+              ※ 受講料のお支払いをもって申し込み完了とします。<br>
+              ※ キャンセルの際には事務手数料33,000円を差し引いた上で返金処理をいたします。<br>
+              ※ セミナー開催1ヶ月前から50%、2週間前から75%、1週間前から100%のキャンセル料が掛かります。<br>
+              ※ FAXでの申込みは受け付けておりません。
+            </small>
+          </td>
+        </tr>
+        <tr>
+          <th>時間</th>
+          <td>
+            土曜日 10:00〜19:00（懇親会あり）<br>
+            日曜日 9:00〜16:00
+          </td>
+        </tr>
+        <tr>
+          <th>主催</th>
+          <td>
+            歯科臨床研鑽会<br>
+            〒650-0021 神戸市中央区三宮町1-1-1-5F<br>
+            高田歯科内
+          </td>
+        </tr>
+      </table>
+      <div class="details-sidebar">
+        <div class="details-sidebar-title">受講のお申し込み</div>
+        <p>少人数制のため定員に達し次第、受付を締め切ります。セミナースケジュールやイベント情報はLINEグループにてご案内しています。</p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSc2bY78VaCcOM4OCE1Dz9U9yeAmIJoeh5CODRfKzR2nMzZUJw/viewform?usp=header" target="_blank" class="btn-apply">お申し込みフォームへ →</a>
+        <div class="contact-info">
+          <strong style="color:rgba(255,255,255,0.9);">お問い合わせ</strong><br>
+          <a href="mailto:run-dom@takata-dc.jp">run-dom@takata-dc.jp</a><br>
+          TEL. <a href="tel:078-333-2666">078-333-2666</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INTERNATIONAL ===== -->
+<section class="section section-dark">
+  <div class="section-inner fade-in">
+    <div class="section-label">Activities</div>
+    <h2 class="section-title">研鑽会の活動</h2>
+    <div class="intl-content">
+      <div class="intl-text">
+        <p>研鑽会メンバーは国内セミナーにとどまらず、海外のデンタルショーや台湾をはじめとするアジア各国の学会・スタディクラブとの共同勉強会にも積極的に参加し、国際的な視野で歯科臨床の研鑽を続けています。</p>
+        <p>また、全国各地への「地方行脚」として、各地域での勉強会やイベントにも出席し、日本全国の歯科医師との交流と技術の共有を推進しています。</p>
+      </div>
+      <div class="intl-photos">
+        <img src="images/kaigai_01.jpg" alt="海外デンタルショー" loading="lazy">
+        <img src="images/kaigai_03.jpg" alt="海外での交流" loading="lazy">
+        <img src="images/kaigai_05.jpg" alt="国際学会" loading="lazy">
+        <img src="images/kaigai_07.jpg" alt="海外活動" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta-section">
+  <div class="cta-title">受講のお申し込み</div>
+  <p class="cta-desc">マイクロスコープ臨床の基礎から応用まで、2日間の集中ハンズオンで確実に身につけてください。</p>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSc2bY78VaCcOM4OCE1Dz9U9yeAmIJoeh5CODRfKzR2nMzZUJw/viewform?usp=header" target="_blank" class="btn-primary" style="font-size:18px;padding:18px 40px;">お申し込みフォームへ →</a>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="images/logo.jpg" alt="KENSANKAI">
+        <p>歯科臨床研鑽会は、顕微鏡歯科治療の技術向上を目的としたハンズオンセミナーを主催しています。</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">MENU</div>
+        <ul>
+          <li><a href="#about">研鑽会について</a></li>
+          <li><a href="#program">カリキュラム</a></li>
+          <li><a href="#instructors">インストラクター</a></li>
+          <li><a href="#gallery">セミナーの様子</a></li>
+          <li><a href="#voice">受講生の声</a></li>
+          <li><a href="#schedule">開催日程</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">CONTACT</div>
+        <ul>
+          <li><a href="mailto:run-dom@takata-dc.jp">run-dom@takata-dc.jp</a></li>
+          <li><a href="tel:078-333-2666">TEL. 078-333-2666</a></li>
+          <li style="margin-top:12px;color:rgba(255,255,255,0.5);font-size:13px;line-height:1.6;">
+            〒650-0021<br>神戸市中央区三宮町1-1-1-5F<br>高田歯科内
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 歯科臨床研鑽会 KENSANKAI. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+window.addEventListener('scroll', () => {
+  document.querySelector('.nav').style.background = window.scrollY > 50 ? 'rgba(15,26,46,0.98)' : 'rgba(26,39,68,0.95)';
+});
+
+function toggleMobileMenu() {
+  const links = document.querySelector('.nav-links');
+  if (links.style.display === 'flex') { links.style.display = 'none'; return; }
+  links.style.display = 'flex'; links.style.flexDirection = 'column';
+  links.style.position = 'absolute'; links.style.top = '64px';
+  links.style.left = '0'; links.style.right = '0';
+  links.style.background = 'rgba(15,26,46,0.98)'; links.style.padding = '20px 24px'; links.style.gap = '16px';
+}
+
+// Carousel
+let carouselIdx = 0;
+const track = document.getElementById('carouselTrack');
+const slides = track ? track.querySelectorAll('.carousel-slide') : [];
+const dotsWrap = document.getElementById('carouselDots');
+const thumbsWrap = document.getElementById('carouselThumbs');
+let autoPlay;
+
+function initCarousel() {
+  if (!slides.length) return;
+  slides.forEach((s, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goToSlide(i);
+    dotsWrap.appendChild(dot);
+    const thumb = document.createElement('div');
+    thumb.className = 'carousel-thumb' + (i === 0 ? ' active' : '');
+    thumb.onclick = () => goToSlide(i);
+    thumb.innerHTML = '<img src="' + s.querySelector('img').src + '" alt="">';
+    thumbsWrap.appendChild(thumb);
+  });
+  startAuto();
+}
+
+function goToSlide(idx) {
+  carouselIdx = idx;
+  track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+  dotsWrap.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+  thumbsWrap.querySelectorAll('.carousel-thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
+  const activeThumb = thumbsWrap.querySelector('.carousel-thumb.active');
+  if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+}
+
+function moveCarousel(dir) {
+  let next = carouselIdx + dir;
+  if (next < 0) next = slides.length - 1;
+  if (next >= slides.length) next = 0;
+  goToSlide(next);
+  resetAuto();
+}
+
+function startAuto() { autoPlay = setInterval(() => moveCarousel(1), 4000); }
+function resetAuto() { clearInterval(autoPlay); startAuto(); }
+
+initCarousel();
+</script>
+</body>
+</html>
