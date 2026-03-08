@@ -218,54 +218,18 @@ h1.hero-title { font-size: 42px; font-weight: 900; line-height: 1.3; letter-spac
 .instructor-location { font-size: 12px; color: var(--teal); font-weight: 500; margin-bottom: 16px; }
 .instructor-topic { font-size: 13px; line-height: 1.7; color: var(--gray-600); padding-top: 16px; border-top: 1px solid var(--gray-100); }
 
-/* ===== CAROUSEL ===== */
-.carousel-wrap { position: relative; margin-top: 48px; overflow: hidden; border-radius: 16px; }
-.carousel-track {
-  display: flex; transition: transform 0.6s ease;
+/* ===== GALLERY GRID ===== */
+.gallery-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px;
 }
-.carousel-slide {
-  min-width: 100%; position: relative;
+.gallery-grid img {
+  width: 100%; height: 220px; object-fit: cover; display: block;
+  border-radius: 12px; transition: transform 0.3s, box-shadow 0.3s;
 }
-.carousel-slide img {
-  width: 100%; height: 480px; object-fit: cover; display: block;
-}
-.carousel-slide .carousel-caption {
-  position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 28px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.65));
-  color: var(--white); font-size: 14px; font-weight: 500;
-}
-.carousel-btn {
-  position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
-  width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer;
-  background: rgba(255,255,255,0.85); color: var(--navy); font-size: 20px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15); transition: all 0.2s;
-}
-.carousel-btn:hover { background: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
-.carousel-btn.prev { left: 16px; }
-.carousel-btn.next { right: 16px; }
-.carousel-dots {
-  display: flex; justify-content: center; gap: 8px; margin-top: 20px;
-}
-.carousel-dot {
-  width: 10px; height: 10px; border-radius: 50%; border: none; cursor: pointer;
-  background: var(--gray-200); transition: all 0.3s;
-}
-.carousel-dot.active { background: var(--teal); width: 28px; border-radius: 5px; }
-/* Thumbnail strip */
-.carousel-thumbs {
-  display: flex; gap: 8px; margin-top: 16px; overflow-x: auto; padding-bottom: 4px;
-  scrollbar-width: thin; scrollbar-color: var(--gray-200) transparent;
-}
-.carousel-thumb {
-  flex-shrink: 0; width: 80px; height: 56px; border-radius: 8px; overflow: hidden;
-  cursor: pointer; opacity: 0.5; transition: all 0.3s; border: 2px solid transparent;
-}
-.carousel-thumb.active { opacity: 1; border-color: var(--teal); }
-.carousel-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gallery-grid img:hover { transform: scale(1.03); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
 @media (max-width: 768px) {
-  .carousel-slide img { height: 280px; }
-  .carousel-thumbs { display: none; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .gallery-grid img { height: 150px; }
 }
 
 /* ===== SCHEDULE ===== */
@@ -723,25 +687,17 @@ h1.hero-title { font-size: 42px; font-weight: 900; line-height: 1.3; letter-spac
     <div class="section-label">Gallery</div>
     <h2 class="section-title">セミナーの様子</h2>
     <p class="section-subtitle">実際のセミナーの雰囲気をご覧ください。</p>
-    <div class="carousel-wrap" id="carousel">
-      <div class="carousel-track" id="carouselTrack">
-        <div class="carousel-slide"><img src="images/wide_room_01.jpg" alt="セミナー会場" loading="lazy"><div class="carousel-caption">セミナー会場 ─ 一人一台のマイクロスコープ完備</div></div>
-        <div class="carousel-slide"><img src="images/handson_01.jpg" alt="ハンズオン実習" loading="lazy"><div class="carousel-caption">マイクロスコープ下でのハンズオン実習</div></div>
-        <div class="carousel-slide"><img src="images/group_01.jpg" alt="マンツーマン指導" loading="lazy"><div class="carousel-caption">インストラクターによるマンツーマン指導</div></div>
-        <div class="carousel-slide"><img src="images/seminar_04.jpg" alt="講義の様子" loading="lazy"><div class="carousel-caption">講義風景 ─ 少人数制で質問しやすい環境</div></div>
-        <div class="carousel-slide"><img src="images/handson_03.jpg" alt="顕微鏡実習" loading="lazy"><div class="carousel-caption">顕微鏡下での実習 ─ 基礎から丁寧に指導</div></div>
-        <div class="carousel-slide"><img src="images/wide_room_02.jpg" alt="会場全景" loading="lazy"><div class="carousel-caption">セミナールーム全景</div></div>
-        <div class="carousel-slide"><img src="images/seminar_06.jpg" alt="セミナー" loading="lazy"><div class="carousel-caption">実症例を交えた実践的な講義</div></div>
-        <div class="carousel-slide"><img src="images/handson_02.jpg" alt="実習" loading="lazy"><div class="carousel-caption">充実した実習機材</div></div>
-        <div class="carousel-slide"><img src="images/group_03.jpg" alt="メンバー" loading="lazy"><div class="carousel-caption">KENSANKAIインストラクター</div></div>
-        <div class="carousel-slide"><img src="images/dinner_01.jpg" alt="懇親会" loading="lazy"><div class="carousel-caption">懇親会 ─ インストラクターとの交流</div></div>
-        <div class="carousel-slide"><img src="images/seminar_12.jpg" alt="セミナー" loading="lazy"><div class="carousel-caption">2日間の集中コース</div></div>
-      </div>
-      <button class="carousel-btn prev" onclick="moveCarousel(-1)" aria-label="前へ">&#8249;</button>
-      <button class="carousel-btn next" onclick="moveCarousel(1)" aria-label="次へ">&#8250;</button>
+    <div class="gallery-grid">
+      <img src="images/wide_room_01.jpg" alt="セミナー会場" loading="lazy">
+      <img src="images/handson_01.jpg" alt="ハンズオン実習" loading="lazy">
+      <img src="images/group_01.jpg" alt="マンツーマン指導" loading="lazy">
+      <img src="images/seminar_04.jpg" alt="講義風景" loading="lazy">
+      <img src="images/handson_03.jpg" alt="顕微鏡実習" loading="lazy">
+      <img src="images/wide_room_02.jpg" alt="セミナールーム全景" loading="lazy">
+      <img src="images/seminar_06.jpg" alt="実症例講義" loading="lazy">
+      <img src="images/handson_02.jpg" alt="実習機材" loading="lazy">
+      <img src="images/group_03.jpg" alt="インストラクター" loading="lazy">
     </div>
-    <div class="carousel-dots" id="carouselDots"></div>
-    <div class="carousel-thumbs" id="carouselThumbs"></div>
   </div>
 </section>
 
@@ -1050,51 +1006,6 @@ function toggleMobileMenu() {
   links.style.background = 'rgba(15,26,46,0.98)'; links.style.padding = '20px 24px'; links.style.gap = '16px';
 }
 
-// Carousel
-let carouselIdx = 0;
-const track = document.getElementById('carouselTrack');
-const slides = track ? track.querySelectorAll('.carousel-slide') : [];
-const dotsWrap = document.getElementById('carouselDots');
-const thumbsWrap = document.getElementById('carouselThumbs');
-let autoPlay;
-
-function initCarousel() {
-  if (!slides.length) return;
-  slides.forEach((s, i) => {
-    const dot = document.createElement('button');
-    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-    dot.onclick = () => goToSlide(i);
-    dotsWrap.appendChild(dot);
-    const thumb = document.createElement('div');
-    thumb.className = 'carousel-thumb' + (i === 0 ? ' active' : '');
-    thumb.onclick = () => goToSlide(i);
-    thumb.innerHTML = '<img src="' + s.querySelector('img').src + '" alt="">';
-    thumbsWrap.appendChild(thumb);
-  });
-  startAuto();
-}
-
-function goToSlide(idx) {
-  carouselIdx = idx;
-  track.style.transform = 'translateX(-' + (idx * 100) + '%)';
-  dotsWrap.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
-  thumbsWrap.querySelectorAll('.carousel-thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
-  const activeThumb = thumbsWrap.querySelector('.carousel-thumb.active');
-  if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-}
-
-function moveCarousel(dir) {
-  let next = carouselIdx + dir;
-  if (next < 0) next = slides.length - 1;
-  if (next >= slides.length) next = 0;
-  goToSlide(next);
-  resetAuto();
-}
-
-function startAuto() { autoPlay = setInterval(() => moveCarousel(1), 4000); }
-function resetAuto() { clearInterval(autoPlay); startAuto(); }
-
-initCarousel();
 </script>
 </body>
 </html>
