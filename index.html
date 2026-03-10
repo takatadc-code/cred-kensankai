@@ -520,6 +520,69 @@
     object-fit: contain;
   }
 
+  /* ─── Testimonials (受講者の声) ─── */
+  .testimonials {
+    background: var(--cream-dark);
+  }
+  .testimonials .section-label { color: var(--brown-light); }
+  .testimonials .section-title { color: var(--brown-dark); }
+  .testimonials .section-line { background: var(--gold); }
+  .testimonial-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .testimonial-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .testimonial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  }
+  .testimonial-card::before {
+    content: '\201C';
+    position: absolute;
+    top: 1rem;
+    left: 1.5rem;
+    font-size: 3rem;
+    color: var(--gold);
+    font-family: Georgia, serif;
+    line-height: 1;
+    opacity: 0.4;
+  }
+  .testimonial-text {
+    font-size: 0.92rem;
+    line-height: 1.9;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    padding-top: 1.5rem;
+  }
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-top: 1px solid var(--cream-dark);
+    padding-top: 1rem;
+  }
+  .testimonial-author-info {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    line-height: 1.5;
+  }
+  .testimonial-author-info strong {
+    display: block;
+    color: var(--brown);
+    font-weight: 500;
+    font-size: 0.85rem;
+  }
+
   /* ─── Responsive ─── */
   @media (max-width: 768px) {
     .nav-links { display: none; }
@@ -528,6 +591,7 @@
     .instructor-cards { grid-template-columns: 1fr; }
     .stats-row { grid-template-columns: 1fr; gap: 1rem; }
     .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .testimonial-cards { grid-template-columns: 1fr; }
     .details-grid { grid-template-columns: 1fr; }
     .detail-item:nth-child(odd) { border-right: none; }
     .schedule-list { flex-direction: column; align-items: center; }
@@ -670,6 +734,7 @@
       <li><a href="#program">プログラム</a></li>
       <li><a href="#gallery">セミナー風景</a></li>
       <li><a href="#instructors">講師紹介</a></li>
+      <li><a href="#testimonials">受講者の声</a></li>
       <li><a href="#schedule">日程・申込</a></li>
       <li><a href="#salon">Salon de CRED</a></li>
     </ul>
@@ -805,6 +870,50 @@
         <p class="instructor-bio">
           日本顕微鏡歯科学会 理事・認定指導歯科衛生士、日本歯周病学会 認定歯科衛生士。顕微鏡下での精緻な衛生士業務のスペシャリストとして、セミナーでは実習指導を担当。受講者一人ひとりに寄り添った丁寧な指導に定評がある。
         </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 受講者の声 -->
+<section class="testimonials" id="testimonials">
+  <div class="container fade-in">
+    <p class="section-label">Voices</p>
+    <h2 class="section-title">受講者の声</h2>
+    <div class="section-line"></div>
+    <div class="testimonial-cards">
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          これまで自分なりに顕微鏡治療に取り組んできましたが、CREDセミナーで学んだ後は「まるで別の治療」になりました。定員3名で講師が常に横にいてくれるので、自分のクセや改善点がリアルタイムでわかります。翌日の臨床からすぐに変わりました。
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-author-info">
+            <strong>歯科医師 A先生</strong>
+            開業医・受講歴2回
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          講義で「なぜそうするのか」という根拠を理論的に学び、実習では実際の手技を高田先生と高橋さんから直接フィードバックしてもらえる。この両輪があるからこそ、技術が定着するのだと実感しました。歯髄保存の考え方が根本から変わりました。
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-author-info">
+            <strong>歯科医師 B先生</strong>
+            勤務医・受講歴1回
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          少人数だからこそ質問しやすく、自分の症例についても相談できました。受講後もSalon de CREDで継続的に学べる環境があるのが心強いです。保存修復の精度が明らかに上がり、患者さんからの信頼も増えたと感じます。
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-author-info">
+            <strong>歯科医師 C先生</strong>
+            開業医・受講歴3回
+          </div>
+        </div>
       </div>
     </div>
   </div>
