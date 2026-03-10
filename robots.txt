@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://takatadc-code.github.io/cred-kensankai/sitemap.xml
