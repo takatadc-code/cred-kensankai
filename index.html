@@ -3,21 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>C.R.E.D. "2-Day" セミナー｜手術用顕微鏡を用いた超精緻な歯科治療の講義とハンズオン</title>
-<meta name="description" content="C.R.E.D.セミナーは2014年から12年の実績を持つ、手術用顕微鏡を用いた超精緻な歯科治療の講義とハンズオンセミナーです。歯髄保存・保存修復・咬合管理を定員3名の少人数制で徹底指導。神戸・高田歯科にて開催。">
+<title>C.R.E.D "2-Day" セミナー｜手術用顕微鏡を用いた超精緻な歯科治療の講義とハンズオン</title>
+<meta name="description" content="C.R.E.Dセミナーは2014年から12年の実績を持つ、手術用顕微鏡を用いた超精緻な歯科治療の講義とハンズオンセミナーです。歯髄保存・保存修復・咬合管理を定員3名の少人数制で徹底指導。神戸・高田歯科にて開催。">
 <meta name="keywords" content="CREDセミナー,歯科セミナー,手術用顕微鏡,マイクロスコープ,歯髄保存,保存修復,ダイレクトボンディング,ハンズオンセミナー,高田光彦,高田歯科,少人数制セミナー,歯科医師向け">
 <link rel="canonical" href="https://takatadc-code.github.io/cred-kensankai/">
 <!-- OGP -->
-<meta property="og:title" content="C.R.E.D. 2-Day セミナー｜超精緻な歯科治療の実践講座">
+<meta property="og:title" content="C.R.E.D 2-Day セミナー｜超精緻な歯科治療の実践講座">
 <meta property="og:description" content="手術用顕微鏡を用いた超精緻な歯科治療の講義とハンズオン。定員3名の少人数制で歯髄保存・保存修復を徹底指導。2014年から12年の実績。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://takatadc-code.github.io/cred-kensankai/">
 <meta property="og:image" content="https://takatadc-code.github.io/cred-kensankai/images/hero-handson-1.jpg">
-<meta property="og:site_name" content="C.R.E.D. セミナー">
+<meta property="og:site_name" content="C.R.E.D セミナー">
 <meta property="og:locale" content="ja_JP">
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="C.R.E.D. 2-Day セミナー｜超精緻な歯科治療の実践講座">
+<meta name="twitter:title" content="C.R.E.D 2-Day セミナー｜超精緻な歯科治療の実践講座">
 <meta name="twitter:description" content="手術用顕微鏡を用いた超精緻な歯科治療の講義とハンズオン。定員3名の少人数制で徹底指導。">
 <meta name="twitter:image" content="https://takatadc-code.github.io/cred-kensankai/images/hero-handson-1.jpg">
 <!-- 構造化データ (JSON-LD) -->
@@ -25,7 +25,7 @@
 {
   "@context": "https://schema.org",
   "@type": "EducationEvent",
-  "name": "C.R.E.D. 2-Day セミナー — 超精緻な歯科治療の講義とハンズオン",
+  "name": "C.R.E.D 2-Day セミナー — 超精緻な歯科治療の講義とハンズオン",
   "description": "手術用顕微鏡を用いた超精緻な歯科治療の講義とハンズオンセミナー。歯髄保存・保存修復・咬合管理を定員3名の少人数制で徹底指導。",
   "url": "https://takatadc-code.github.io/cred-kensankai/",
   "image": "https://takatadc-code.github.io/cred-kensankai/images/hero-handson-1.jpg",
@@ -61,7 +61,7 @@
 }
 </script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Cormorant+Garamond:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
   :root {
     --brown-dark: #3C2415;
@@ -117,12 +117,24 @@
   .nav-links a {
     text-decoration: none;
     color: var(--brown);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 400;
     letter-spacing: 0.05em;
     transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transition: width 0.3s ease;
   }
   .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
 
   /* ─── Hero ─── */
   .hero {
@@ -141,11 +153,23 @@
     background-image: url('images/group-overview.jpg');
     background-size: cover;
     background-position: center;
-    opacity: 0.35;
-    filter: blur(1px);
+    opacity: 0.3;
+    animation: heroZoom 20s ease-out forwards;
+  }
+  @keyframes heroZoom {
+    from { transform: scale(1.1); }
+    to { transform: scale(1); }
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(60,36,21,0.3) 0%, rgba(60,36,21,0.6) 50%, rgba(60,36,21,0.8) 100%);
+    pointer-events: none;
   }
   .hero-content {
     position: relative;
+    z-index: 1;
     text-align: center;
     color: var(--white);
     padding: 2rem;
@@ -154,32 +178,41 @@
     width: 120px;
     height: 120px;
     margin: 0 auto 2rem;
-    opacity: 0.95;
+    opacity: 0;
+    animation: heroFadeUp 1s ease-out 0.3s forwards;
   }
   .hero-logo img { width: 100%; height: 100%; object-fit: contain; }
   .hero h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    margin-bottom: 0.5rem;
+    font-family: 'Cinzel', serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    margin-bottom: 0.3rem;
+    opacity: 0;
+    animation: heroFadeUp 1s ease-out 0.6s forwards;
+    text-shadow: 0 2px 40px rgba(0,0,0,0.3);
   }
   .hero-sub {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
     font-weight: 400;
-    letter-spacing: 0.2em;
-    margin-bottom: 2rem;
+    font-style: italic;
+    letter-spacing: 0.3em;
+    margin-bottom: 2.5rem;
     color: var(--gold-light);
+    opacity: 0;
+    animation: heroFadeUp 1s ease-out 0.9s forwards;
   }
   .hero-tagline {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 300;
     letter-spacing: 0.1em;
     max-width: 600px;
     margin: 0 auto 3rem;
-    line-height: 2;
-    color: rgba(255,255,255,0.85);
+    line-height: 2.2;
+    color: rgba(255,255,255,0.8);
+    opacity: 0;
+    animation: heroFadeUp 1s ease-out 1.2s forwards;
   }
   .hero-cta {
     display: inline-block;
@@ -189,11 +222,31 @@
     text-decoration: none;
     font-size: 0.9rem;
     letter-spacing: 0.15em;
-    transition: all 0.4s;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity: 0;
+    animation: heroFadeUp 1s ease-out 1.5s forwards;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: -1;
   }
   .hero-cta:hover {
-    background: var(--gold);
     color: var(--brown-dark);
+  }
+  .hero-cta:hover::before {
+    transform: scaleX(1);
+  }
+  @keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   /* ─── Sections ─── */
@@ -201,25 +254,31 @@
   .container { max-width: 1000px; margin: 0 auto; }
 
   .section-label {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.85rem;
-    letter-spacing: 0.3em;
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
     color: var(--gold);
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
+    font-weight: 500;
   }
   .section-title {
+    font-family: 'Noto Sans JP', sans-serif;
     font-size: clamp(1.5rem, 3vw, 2.2rem);
     font-weight: 500;
     color: var(--brown-dark);
-    margin-bottom: 1rem;
-    letter-spacing: 0.05em;
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.08em;
   }
   .section-line {
-    width: 60px;
-    height: 1px;
-    background: var(--gold);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
     margin-bottom: 3rem;
+    transition: width 0.6s ease;
+  }
+  .fade-in.visible .section-line {
+    width: 60px;
   }
 
   /* ─── About ─── */
@@ -241,15 +300,17 @@
   }
   .stat-item { padding: 2rem 1rem; }
   .stat-number {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 3rem;
-    font-weight: 600;
+    font-family: 'Cinzel', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
     color: var(--brown);
     line-height: 1;
+    display: inline-block;
   }
   .stat-unit {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-style: italic;
     color: var(--brown-light);
   }
   .stat-label {
@@ -294,9 +355,14 @@
     background: var(--white);
     padding: 3rem;
     border-left: 3px solid var(--gold);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+  .program-day:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.06);
   }
   .day-label {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Cinzel', serif;
     font-size: 0.8rem;
     letter-spacing: 0.2em;
     color: var(--gold);
@@ -332,12 +398,13 @@
     height: 100%;
     object-fit: cover;
     aspect-ratio: 4/3;
-    transition: transform 0.5s, opacity 0.5s;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.6s;
     cursor: pointer;
+    filter: saturate(0.9);
   }
   .gallery-grid img:hover {
-    transform: scale(1.03);
-    opacity: 0.9;
+    transform: scale(1.05);
+    filter: saturate(1.1) brightness(1.05);
   }
   .gallery-grid .wide {
     grid-column: span 2;
@@ -401,14 +468,14 @@
     letter-spacing: 0.1em;
   }
   .schedule-date {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Cinzel', serif;
     font-size: 2.5rem;
     font-weight: 600;
     color: var(--brown);
     line-height: 1.2;
   }
   .schedule-month {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Cinzel', serif;
     font-size: 1rem;
     color: var(--brown-light);
     letter-spacing: 0.1em;
@@ -483,12 +550,29 @@
     font-size: 0.9rem;
     font-weight: 500;
     letter-spacing: 0.15em;
-    transition: all 0.4s;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
   }
   .cta-btn:hover {
-    background: var(--gold-light);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(197, 160, 89, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(197, 160, 89, 0.4);
+  }
+  .cta-btn:hover::after {
+    width: 300px;
+    height: 300px;
   }
 
   /* ─── Footer ─── */
@@ -615,17 +699,17 @@
     margin: 0 auto 2rem;
   }
   .salon-divider-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.85rem;
-    letter-spacing: 0.3em;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-style: italic;
+    letter-spacing: 0.25em;
     color: var(--brown-light);
-    text-transform: uppercase;
   }
 
   /* ─── Salon de CRED ─── */
   .salon { background: #1C2833; color: var(--white); overflow: hidden; }
   .salon .section-label { color: #7FB3D3; text-align: center; }
-  .salon .section-title { color: var(--white); text-align: center; font-size: clamp(1.8rem, 3.5vw, 2.8rem); }
+  .salon .section-title { color: var(--white); text-align: center; font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-family: 'Playfair Display', serif; font-style: italic; }
   .salon .section-line { background: #7FB3D3; margin: 0 auto 3rem; }
   .salon-intro {
     display: grid;
@@ -657,7 +741,7 @@
     border: 1px solid rgba(127, 179, 211, 0.3);
   }
   .salon-detail-number {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Cinzel', serif;
     font-size: 1.8rem;
     font-weight: 600;
     color: #A8D4E6;
@@ -715,13 +799,21 @@
   /* ─── Fade-in Animation ─── */
   .fade-in {
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transform: translateY(40px);
+    transition: opacity 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
   .fade-in.visible {
     opacity: 1;
     transform: translateY(0);
   }
+  /* スタガード：子要素を順次フェードイン */
+  .fade-in .stagger { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible .stagger:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
+  .fade-in.visible .stagger:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.2s; }
+  .fade-in.visible .stagger:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.3s; }
+  .fade-in.visible .stagger:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.4s; }
+  .fade-in.visible .stagger:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 0.5s; }
+  .fade-in.visible .stagger:nth-child(6) { opacity: 1; transform: translateY(0); transition-delay: 0.6s; }
 </style>
 </head>
 <body>
@@ -729,7 +821,7 @@
 <!-- Navigation -->
 <nav id="nav">
   <div class="nav-inner">
-    <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="cursor:pointer;"><img src="images/logo.jpg" alt="C.R.E.D." class="nav-logo"></a>
+    <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="cursor:pointer;"><img src="images/logo.jpg" alt="C.R.E.D" class="nav-logo"></a>
     <ul class="nav-links">
       <li><a href="#about">セミナーについて</a></li>
       <li><a href="#program">プログラム</a></li>
@@ -746,8 +838,8 @@
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-content">
-    <div class="hero-logo"><img src="images/logo.jpg" alt="C.R.E.D."></div>
-    <h1>C.R.E.D.</h1>
+    <div class="hero-logo"><img src="images/logo.jpg" alt="C.R.E.D"></div>
+    <h1>C.R.E.D</h1>
     <p class="hero-sub">"2-Day" Seminar</p>
     <p class="hero-tagline">
       手術用顕微鏡を用いた超精緻な歯科治療<br>
@@ -765,20 +857,20 @@
     <h2 class="section-title">「治せる歯を、抜かない」ために</h2>
     <div class="section-line"></div>
     <div class="about-text">
-      <p>C.R.E.D.（Comprehensive Restorative & Esthetic Dentistry）セミナーは、歯髄保存と歯の保存に特化した2日間の実践講座です。「歯髄保存はできる」「安易な抜髄は必要ない」「長期予後のためにも予防のためにも咬合を無視できない」——そして「MTA神話の崩壊」「カリエスにプラークは関係ない！？」など、通説に切り込む独自の視点から、修復治療の本質に迫ります。</p>
+      <p>C.R.E.D（Comprehensive Restorative & Esthetic Dentistry）セミナーは、歯髄保存と歯の保存に特化した2日間の実践講座です。「歯髄保存はできる」「安易な抜髄は必要ない」「長期予後のためにも予防のためにも咬合を無視できない」——そして「MTA神話の崩壊」「カリエスにプラークは関係ない！？」など、通説に切り込む独自の視点から、修復治療の本質に迫ります。</p>
       <p>初日は7時間の講義で理論を体系的に学び、2日目は実際の臨床に即したハンズオン実習。部分断髄から天然前歯の審美レジン修復まで、手術用顕微鏡下での精緻な技術を、最大3名の少人数で徹底的に身につけます。</p>
     </div>
 
     <div class="stats-row">
-      <div class="stat-item">
+      <div class="stat-item stagger">
         <span class="stat-number">12</span><span class="stat-unit"> years</span>
         <p class="stat-label">2014年からの開催実績</p>
       </div>
-      <div class="stat-item">
+      <div class="stat-item stagger">
         <span class="stat-number">3</span><span class="stat-unit"> max</span>
         <p class="stat-label">各回の最大受講者数</p>
       </div>
-      <div class="stat-item">
+      <div class="stat-item stagger">
         <span class="stat-number">2</span><span class="stat-unit">-Day</span>
         <p class="stat-label">講義7h＋ハンズオン実習</p>
       </div>
@@ -796,7 +888,7 @@
         <div class="section-line"></div>
         <div class="philosophy-text">
           <p>セミナーの定員は最大3名。大人数の講演では決して伝わらない、指先の微妙な感覚、器具の角度、顕微鏡のピント合わせ——そのすべてを、講師が一人ひとりに直接指導します。</p>
-          <p>受講者の手技を顕微鏡越しにリアルタイムで確認し、その場でフィードバック。「見て学ぶ」から「できるようになる」へ。それがC.R.E.D.セミナーの哲学です。</p>
+          <p>受講者の手技を顕微鏡越しにリアルタイムで確認し、その場でフィードバック。「見て学ぶ」から「できるようになる」へ。それがC.R.E.Dセミナーの哲学です。</p>
         </div>
       </div>
       <img src="images/individual-instruction.jpg" alt="個別指導の様子" class="philosophy-img">
@@ -811,7 +903,7 @@
     <h2 class="section-title">2日間のカリキュラム</h2>
     <div class="section-line"></div>
     <div class="program-days">
-      <div class="program-day">
+      <div class="program-day stagger">
         <p class="day-label">Day 1 — Saturday</p>
         <h3 class="day-title">講義</h3>
         <p class="day-time">11:00 – 19:00（7時間）</p>
@@ -819,7 +911,7 @@
           歯髄保存と歯の保存、修復治療について体系的に講義。MTA神話の崩壊、カリエスとプラークの関係性など、エビデンスに基づく独自の知見を共有します。通説を覆す視点から、明日の臨床が変わる7時間。
         </div>
       </div>
-      <div class="program-day">
+      <div class="program-day stagger">
         <p class="day-label">Day 2 — Sunday</p>
         <h3 class="day-title">実習</h3>
         <p class="day-time">9:30 – 17:00</p>
@@ -858,14 +950,14 @@
     <h2 class="section-title">講師紹介</h2>
     <div class="section-line"></div>
     <div class="instructor-cards">
-      <div class="instructor-card">
+      <div class="instructor-card stagger">
         <h3 class="instructor-name">高田 光彦</h3>
         <p class="instructor-role">高田歯科 院長</p>
         <p class="instructor-bio">
           日本臨床歯周病学会 理事、日本顕微鏡歯科学会 理事・指導医。歯科臨床研鑽会 会長。手術用顕微鏡を用いた精緻な治療を率先して実践し、2014年からCREDセミナーを主宰。TikTokフォロワー1.1万人超、ツイキャス1,300回超の配信で歯科臨床の知見を日々発信。
         </p>
       </div>
-      <div class="instructor-card">
+      <div class="instructor-card stagger">
         <h3 class="instructor-name">高橋 規子</h3>
         <p class="instructor-role">歯科衛生士</p>
         <p class="instructor-bio">
@@ -883,7 +975,7 @@
     <h2 class="section-title">受講者の声</h2>
     <div class="section-line"></div>
     <div class="testimonial-cards">
-      <div class="testimonial-card">
+      <div class="testimonial-card stagger">
         <p class="testimonial-text">
           これまで自分なりに顕微鏡治療に取り組んできましたが、CREDセミナーで学んだ後は「まるで別の治療」になりました。定員3名で講師が常に横にいてくれるので、自分のクセや改善点がリアルタイムでわかります。翌日の臨床からすぐに変わりました。
         </p>
@@ -894,7 +986,7 @@
           </div>
         </div>
       </div>
-      <div class="testimonial-card">
+      <div class="testimonial-card stagger">
         <p class="testimonial-text">
           講義で「なぜそうするのか」という根拠を理論的に学び、実習では実際の手技を高田先生と高橋さんから直接フィードバックしてもらえる。この両輪があるからこそ、技術が定着するのだと実感しました。歯髄保存の考え方が根本から変わりました。
         </p>
@@ -905,7 +997,7 @@
           </div>
         </div>
       </div>
-      <div class="testimonial-card">
+      <div class="testimonial-card stagger">
         <p class="testimonial-text">
           少人数だからこそ質問しやすく、自分の症例についても相談できました。受講後もSalon de CREDで継続的に学べる環境があるのが心強いです。保存修復の精度が明らかに上がり、患者さんからの信頼も増えたと感じます。
         </p>
@@ -927,19 +1019,19 @@
     <h2 class="section-title">開催日程</h2>
     <div class="section-line"></div>
     <div class="schedule-list">
-      <div class="schedule-item sold-out">
+      <div class="schedule-item sold-out stagger">
         <p class="schedule-month">June</p>
         <p class="schedule-date">6.7</p>
         <p class="schedule-year">2026年 6月6日(土)・7日(日)</p>
         <span class="schedule-status">満席</span>
       </div>
-      <div class="schedule-item">
+      <div class="schedule-item stagger">
         <p class="schedule-month">October</p>
         <p class="schedule-date">3.4</p>
         <p class="schedule-year">2026年 10月3日(土)・4日(日)</p>
         <span class="schedule-status open">受付中</span>
       </div>
-      <div class="schedule-item">
+      <div class="schedule-item stagger">
         <p class="schedule-month">November</p>
         <p class="schedule-date">14.15</p>
         <p class="schedule-year">2026年 11月14日(土)・15日(日)</p>
@@ -986,7 +1078,7 @@
 
 <!-- CTA (CREDセミナー用) -->
 <section class="cta-section">
-  <h2 class="section-title">C.R.E.D. セミナー お申込み・お問い合わせ</h2>
+  <h2 class="section-title">C.R.E.D セミナー お申込み・お問い合わせ</h2>
   <p class="cta-text">
     定員3名の少人数制のため、<br>お早めのお申込みをおすすめします。
   </p>
@@ -1002,7 +1094,7 @@
 <!-- ════════════════════════════════════════ -->
 
 <div class="salon-divider">
-  <p class="salon-divider-text">Another way to learn from C.R.E.D.</p>
+  <p class="salon-divider-text">Another way to learn from C.R.E.D</p>
 </div>
 
 <section class="salon" id="salon">
@@ -1013,7 +1105,7 @@
 
     <div class="salon-intro">
       <div class="salon-text">
-        <p>C.R.E.D.セミナーから派生した、会員制のFacebookオンラインスタディグループです。歯科医師・歯科衛生士・その他歯科医療関係者が共に学べる空間をお届けします。</p>
+        <p>C.R.E.Dセミナーから派生した、会員制のFacebookオンラインスタディグループです。歯科医師・歯科衛生士・その他歯科医療関係者が共に学べる空間をお届けします。</p>
         <p>スピーカーは、高田光彦と歯科衛生士の高橋規子が交互に、日頃の臨床スタイル・物事の考え方・理念をお伝えします。さらに各分野のスペシャリストをゲストにお招きし、多彩なテーマで配信しています。</p>
         <p>配信中はコメント欄でお気軽にご質問いただけます。院内勉強会・後輩育成・歯科医院のボトムアップにお役立てください。</p>
       </div>
@@ -1058,7 +1150,7 @@
 
 <!-- Footer -->
 <footer>
-  <p>&copy; 2026 C.R.E.D. Seminar — Comprehensive Restorative & Esthetic Dentistry</p>
+  <p>&copy; 2026 C.R.E.D Seminar — Comprehensive Restorative & Esthetic Dentistry</p>
   <p style="margin-top: 0.5rem;">主催：株式会社ランダムコーポレーション（神戸市中央区 高田歯科内）｜<a href="mailto:run-dom@takata-dc.jp">run-dom@takata-dc.jp</a></p>
 </footer>
 
