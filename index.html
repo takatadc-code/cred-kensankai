@@ -27,7 +27,7 @@
     "@context": "https://schema.org",
     "@type": "EducationEvent",
     "name": "C.R.E.D 2-Day セミナー 2026年11月",
-    "description": "手術用顮微鏡を用いた超精緻な歯科治療の講義とハンズオンセミナー。歯髄保存・保存修復・咬合管理を定員3名の少人数制で徹底指導。",
+    "description": "手術用顕微鏡を用いた超精緻な歯科治療の講義とハンズオンセミナー。歯髄保存・保存修復・咬合管理を定員3名の少人数制で徹底指導。",
     "startDate": "2026-11-14",
     "endDate": "2026-11-15",
     "url": "https://takatadc-code.github.io/cred-kensankai/",
@@ -98,7 +98,7 @@
   }
 ]
 </script>
-
+<style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
   :root {
@@ -182,6 +182,10 @@
     cursor: pointer;
     padding: 4px;
     z-index: 110;
+    background: none;
+    border: none;
+    -webkit-appearance: none;
+    appearance: none;
   }
   .hamburger span {
     display: block;
@@ -193,6 +197,7 @@
   .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
   .hamburger.active span:nth-child(2) { opacity: 0; }
   .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+  body.menu-open { overflow: hidden; }
 
   /* ─── Hero ─── */
   .hero {
@@ -721,7 +726,7 @@
     object-fit: contain;
   }
 
-/* ─── Responsive ─── */
+  /* ─── Responsive ─── */
   @media (max-width: 768px) {
     .nav-links { display: none; }
     .nav-links.active {
@@ -890,17 +895,17 @@
 <nav id="nav">
   <div class="nav-inner">
     <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="cursor:pointer;"><img src="images/logo.jpg" alt="C.R.E.D" class="nav-logo"></a>
-    <div class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('active');this.classList.toggle('active');">
+    <button class="hamburger" id="hamburger" aria-label="メニューを開く" aria-expanded="false">
       <span></span><span></span><span></span>
-    </div>
+    </button>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#about" onclick="document.getElementById('navLinks').classList.remove('active');document.getElementById('hamburger').classList.remove('active');">セミナーについて</a></li>
-      <li><a href="#program" onclick="document.getElementById('navLinks').classList.remove('active');document.getElementById('hamburger').classList.remove('active');">プログラム</a></li>
-      <li><a href="#gallery" onclick="document.getElementById('navLinks').classList.remove('active');document.getElementById('hamburger').classList.remove('active');">セミナー風景</a></li>
-      <li><a href="#instructors" onclick="document.getElementById('navLinks').classList.remove('active');document.getElementById('hamburger').classList.remove('active');">講師紹介</a></li>
-      <li><a href="#testimonials" onclick="document.getElementById('navLinks').classList.remove('active');document.getElementById('hamburger').classList.remove('active');">受講者の声</a></li>
-      <li><a href="#schedule" onclick="document.getElementById('navLinks').classList.remove('active');document.getElementById('hamburger').classList.remove('active');">日程・申込</a></li>
-      <li><a href="#salon" onclick="document.getElementById('navLinks').classList.remove('active');document.getElementById('hamburger').classList.remove('active');">Salon de CRED</a></li>
+      <li><a href="#about">セミナーについて</a></li>
+      <li><a href="#program">プログラム</a></li>
+      <li><a href="#gallery">セミナー風景</a></li>
+      <li><a href="#instructors">講師紹介</a></li>
+      <li><a href="#testimonials">受講者の声</a></li>
+      <li><a href="#schedule">日程・申込</a></li>
+      <li><a href="#salon">Salon de CRED</a></li>
     </ul>
   </div>
 </nav>
@@ -917,7 +922,7 @@
       定員3名の少人数制ハンズオンセミナー<br>
       2014年から12年の実績
     </p>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSd0A5N2_yn_jDSCJi1hWiOkqQTh7L0yV78x60HpB_ElyTDUnw/viewform?usp=header" target="_blank" class="hero-cta">セミナーに申し込む</a>
+    <a href="#schedule" class="hero-cta">開催日程を見る</a>
   </div>
 </header>
 
@@ -1101,22 +1106,19 @@
         <p class="schedule-month">June</p>
         <p class="schedule-date">6.7</p>
         <p class="schedule-year">2026年 6月6日(土)・7日(日)</p>
-        <span class="schedule-status relisten-only">再聴講のみ</span>
-        <span class="schedule-note">初受講の受付は終了しました</span>
+        <span class="schedule-status">終了</span>
       </div>
-      <div class="schedule-item sold-out stagger">
+      <div class="schedule-item newcomer-full stagger">
         <p class="schedule-month">October</p>
         <p class="schedule-date">3.4</p>
         <p class="schedule-year">2026年 10月3日(土)・4日(日)</p>
-        <span class="schedule-status relisten-only">再聴講のみ</span>
-        <span class="schedule-note">初受講の受付は終了しました</span>
+        <span class="schedule-status newcomer-full">初受講満席・再聴講のみ受付中</span>
       </div>
       <div class="schedule-item newcomer-full stagger">
         <p class="schedule-month">November</p>
         <p class="schedule-date">14.15</p>
         <p class="schedule-year">2026年 11月14日(土)・15日(日)</p>
-        <span class="schedule-status newcomer-full">初受講 満席</span>
-        <span class="schedule-note">再聴講のお申込みは受付中</span>
+        <span class="schedule-status newcomer-full">初受講満席・再聴講のみ受付中</span>
       </div>
       <div class="schedule-item stagger">
         <p class="schedule-month">January</p>
@@ -1274,6 +1276,26 @@
   }, { threshold: 0.1 });
 
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Hamburger menu toggle
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('active');
+    hamburger.classList.toggle('active');
+    hamburger.setAttribute('aria-expanded', isOpen);
+    document.body.classList.toggle('menu-open', isOpen);
+  });
+
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('active');
+      hamburger.classList.remove('active');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('menu-open');
+    });
+  });
 
   // Lightbox
   const lightbox = document.getElementById('lightbox');
