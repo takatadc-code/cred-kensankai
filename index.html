@@ -99,7 +99,7 @@
 ]
 </script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=Noto+Sans+JP:wght@300;400;500;700&family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
   :root {
     --brown-dark: #3C2415;
@@ -490,6 +490,56 @@
     line-height: 2;
     color: var(--text);
   }
+  .instructor-lead {
+    text-align: center;
+    max-width: 620px;
+    margin: 0 auto 3rem;
+    font-size: 0.92rem;
+    line-height: 2.2;
+    color: var(--text-light);
+  }
+  .mbti-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    padding: 0.2em 0.65em;
+    border: 1px solid rgba(197, 160, 89, 0.35);
+    border-radius: 999px;
+    background: rgba(250, 246, 240, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+    box-shadow: 0 1px 6px rgba(197, 160, 89, 0.08);
+  }
+  .mbti-badge .mbti-label {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    opacity: 0.85;
+  }
+  .instructor-catchphrase {
+    font-size: 0.78rem;
+    color: var(--text-light);
+    line-height: 1.7;
+    margin-bottom: 1.2rem;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .instructor-card:hover .instructor-catchphrase {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .instructor-disclaimer {
+    text-align: center;
+    font-size: 0.7rem;
+    color: #aaa;
+    margin-top: 2.5rem;
+  }
 
   /* ─── Schedule ─── */
   .schedule { background: var(--white); }
@@ -748,6 +798,10 @@
     .philosophy-grid,
     .program-days,
     .instructor-cards { grid-template-columns: 1fr; }
+    .instructor-catchphrase {
+      opacity: 1;
+      transform: none;
+    }
     .stats-row { grid-template-columns: 1fr; gap: 1rem; }
     .gallery-grid { grid-template-columns: repeat(2, 1fr); }
     .testimonial-cards { grid-template-columns: 1fr; }
@@ -1032,10 +1086,17 @@
     <p class="section-label">Instructors</p>
     <h2 class="section-title">講師紹介</h2>
     <div class="section-line"></div>
+    <p class="instructor-lead">
+      全員が直観型（N型）100%の、理詰めの戦略家集団。<br>
+      でもご安心を。こんな性格のインストラクター達が<br>
+      皆様をお待ちしています。
+    </p>
     <div class="instructor-cards">
       <div class="instructor-card stagger">
         <h3 class="instructor-name">高田 光彦</h3>
         <p class="instructor-role">高田歯科 院長</p>
+        <span class="mbti-badge">INTP-A <span class="mbti-label">論理学者</span></span>
+        <p class="instructor-catchphrase">原理から説明しないと気が済まない理論派</p>
         <p class="instructor-bio">
           日本臨床歯周病学会 理事、日本顕微鏡歯科学会 理事・指導医。歯科臨床研鑽会 会長。手術用顕微鏡を用いた精緻な治療を率先して実践し、2014年からCREDセミナーを主宰。TikTokフォロワー1.1万人超、ツイキャス1,300回超の配信で歯科臨床の知見を日々発信。
         </p>
@@ -1043,11 +1104,14 @@
       <div class="instructor-card stagger">
         <h3 class="instructor-name">高橋 規子</h3>
         <p class="instructor-role">歯科衛生士</p>
+        <span class="mbti-badge">ENTJ-A <span class="mbti-label">指揮官</span></span>
+        <p class="instructor-catchphrase">実習が脱線しかけたら軌道修正する現場の司令塔</p>
         <p class="instructor-bio">
           日本顕微鏡歯科学会 理事・認定指導歯科衛生士、日本歯周病学会 認定歯科衛生士。顕微鏡下での精緻な衛生士業務のスペシャリストとして、セミナーでは実習指導を担当。受講者一人ひとりに寄り添った丁寧な指導に定評がある。
         </p>
       </div>
     </div>
+    <p class="instructor-disclaimer">※MBTIは自己申告による性格タイプです。人柄紹介の遊びとしてお楽しみください。</p>
   </div>
 </section>
 
