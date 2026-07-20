@@ -55,7 +55,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;900&family=Inter:wght@400;600;700;800;900&display=swap&family=DM+Mono:wght@400" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -266,7 +266,49 @@ h1.hero-title { font-size: 42px; font-weight: 900; line-height: 1.3; letter-spac
 .instructor-location { font-size: 12px; color: var(--teal); font-weight: 500; margin-bottom: 16px; }
 .instructor-topic { font-size: 13px; line-height: 1.7; color: var(--gray-600); padding-top: 16px; border-top: 1px solid var(--gray-100); }
 
-/* ===== GALLERY GRID ===== */
+/* ===== MBTI BADGES ===== */
+    .mbti-badge {
+      display: inline-flex; align-items: center; gap: 0.35em;
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.06em; padding: 0.2em 0.65em;
+      border: 1px solid rgba(197, 160, 89, 0.35);
+      border-radius: 999px;
+      background: rgba(250, 246, 240, 0.55);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      color: var(--gold); margin-bottom: 0.6rem;
+      box-shadow: 0 1px 6px rgba(197, 160, 89, 0.08);
+    }
+    .mbti-badge .mbti-label {
+      font-weight: 500;
+    }
+    .instructor-catchphrase {
+      font-size: 0.82rem;
+      color: var(--gray-500);
+      font-style: italic;
+      margin-top: 0.3rem;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .instructor-card:hover .instructor-catchphrase {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .instructor-lead {
+      text-align: center;
+      font-size: 0.95rem;
+      color: var(--gray-600);
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+    .instructor-disclaimer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      margin-top: 2rem;
+    }
+
+    /* ===== GALLERY GRID ===== */
 .gallery-grid {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px;
 }
@@ -373,6 +415,7 @@ h1.hero-title { font-size: 42px; font-weight: 900; line-height: 1.3; letter-spac
   h1.hero-title { font-size: 34px; }
   .program-days { grid-template-columns: 1fr; }
   .instructors-grid { grid-template-columns: repeat(2, 1fr); }
+      .instructor-catchphrase { opacity: 1; transform: none; }
   .gallery-grid { grid-template-columns: repeat(3, 1fr); }
   .gallery-item.large img { min-height: 300px; }
   .details-grid { grid-template-columns: 1fr; }
@@ -679,6 +722,7 @@ h1.hero-title { font-size: 42px; font-weight: 900; line-height: 1.3; letter-spac
     <div class="section-label">Instructors</div>
     <h2 class="section-title">インストラクター</h2>
     <p class="section-subtitle">全国各地で顕微鏡歯科治療を実践する精鋭の臨床家が直接指導します。</p>
+        <p class="instructor-lead">全員が直観型（N型）100%の、理詰めの戦略家集団。でもご安心を。こんな性格のインストラクター達が皆様をお待ちしています。</p>
     <div class="instructors-grid">
       <div class="instructor-card lead">
         <span class="instructor-lead-badge">主宰</span>
@@ -687,6 +731,8 @@ h1.hero-title { font-size: 42px; font-weight: 900; line-height: 1.3; letter-spac
           <img src="images/prof_takada.png" alt="高田光彦" class="photo">
         </div>
         <div class="instructor-name">高田 光彦</div>
+        <span class="mbti-badge">🧠 INTP-A 論理学者</span>
+        <div class="instructor-catchphrase">「原理から説明しないと気が済まない理論派」</div>
         <div class="instructor-title">Dr.</div>
         <div class="instructor-location"><a href="https://www.takata-dc.jp" target="_blank" style="color:inherit;text-decoration:none;">高田歯科</a> ─ 神戸市</div>
         <div class="instructor-topic">バイオセラミックの活用と落とし穴（断髄/穿孔封鎖）、ミラーテクニックの基本</div>
@@ -697,6 +743,8 @@ h1.hero-title { font-size: 42px; font-weight: 900; line-height: 1.3; letter-spac
           <img src="images/prof_araki.png" alt="荒木謙太郎" class="photo">
         </div>
         <div class="instructor-name">荒木 謙太郎</div>
+        <span class="mbti-badge">🧠 INTJ-T 建築家</span>
+        <div class="instructor-catchphrase">「治療計画は常に三手先まで組み立てる設計者」</div>
         <div class="instructor-title">Dr.</div>
         <div class="instructor-location"><a href="https://www.araki-dc.net" target="_blank" style="color:inherit;text-decoration:none;">あらきデンタルクリニック</a> ─ 香川県</div>
         <div class="instructor-topic">時短のためのマイクロエンド（透明根管模型/天然歯）</div>
@@ -707,6 +755,8 @@ h1.hero-title { font-size: 42px; font-weight: 900; line-height: 1.3; letter-spac
           <img src="images/prof_takahashi.png" alt="高橋規子" class="photo">
         </div>
         <div class="instructor-name">高橋 規子</div>
+        <span class="mbti-badge">🧠 ENTJ-A 指揮官</span>
+        <div class="instructor-catchphrase">「実習が脱線しかけたら軌道修正する現場の司令塔」</div>
         <div class="instructor-title">DH（歯科衛生士）</div>
         <div class="instructor-location"><a href="https://www.takata-dc.jp" target="_blank" style="color:inherit;text-decoration:none;">高田歯科</a> ─ 神戸市</div>
         <div class="instructor-topic">全身で身につく！マイクロ OHI</div>
@@ -717,6 +767,8 @@ h1.hero-title { font-size: 42px; font-weight: 900; line-height: 1.3; letter-spac
           <img src="images/prof_yoshioka.png" alt="吉岡秀樹" class="photo">
         </div>
         <div class="instructor-name">吉岡 秀樹</div>
+        <span class="mbti-badge">🧠 INTP-A 論理学者</span>
+        <div class="instructor-catchphrase">「なぜ？を突き詰める、もう一人の理論派」</div>
         <div class="instructor-title">Dr.</div>
         <div class="instructor-location"><a href="https://ortho.breath-design.com" target="_blank" style="color:inherit;text-decoration:none;">ブレス・デザイン デンタルオフィス</a> ─ 新潟県</div>
         <div class="instructor-topic">ブランディングのための動画活用術（動画編集）</div>
@@ -727,6 +779,8 @@ h1.hero-title { font-size: 42px; font-weight: 900; line-height: 1.3; letter-spac
           <img src="images/prof_kasahara.png" alt="笠原明人" class="photo">
         </div>
         <div class="instructor-name">笠原 明人</div>
+        <span class="mbti-badge">🧠 ENFJ-A 主人公</span>
+        <div class="instructor-catchphrase">「受講生の詰まりに最初に気づく世話焼き役」</div>
         <div class="instructor-title">Dr.</div>
         <div class="instructor-location"><a href="https://www.kasahara-dc.com" target="_blank" style="color:inherit;text-decoration:none;">笠原デンタルオフィス</a> ─ 東京都</div>
         <div class="instructor-topic">基本を極めるラバーダム（単独〜連続防湿）</div>
@@ -737,11 +791,14 @@ h1.hero-title { font-size: 42px; font-weight: 900; line-height: 1.3; letter-spac
           <img src="images/prof_watanabe.png" alt="渡辺徹也" class="photo">
         </div>
         <div class="instructor-name">渡辺 徹也</div>
+        <span class="mbti-badge">🧠 ENTP-A 討論者</span>
+        <div class="instructor-catchphrase">「『それ、本当にそう？』が口癖の切り込み隊長」</div>
         <div class="instructor-title">Dr.</div>
         <div class="instructor-location"><a href="https://www.noahdental.com" target="_blank" style="color:inherit;text-decoration:none;">ノアデンタルクリニック</a> ─ 岐阜県</div>
         <div class="instructor-topic">自費化する！臼歯部2級ダイレクトボンディング（II級CR）</div>
       </div>
     </div>
+    <p class="instructor-disclaimer">※MBTIは自己申告による性格タイプです。人柄紹介の遊びとしてお楽しみください。</p>
   </div>
 </section>
 
