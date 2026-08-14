@@ -119,6 +119,30 @@
           <input type="url" id="c-url" placeholder="https://www.youtube.com/watch?v=...">
         </div>
         <div class="field">
+          <label for="c-thumb-file">サムネイル画像（SNS配布用と同じもので構いません）</label>
+          <img id="c-thumb-preview" class="thumb thumb-preview" hidden alt="">
+          <input type="file" id="c-thumb-file" accept="image/*">
+          <button class="small danger" id="c-thumb-clear" hidden style="margin-top:10px">画像を外す</button>
+          <div class="until-note" id="c-thumb-status"></div>
+        </div>
+
+        <div class="field">
+          <label for="c-until">アーカイブ公開終了日時</label>
+          <input type="datetime-local" id="c-until">
+          <div class="presets">
+            <button class="small" data-until="24">24時間後</button>
+            <button class="small" data-until="72">3日後</button>
+            <button class="small" data-until="168">1週間後</button>
+            <button class="small" data-until="720">1ヶ月後</button>
+            <button class="small" data-until="">無期限にする</button>
+          </div>
+          <div class="until-note">
+            演者と約束した期間を入れてください。<strong>この日時を過ぎると自動的に会員から見えなくなります</strong>
+            （手動で非公開にする必要はありません）。空欄なら無期限です。
+          </div>
+        </div>
+
+        <div class="field">
           <label for="c-body">説明・補足</label>
           <textarea id="c-body" placeholder="アーカイブは次回例会まで公開します。"></textarea>
         </div>
@@ -241,11 +265,83 @@ suzuki@example.com,鈴木花子"></textarea>
 
   // ================= コンテンツ =================
   let editingId = null;   // null なら新規追加、id が入っていれば編集中
+  let thumbUrl  = null;   // アップロード済みサムネイルの公開URL
+
+  // ---- 日時の変換（datetime-local ⇔ ISO） ----
+  function toLocalInput(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const p = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`
+         + `T${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+
+  function formatUntil(iso) {
+    if (!iso) return '無期限';
+    const d = new Date(iso);
+    const p = (n) => String(n).padStart(2, '0');
+    return `${d.getMonth() + 1}/${d.getDate()} ${p(d.getHours())}:${p(d.getMinutes())} まで`;
+  }
+
+  // ---- 公開終了日時のプリセット ----
+  for (const btn of document.querySelectorAll('.presets button')) {
+    btn.addEventListener('click', () => {
+      const hours = btn.dataset.until;
+      if (!hours) { $('c-until').value = ''; return; }
+      const d = new Date(Date.now() + Number(hours) * 3600 * 1000);
+      $('c-until').value = toLocalInput(d.toISOString());
+    });
+  }
+
+  // ---- サムネイルのアップロード ----
+  function showThumb(url) {
+    thumbUrl = url || null;
+    const img = $('c-thumb-preview');
+    if (url) {
+      img.src = url;
+      img.hidden = false;
+      $('c-thumb-clear').hidden = false;
+    } else {
+      img.removeAttribute('src');
+      img.hidden = true;
+      $('c-thumb-clear').hidden = true;
+    }
+  }
+
+  $('c-thumb-clear').addEventListener('click', () => {
+    showThumb(null);
+    $('c-thumb-file').value = '';
+    $('c-thumb-status').textContent = '画像を外しました。「更新する」を押すと反映されます。';
+  });
+
+  $('c-thumb-file').addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    $('c-thumb-status').textContent = 'アップロード中…';
+
+    const ext  = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = `${crypto.randomUUID()}.${ext}`;
+
+    const { error } = await supabase.storage
+      .from('thumbnails')
+      .upload(path, file, { cacheControl: '3600', upsert: false });
+
+    if (error) {
+      $('c-thumb-status').textContent = `アップロードできませんでした。（${error.message}）`;
+      return;
+    }
+
+    const { data } = supabase.storage.from('thumbnails').getPublicUrl(path);
+    showThumb(data.publicUrl);
+    $('c-thumb-status').textContent =
+      'アップロードしました。下の「追加する／更新する」を押すと反映されます。';
+  });
 
   async function loadContents() {
     const { data, error } = await supabase
       .from('contents')
-      .select('id, title, kind, url, zoom_url, body, event_date, is_published')
+      .select('id, title, kind, url, zoom_url, body, event_date, is_published, thumbnail_url, archive_until')
       .order('event_date', { ascending: false, nullsFirst: false })
       .order('created_at', { ascending: false });
 
@@ -279,10 +375,16 @@ suzuki@example.com,鈴木花子"></textarea>
       tr.appendChild(tdUrl);
 
       const tdState = document.createElement('td');
+      const expiredNow = c.archive_until && new Date(c.archive_until) <= new Date();
       const pill = document.createElement('span');
-      pill.className = `pill ${c.is_published ? 'active' : 'off'}`;
-      pill.textContent = c.is_published ? '公開中' : '非公開';
+      pill.className = `pill ${!c.is_published || expiredNow ? 'off' : 'active'}`;
+      pill.textContent = !c.is_published ? '非公開' : expiredNow ? '公開終了' : '公開中';
       tdState.appendChild(pill);
+
+      const exp = document.createElement('span');
+      exp.className = 'expiry';
+      exp.textContent = formatUntil(c.archive_until);
+      tdState.appendChild(exp);
       tr.appendChild(tdState);
 
       const tdAct = document.createElement('td');
@@ -347,6 +449,10 @@ suzuki@example.com,鈴木花子"></textarea>
     $('c-zoom').value  = c.zoom_url || '';
     $('c-url').value   = c.url || '';
     $('c-body').value  = c.body || '';
+    $('c-until').value = toLocalInput(c.archive_until);
+    $('c-thumb-file').value = '';
+    $('c-thumb-status').textContent = '';
+    showThumb(c.thumbnail_url);
 
     $('c-form-title').textContent = `編集中：${c.title}`;
     $('c-add').textContent = '更新する';
@@ -357,8 +463,11 @@ suzuki@example.com,鈴木花子"></textarea>
 
   function resetForm() {
     editingId = null;
-    for (const id of ['c-title', 'c-date', 'c-zoom', 'c-url', 'c-body']) $(id).value = '';
+    for (const id of ['c-title', 'c-date', 'c-zoom', 'c-url', 'c-body', 'c-until', 'c-thumb-file'])
+      $(id).value = '';
     $('c-kind').value = 'video';
+    $('c-thumb-status').textContent = '';
+    showThumb(null);
     $('c-form-title').textContent = '新しく追加する';
     $('c-add').textContent = '追加する';
     $('c-cancel').hidden = true;
@@ -377,6 +486,7 @@ suzuki@example.com,鈴木花子"></textarea>
       return;
     }
 
+    const until = $('c-until').value;
     const payload = {
       title,
       kind: $('c-kind').value,
@@ -384,6 +494,9 @@ suzuki@example.com,鈴木花子"></textarea>
       url: $('c-url').value.trim() || null,
       body: $('c-body').value.trim() || null,
       event_date: $('c-date').value || null,
+      thumbnail_url: thumbUrl,
+      // datetime-local はローカル時間なので、Date を通して UTC に直して送る
+      archive_until: until ? new Date(until).toISOString() : null,
     };
 
     const btn = $('c-add');

@@ -92,6 +92,24 @@
   document.getElementById('logout-btn').addEventListener('click', logout);
   document.getElementById('denied-logout').addEventListener('click', logout);
 
+  function thumbImage(url, title) {
+    if (!url) return null;
+    const img = document.createElement('img');
+    img.className = 'thumb';
+    img.src = url;
+    img.alt = title;
+    img.loading = 'lazy';
+    return img;
+  }
+
+  /** 「8月15日 20:00 まで視聴できます」 */
+  function untilText(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const p = (n) => String(n).padStart(2, '0');
+    return `${d.getMonth() + 1}月${d.getDate()}日 ${p(d.getHours())}:${p(d.getMinutes())} まで視聴できます`;
+  }
+
   function linkButton(href, label, extraClass) {
     const a = document.createElement('a');
     a.className = 'watch' + (extraClass ? ` ${extraClass}` : '');
@@ -118,6 +136,9 @@
       badge.className = 'live-badge';
       badge.textContent = '本日の例会';
       card.appendChild(badge);
+
+      const thumb = thumbImage(c.thumbnail_url, c.title);
+      if (thumb) card.appendChild(thumb);
 
       const h2 = document.createElement('h2');
       h2.textContent = c.title;
@@ -147,6 +168,13 @@
         card.appendChild(wait);
       }
 
+      if (c.archive_until && c.url) {
+        const u = document.createElement('div');
+        u.className = 'refreshed';
+        u.textContent = untilText(c.archive_until);
+        card.appendChild(u);
+      }
+
       const stamp = document.createElement('div');
       stamp.className = 'refreshed';
       const now = new Date();
@@ -168,6 +196,9 @@
     for (const c of items) {
       const item = document.createElement('div');
       item.className = 'content-item';
+
+      const thumb = thumbImage(c.thumbnail_url, c.title);
+      if (thumb) item.appendChild(thumb);
 
       const h3 = document.createElement('h3');
       h3.textContent = c.title;
@@ -196,6 +227,13 @@
       }
       if (actions.childElementCount) item.appendChild(actions);
 
+      if (c.archive_until && c.url) {
+        const u = document.createElement('div');
+        u.className = 'refreshed';
+        u.textContent = untilText(c.archive_until);
+        item.appendChild(u);
+      }
+
       list.appendChild(item);
     }
   }
@@ -205,7 +243,7 @@
   async function loadContents() {
     const { data, error } = await supabase
       .from('contents')
-      .select('title, kind, url, zoom_url, body, event_date')
+      .select('title, kind, url, zoom_url, body, event_date, thumbnail_url, archive_until')
       .eq('is_published', true)
       .order('event_date', { ascending: false, nullsFirst: false })
       .order('created_at', { ascending: false });

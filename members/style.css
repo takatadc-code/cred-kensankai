@@ -235,6 +235,43 @@ a.watch.zoom:hover { background: #1a74e2; }
   margin-top: 12px;
 }
 
+/* サムネイル */
+.thumb {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #f0f2f5;
+  margin-bottom: 16px;
+}
+
+.thumb-preview {
+  max-width: 340px;
+  margin-bottom: 10px;
+}
+
+.presets {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.until-note {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.expiry {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
 .skeleton {
   color: var(--muted);
   font-size: 16px;
