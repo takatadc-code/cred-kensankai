@@ -294,6 +294,49 @@ a.watch.zoom:hover { background: #1a74e2; }
   margin-top: 8px;
 }
 
+/* ZOOM のミーティングID・パスコード */
+.zoom-info {
+  background: #f2f7fd;
+  border: 1px solid #cfe0f5;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 14px;
+}
+
+.zoom-info .line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 5px 0;
+}
+
+.zoom-info .k {
+  font-size: 14px;
+  color: var(--muted);
+  min-width: 7em;
+}
+
+.zoom-info .v {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  font-variant-numeric: tabular-nums;
+  user-select: all;
+}
+
+.zoom-info button {
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--accent);
+  border: 1px solid #cfe0f5;
+  font-weight: 600;
+}
+
+.zoom-info button:hover { background: #e6effb; }
+
 .expiry {
   display: block;
   font-size: 12px;

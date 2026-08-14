@@ -113,6 +113,58 @@
     return `${d.getMonth() + 1}月${d.getDate()}日 ${p(d.getHours())}:${p(d.getMinutes())} まで視聴できます`;
   }
 
+  /** 86056300145 → 860 5630 0145（Zoom の表記に合わせる） */
+  function formatMeetingId(id) {
+    const d = (id || '').replace(/\D/g, '');
+    if (d.length === 11) return `${d.slice(0, 3)} ${d.slice(3, 7)} ${d.slice(7)}`;
+    if (d.length === 10) return `${d.slice(0, 3)} ${d.slice(3, 6)} ${d.slice(6)}`;
+    return d;
+  }
+
+  /** ミーティングID・パスコードを、コピーボタン付きで表示する */
+  function zoomInfoBlock(c) {
+    const rows = [];
+    if (c.zoom_meeting_id) rows.push(['ミーティングID', formatMeetingId(c.zoom_meeting_id), c.zoom_meeting_id]);
+    if (c.zoom_passcode)   rows.push(['パスコード', c.zoom_passcode, c.zoom_passcode]);
+    if (!rows.length) return null;
+
+    const box = document.createElement('div');
+    box.className = 'zoom-info';
+
+    for (const [label, shown, raw] of rows) {
+      const line = document.createElement('div');
+      line.className = 'line';
+
+      const k = document.createElement('span');
+      k.className = 'k';
+      k.textContent = label;
+      line.appendChild(k);
+
+      const v = document.createElement('span');
+      v.className = 'v';
+      v.textContent = shown;
+      line.appendChild(v);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = 'コピー';
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(raw);
+          btn.textContent = 'コピーしました';
+          setTimeout(() => { btn.textContent = 'コピー'; }, 1500);
+        } catch {
+          // クリップボードが使えない環境では、選択してもらえば足りる
+          btn.textContent = '選択してコピーしてください';
+        }
+      });
+      line.appendChild(btn);
+
+      box.appendChild(line);
+    }
+    return box;
+  }
+
   function linkButton(href, label, extraClass) {
     const a = document.createElement('a');
     a.className = 'watch' + (extraClass ? ` ${extraClass}` : '');
@@ -161,6 +213,9 @@
       if (c.url)      actions.appendChild(linkButton(c.url, '配信を見る'));
 
       if (actions.childElementCount) card.appendChild(actions);
+
+      const zoomInfo = zoomInfoBlock(c);
+      if (zoomInfo) card.appendChild(zoomInfo);
 
       if (!c.url) {
         const wait = document.createElement('div');
@@ -230,6 +285,9 @@
       }
       if (actions.childElementCount) item.appendChild(actions);
 
+      const zoomInfo = zoomInfoBlock(c);
+      if (zoomInfo) item.appendChild(zoomInfo);
+
       if (c.archive_until && c.url) {
         const u = document.createElement('div');
         u.className = 'refreshed';
@@ -246,7 +304,7 @@
   async function loadContents() {
     const { data, error } = await supabase
       .from('contents')
-      .select('title, kind, url, zoom_url, body, event_date, thumbnail_url, archive_until')
+      .select('title, kind, url, zoom_url, zoom_meeting_id, zoom_passcode, body, event_date, thumbnail_url, archive_until')
       .eq('is_published', true)
       .order('event_date', { ascending: false, nullsFirst: false })
       .order('created_at', { ascending: false });

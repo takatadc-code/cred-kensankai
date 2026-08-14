@@ -117,6 +117,21 @@
           <label for="c-zoom">ZOOM 参加URL（事前に入れておく）</label>
           <input type="url" id="c-zoom" placeholder="https://zoom.us/j/...">
         </div>
+        <div class="row">
+          <div>
+            <label for="c-zoom-id">ミーティングID</label>
+            <input type="text" id="c-zoom-id" inputmode="numeric" placeholder="860 5630 0145">
+          </div>
+          <div>
+            <label for="c-zoom-pass">パスコード</label>
+            <input type="text" id="c-zoom-pass" placeholder="123456">
+          </div>
+        </div>
+        <div class="until-note" style="margin-bottom:14px">
+          ミーティングIDは、URLを入れると自動で読み取ります。
+          <strong>パスコードはURLからは分からない</strong>ので、Zoomの画面を見て手で入れてください
+          （URL内の <code>pwd=</code> はパスコードそのものではありません）。
+        </div>
         <div class="field">
           <label for="c-url">配信の視聴URL（配信開始後に追記）</label>
           <input type="url" id="c-url" placeholder="https://www.youtube.com/watch?v=...">
@@ -296,6 +311,15 @@ suzuki@example.com,鈴木花子"></textarea>
     });
   }
 
+  // ---- ZOOM URL からミーティングIDを読み取る ----
+  // 手入力の手間を減らすだけなので、読み取れなくても手で入れれば足りる。
+  // パスコードは URL の pwd= が暗号化トークンで別物のため、自動では入れない。
+  $('c-zoom').addEventListener('input', () => {
+    if ($('c-zoom-id').value.trim()) return;      // すでに入っていれば触らない
+    const m = $('c-zoom').value.match(/(\d{9,12})/);
+    if (m) $('c-zoom-id').value = m[1];
+  });
+
   // ---- サムネイルのアップロード ----
   function showThumb(url) {
     thumbUrl = url || null;
@@ -344,7 +368,7 @@ suzuki@example.com,鈴木花子"></textarea>
   async function loadContents() {
     const { data, error } = await supabase
       .from('contents')
-      .select('id, title, kind, url, zoom_url, body, event_date, is_published, thumbnail_url, archive_until')
+      .select('id, title, kind, url, zoom_url, zoom_meeting_id, zoom_passcode, body, event_date, is_published, thumbnail_url, archive_until')
       .order('event_date', { ascending: false, nullsFirst: false })
       .order('created_at', { ascending: false });
 
@@ -449,7 +473,9 @@ suzuki@example.com,鈴木花子"></textarea>
     $('c-title').value = c.title || '';
     $('c-kind').value  = c.kind || 'video';
     $('c-date').value  = c.event_date || '';
-    $('c-zoom').value  = c.zoom_url || '';
+    $('c-zoom').value      = c.zoom_url || '';
+    $('c-zoom-id').value   = c.zoom_meeting_id || '';
+    $('c-zoom-pass').value = c.zoom_passcode || '';
     $('c-url').value   = c.url || '';
     $('c-body').value  = c.body || '';
     $('c-until').value = toLocalInput(c.archive_until);
@@ -466,7 +492,8 @@ suzuki@example.com,鈴木花子"></textarea>
 
   function resetForm() {
     editingId = null;
-    for (const id of ['c-title', 'c-date', 'c-zoom', 'c-url', 'c-body', 'c-until', 'c-thumb-file'])
+    for (const id of ['c-title', 'c-date', 'c-zoom', 'c-zoom-id', 'c-zoom-pass',
+                      'c-url', 'c-body', 'c-until', 'c-thumb-file'])
       $(id).value = '';
     $('c-kind').value = 'video';
     $('c-thumb-status').textContent = '';
@@ -494,6 +521,9 @@ suzuki@example.com,鈴木花子"></textarea>
       title,
       kind: $('c-kind').value,
       zoom_url: $('c-zoom').value.trim() || null,
+      // 表示時に整形するので、保存は数字だけにそろえる
+      zoom_meeting_id: $('c-zoom-id').value.replace(/\D/g, '') || null,
+      zoom_passcode: $('c-zoom-pass').value.trim() || null,
       url: $('c-url').value.trim() || null,
       body: $('c-body').value.trim() || null,
       event_date: $('c-date').value || null,
