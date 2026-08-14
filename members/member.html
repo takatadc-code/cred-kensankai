@@ -13,7 +13,10 @@
 <header class="site">
   <div class="inner">
     <h1 id="salon-name">Salon de CRED</h1>
-    <button class="ghost" id="logout-btn" hidden>ログアウト</button>
+    <div class="head-actions">
+      <a class="ghost admin" id="admin-link" href="admin.html" hidden>運営管理</a>
+      <button class="ghost" id="logout-btn" hidden>ログアウト</button>
+    </div>
   </div>
 </header>
 
@@ -272,7 +275,7 @@
     // RLS により、自分の行しか取得できない
     const { data: member, error: memberErr } = await supabase
       .from('members')
-      .select('display_name, status, current_period_end')
+      .select('display_name, status, current_period_end, role')
       .eq('email', email)
       .maybeSingle();
 
@@ -293,6 +296,12 @@
     const expired =
       member.current_period_end && member.current_period_end < todayStr();
     const active = ['active', 'grace'].includes(member.status) && !expired;
+
+    // 運営（管理者）のときだけ、管理画面へのリンクを出す。
+    // 一般会員にはそもそも表示されず、URLを直接開いても RLS で弾かれる。
+    if (member.role === 'admin' && active) {
+      document.getElementById('admin-link').hidden = false;
+    }
 
     document.getElementById('status-card').hidden = false;
     document.getElementById('member-email').textContent =

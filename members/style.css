@@ -116,6 +116,36 @@ button.ghost {
 
 button.ghost:hover:not(:disabled) { background: #f0f2f5; color: var(--text); }
 
+/* ヘッダー右側のボタン群（リンクもボタンと同じ見た目にそろえる） */
+.head-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+a.ghost {
+  display: inline-block;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 16px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+a.ghost:hover { background: #f0f2f5; color: var(--text); }
+
+a.ghost.admin {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+a.ghost.admin:hover { background: #eef2f7; color: var(--accent); }
+
 .msg {
   border-radius: 8px;
   padding: 14px 16px;

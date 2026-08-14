@@ -61,7 +61,10 @@
 <header class="site">
   <div class="inner">
     <h1 id="salon-name">Salon de CRED</h1>
-    <button class="ghost" id="logout-btn" hidden>ログアウト</button>
+    <div class="head-actions">
+      <a class="ghost" id="member-link" href="member.html" hidden>会員ページ</a>
+      <button class="ghost" id="logout-btn" hidden>ログアウト</button>
+    </div>
   </div>
 </header>
 
@@ -779,6 +782,7 @@ suzuki@example.com,鈴木花子"></textarea>
 
     $('gate').hidden = true;
     $('app').hidden = false;
+    $('member-link').hidden = false;
 
     await Promise.all([loadContents(), loadMembers()]);
   }
