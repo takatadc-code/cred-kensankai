@@ -1032,12 +1032,15 @@
     box-shadow: 0 4px 20px rgba(0,0,0,0.4);
   }
   .salon-cta-wrap {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
     margin-top: 3rem;
   }
   .salon-cta {
     display: inline-block;
-    padding: 1rem 3rem;
+    padding: 1rem 2.5rem;
     border: 1px solid #7FB3D3;
     color: #A8D4E6;
     text-decoration: none;
@@ -1049,6 +1052,26 @@
     background: #7FB3D3;
     color: #1C2833;
     border-color: #7FB3D3;
+  }
+  .salon-cta-primary {
+    background: #7FB3D3;
+    color: #1C2833;
+    font-weight: 600;
+  }
+  .salon-cta-primary:hover {
+    background: #A8D4E6;
+    border-color: #A8D4E6;
+  }
+  .salon-cta-line {
+    background: #06C755;
+    border-color: #06C755;
+    color: #fff;
+    font-weight: 500;
+  }
+  .salon-cta-line:hover {
+    background: #05b34c;
+    border-color: #05b34c;
+    color: #fff;
   }
 
   @media (max-width: 768px) {
@@ -1453,9 +1476,9 @@
 
     <div class="salon-intro">
       <div class="salon-text">
-        <p>C.R.E.Dセミナーから派生した、会員制のFacebookオンラインスタディグループです。歯科医師・歯科衛生士・その他歯科医療関係者が共に学べる空間をお届けします。</p>
+        <p>C.R.E.Dセミナーから派生した、会員制のオンラインスタディグループです。歯科医師・歯科衛生士・その他歯科医療関係者が共に学べる空間をお届けします。</p>
         <p>スピーカーは、高田光彦と歯科衛生士の高橋規子が交互に、日頃の臨床スタイル・物事の考え方・理念をお伝えします。さらに各分野のスペシャリストをゲストにお招きし、多彩なテーマで配信しています。</p>
-        <p>配信中はコメント欄でお気軽にご質問いただけます。院内勉強会・後輩育成・歯科医院のボトムアップにお役立てください。</p>
+        <p>配信中はチャットでお気軽にご質問いただけます。院内勉強会・後輩育成・歯科医院のボトムアップにお役立てください。</p>
       </div>
       <img src="images/salon-main.jpg" alt="SALON de CRED" class="salon-hero-img" loading="lazy">
     </div>
@@ -1491,8 +1514,11 @@
     </div>
 
     <div class="salon-cta-wrap">
-      <a href="https://www.takata-dc.jp/paypal-sub/" target="_blank" class="salon-cta">Salon de CRED 詳細・お申込み</a>
+      <a href="https://www.takata-dc.jp/paypal-sub/" target="_blank" class="salon-cta salon-cta-primary">入会する</a>
+      <a href="https://takatadc-code.github.io/cred-kensankai/members/" target="_blank" class="salon-cta">会員ログイン</a>
+      <a href="https://lin.ee/TfGrFSS" target="_blank" class="salon-cta salon-cta-line">LINEで最新情報を受け取る</a>
     </div>
+    <p style="text-align:center; margin-top: 1.5rem;"><a href="tokushoho.html" style="color: rgba(255,255,255,0.4); font-size: 0.75rem; text-decoration: underline;">特定商取引法に基づく表示</a></p>
   </div>
 </section>
 
