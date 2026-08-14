@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>運営管理 | Salon de CRED</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+  <style>
+    .wrap.admin { max-width: 960px; }
+
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+    .tabs button {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--line); font-size: 16px; padding: 10px 20px;
+    }
+    .tabs button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 15px; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { font-size: 13px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+    td.actions { white-space: nowrap; text-align: right; }
+    .table-scroll { overflow-x: auto; }
+
+    input[type="text"], input[type="date"], input[type="url"], select, textarea {
+      width: 100%; padding: 11px 13px; font-size: 16px;
+      border: 1px solid #c3c8cf; border-radius: 8px; background: #fff;
+      font-family: inherit;
+    }
+    textarea { min-height: 110px; resize: vertical; line-height: 1.6; }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .field { margin-bottom: 14px; }
+    .field label { font-size: 14px; }
+
+    button.small {
+      font-size: 14px; padding: 7px 13px; border-radius: 6px;
+      background: transparent; color: var(--accent);
+      border: 1px solid var(--line);
+    }
+    button.small:hover:not(:disabled) { background: #eef2f7; }
+    button.small.danger { color: var(--danger); }
+
+    .pill { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+    .pill.active    { background: #e7f6ee; color: var(--ok); }
+    .pill.grace     { background: #fff4e5; color: #a15c07; }
+    .pill.cancelled { background: #f0f2f5; color: var(--muted); }
+    .pill.admin     { background: #eae6fb; color: #5b3fb5; }
+    .pill.off       { background: #f0f2f5; color: var(--muted); }
+
+    .toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
+    .toolbar input { flex: 1; }
+    .count { font-size: 14px; color: var(--muted); white-space: nowrap; }
+
+    @media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header class="site">
+  <div class="inner">
+    <h1 id="salon-name">Salon de CRED</h1>
+    <button class="ghost" id="logout-btn" hidden>ログアウト</button>
+  </div>
+</header>
+
+<div class="wrap admin">
+
+  <div class="card" id="gate">
+    <div class="skeleton" id="loading">読み込んでいます…</div>
+    <div id="denied" hidden>
+      <h2 id="denied-title">権限がありません</h2>
+      <p class="note" id="denied-body"></p>
+      <p><button class="ghost" id="denied-logout">別のアドレスでログインし直す</button></p>
+    </div>
+  </div>
+
+  <div id="app" hidden>
+
+    <div class="tabs">
+      <button id="tab-contents" class="on">配信・お知らせ</button>
+      <button id="tab-members">会員</button>
+    </div>
+
+    <!-- ======================= コンテンツ ======================= -->
+    <section id="pane-contents">
+      <div class="card">
+        <h2>新しく追加する</h2>
+        <div class="field">
+          <label for="c-title">タイトル</label>
+          <input type="text" id="c-title" placeholder="第○回 Salon de CRED 例会">
+        </div>
+        <div class="row">
+          <div>
+            <label for="c-kind">種別</label>
+            <select id="c-kind">
+              <option value="video">動画（YouTube等）</option>
+              <option value="document">資料</option>
+              <option value="notice">お知らせのみ</option>
+            </select>
+          </div>
+          <div>
+            <label for="c-date">開催日</label>
+            <input type="date" id="c-date">
+          </div>
+        </div>
+        <div class="field">
+          <label for="c-url">URL（お知らせのみの場合は空でOK）</label>
+          <input type="url" id="c-url" placeholder="https://www.youtube.com/watch?v=...">
+        </div>
+        <div class="field">
+          <label for="c-body">説明・補足</label>
+          <textarea id="c-body" placeholder="アーカイブは次回例会まで公開します。"></textarea>
+        </div>
+        <button id="c-add">追加する</button>
+        <div class="msg" id="c-msg" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="card">
+        <h2>登録済み一覧</h2>
+        <p class="note" style="margin-bottom:14px">
+          「非公開にする」を押すと、会員ページから即座に見えなくなります。
+        </p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>開催日</th><th>タイトル</th><th>状態</th><th></th></tr>
+            </thead>
+            <tbody id="c-list"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= 会員 ======================= -->
+    <section id="pane-members" hidden>
+      <div class="card">
+        <h2>会員を追加する</h2>
+        <div class="row">
+          <div>
+            <label for="m-email">メールアドレス</label>
+            <input type="text" id="m-email" placeholder="member@example.com">
+          </div>
+          <div>
+            <label for="m-name">氏名</label>
+            <input type="text" id="m-name" placeholder="山田太郎">
+          </div>
+        </div>
+        <div class="field">
+          <label for="m-sub">PayPal サブスクリプションID（任意・後から入力可）</label>
+          <input type="text" id="m-sub" placeholder="I-XXXXXXXXXXXX">
+        </div>
+        <button id="m-add">追加する</button>
+        <div class="msg" id="m-msg" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="card">
+        <h2>まとめて追加（CSV貼り付け）</h2>
+        <p class="note">
+          1行につき1名。<strong>メールアドレス,氏名,サブスクリプションID</strong> の順にカンマ区切りで貼り付けてください。
+          氏名以降は省略できます。<br>
+          すでに登録済みのメールアドレスは、氏名とIDが上書きされます（状態は変更しません）。
+        </p>
+        <div class="field">
+          <textarea id="m-csv" placeholder="yamada@example.com,山田太郎,I-XXXXXXXXXXXX
+suzuki@example.com,鈴木花子"></textarea>
+        </div>
+        <button id="m-import">まとめて追加する</button>
+        <div class="msg" id="m-csv-msg" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="card">
+        <h2>会員一覧</h2>
+        <div class="toolbar">
+          <input type="text" id="m-search" placeholder="メールアドレス・氏名で絞り込み">
+          <span class="count" id="m-count"></span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>氏名</th><th>メールアドレス</th><th>状態</th><th>有効期限</th><th></th></tr>
+            </thead>
+            <tbody id="m-list"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<footer class="site">
+  <span id="footer-name">Salon de CRED</span> 運営管理
+</footer>
+
+<script type="module">
+  import { supabase, cfg, showMsg, hideMsg, formatDate } from './app.js';
+
+  document.getElementById('salon-name').textContent  = cfg.SALON_NAME;
+  document.getElementById('footer-name').textContent = cfg.SALON_NAME;
+  document.title = `運営管理 | ${cfg.SALON_NAME}`;
+
+  const $ = (id) => document.getElementById(id);
+
+  function showDenied(title, body) {
+    $('loading').hidden = true;
+    $('denied').hidden = false;
+    $('denied-title').textContent = title;
+    $('denied-body').textContent = body;
+  }
+
+  async function logout() {
+    await supabase.auth.signOut();
+    window.location.replace('index.html');
+  }
+  $('logout-btn').addEventListener('click', logout);
+  $('denied-logout').addEventListener('click', logout);
+
+  // ---------- タブ ----------
+  $('tab-contents').addEventListener('click', () => switchTab('contents'));
+  $('tab-members').addEventListener('click',  () => switchTab('members'));
+
+  function switchTab(name) {
+    const isContents = name === 'contents';
+    $('tab-contents').classList.toggle('on', isContents);
+    $('tab-members').classList.toggle('on', !isContents);
+    $('pane-contents').hidden = !isContents;
+    $('pane-members').hidden  = isContents;
+  }
+
+  // ================= コンテンツ =================
+  async function loadContents() {
+    const { data, error } = await supabase
+      .from('contents')
+      .select('id, title, kind, url, event_date, is_published')
+      .order('event_date', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false });
+
+    const list = $('c-list');
+    list.textContent = '';
+
+    if (error) {
+      showMsg($('c-msg'), 'error', `一覧を取得できませんでした。（${error.message}）`);
+      return;
+    }
+
+    for (const c of data) {
+      const tr = document.createElement('tr');
+
+      const tdDate = document.createElement('td');
+      tdDate.textContent = c.event_date ? formatDate(c.event_date) : '—';
+      tr.appendChild(tdDate);
+
+      const tdTitle = document.createElement('td');
+      tdTitle.textContent = c.title;
+      tr.appendChild(tdTitle);
+
+      const tdState = document.createElement('td');
+      const pill = document.createElement('span');
+      pill.className = `pill ${c.is_published ? 'active' : 'off'}`;
+      pill.textContent = c.is_published ? '公開中' : '非公開';
+      tdState.appendChild(pill);
+      tr.appendChild(tdState);
+
+      const tdAct = document.createElement('td');
+      tdAct.className = 'actions';
+
+      const toggle = document.createElement('button');
+      toggle.className = 'small';
+      toggle.textContent = c.is_published ? '非公開にする' : '公開する';
+      toggle.addEventListener('click', async () => {
+        toggle.disabled = true;
+        const { error: e } = await supabase
+          .from('contents')
+          .update({ is_published: !c.is_published })
+          .eq('id', c.id);
+        if (e) showMsg($('c-msg'), 'error', `変更できませんでした。（${e.message}）`);
+        await loadContents();
+      });
+      tdAct.appendChild(toggle);
+
+      const del = document.createElement('button');
+      del.className = 'small danger';
+      del.style.marginLeft = '8px';
+      del.textContent = '削除';
+      del.addEventListener('click', async () => {
+        if (!window.confirm(`「${c.title}」を削除します。よろしいですか？`)) return;
+        del.disabled = true;
+        const { error: e } = await supabase.from('contents').delete().eq('id', c.id);
+        if (e) showMsg($('c-msg'), 'error', `削除できませんでした。（${e.message}）`);
+        await loadContents();
+      });
+      tdAct.appendChild(del);
+
+      tr.appendChild(tdAct);
+      list.appendChild(tr);
+    }
+
+    if (!data.length) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 4;
+      td.className = 'note';
+      td.textContent = 'まだ登録がありません。';
+      tr.appendChild(td);
+      list.appendChild(tr);
+    }
+  }
+
+  $('c-add').addEventListener('click', async () => {
+    hideMsg($('c-msg'));
+    const title = $('c-title').value.trim();
+    if (!title) {
+      showMsg($('c-msg'), 'error', 'タイトルを入力してください。');
+      return;
+    }
+
+    const btn = $('c-add');
+    btn.disabled = true;
+
+    const { error } = await supabase.from('contents').insert({
+      title,
+      kind: $('c-kind').value,
+      url: $('c-url').value.trim() || null,
+      body: $('c-body').value.trim() || null,
+      event_date: $('c-date').value || null,
+      is_published: true,
+    });
+
+    btn.disabled = false;
+
+    if (error) {
+      showMsg($('c-msg'), 'error', `追加できませんでした。（${error.message}）`);
+      return;
+    }
+
+    showMsg($('c-msg'), 'ok', `「${title}」を追加し、会員ページに公開しました。`);
+    $('c-title').value = '';
+    $('c-url').value = '';
+    $('c-body').value = '';
+    $('c-date').value = '';
+    await loadContents();
+  });
+
+  // ================= 会員 =================
+  let allMembers = [];
+
+  async function loadMembers() {
+    const { data, error } = await supabase
+      .from('members')
+      .select('id, email, display_name, status, role, current_period_end, paypal_subscription_id')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      showMsg($('m-msg'), 'error', `一覧を取得できませんでした。（${error.message}）`);
+      return;
+    }
+
+    allMembers = data;
+    renderMembers();
+  }
+
+  function renderMembers() {
+    const q = $('m-search').value.trim().toLowerCase();
+    const rows = q
+      ? allMembers.filter((m) =>
+          m.email.includes(q) || (m.display_name || '').toLowerCase().includes(q))
+      : allMembers;
+
+    const activeCount = allMembers.filter((m) => m.status === 'active').length;
+    $('m-count').textContent =
+      `有効 ${activeCount}名 / 全${allMembers.length}名` + (q ? `（表示 ${rows.length}名）` : '');
+
+    const list = $('m-list');
+    list.textContent = '';
+
+    for (const m of rows) {
+      const tr = document.createElement('tr');
+
+      const tdName = document.createElement('td');
+      tdName.textContent = m.display_name || '—';
+      if (m.role === 'admin') {
+        const p = document.createElement('span');
+        p.className = 'pill admin';
+        p.style.marginLeft = '8px';
+        p.textContent = '運営';
+        tdName.appendChild(p);
+      }
+      tr.appendChild(tdName);
+
+      const tdMail = document.createElement('td');
+      tdMail.textContent = m.email;
+      tr.appendChild(tdMail);
+
+      const tdState = document.createElement('td');
+      const pill = document.createElement('span');
+      pill.className = `pill ${m.status}`;
+      pill.textContent =
+        m.status === 'active' ? '有効' : m.status === 'grace' ? '支払い確認中' : '退会';
+      tdState.appendChild(pill);
+      tr.appendChild(tdState);
+
+      const tdEnd = document.createElement('td');
+      tdEnd.textContent = m.current_period_end ? formatDate(m.current_period_end) : '—';
+      tr.appendChild(tdEnd);
+
+      const tdAct = document.createElement('td');
+      tdAct.className = 'actions';
+
+      const sel = document.createElement('select');
+      sel.style.width = 'auto';
+      sel.style.fontSize = '14px';
+      sel.style.padding = '6px 10px';
+      for (const [value, label] of [
+        ['active', '有効'],
+        ['grace', '支払い確認中'],
+        ['cancelled', '退会'],
+      ]) {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = label;
+        if (m.status === value) opt.selected = true;
+        sel.appendChild(opt);
+      }
+      sel.addEventListener('change', async () => {
+        sel.disabled = true;
+        const { error } = await supabase
+          .from('members')
+          .update({ status: sel.value })
+          .eq('id', m.id);
+        if (error) showMsg($('m-msg'), 'error', `変更できませんでした。（${error.message}）`);
+        else showMsg($('m-msg'), 'ok', `${m.email} の状態を変更しました。`);
+        await loadMembers();
+      });
+      tdAct.appendChild(sel);
+      tr.appendChild(tdAct);
+
+      list.appendChild(tr);
+    }
+
+    if (!rows.length) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 5;
+      td.className = 'note';
+      td.textContent = q ? '該当する会員がいません。' : 'まだ会員が登録されていません。';
+      tr.appendChild(td);
+      list.appendChild(tr);
+    }
+  }
+
+  $('m-search').addEventListener('input', renderMembers);
+
+  $('m-add').addEventListener('click', async () => {
+    hideMsg($('m-msg'));
+    const email = $('m-email').value.trim().toLowerCase();
+    if (!email.includes('@')) {
+      showMsg($('m-msg'), 'error', 'メールアドレスを正しく入力してください。');
+      return;
+    }
+
+    const btn = $('m-add');
+    btn.disabled = true;
+
+    const { error } = await supabase.from('members').insert({
+      email,
+      display_name: $('m-name').value.trim() || null,
+      paypal_subscription_id: $('m-sub').value.trim() || null,
+      status: 'active',
+    });
+
+    btn.disabled = false;
+
+    if (error) {
+      showMsg($('m-msg'), 'error',
+        error.code === '23505'
+          ? `${email} はすでに登録されています。`
+          : `追加できませんでした。（${error.message}）`);
+      return;
+    }
+
+    showMsg($('m-msg'), 'ok', `${email} を追加しました。`);
+    $('m-email').value = '';
+    $('m-name').value = '';
+    $('m-sub').value = '';
+    await loadMembers();
+  });
+
+  $('m-import').addEventListener('click', async () => {
+    hideMsg($('m-csv-msg'));
+
+    const lines = $('m-csv').value
+      .split('\n')
+      .map((l) => l.trim())
+      .filter(Boolean);
+
+    if (!lines.length) {
+      showMsg($('m-csv-msg'), 'error', '貼り付ける内容がありません。');
+      return;
+    }
+
+    const rows = [];
+    const skipped = [];
+
+    for (const line of lines) {
+      const [email, name, sub] = line.split(',').map((s) => (s || '').trim());
+      if (!email || !email.includes('@')) {
+        skipped.push(line);
+        continue;
+      }
+      rows.push({
+        email: email.toLowerCase(),
+        display_name: name || null,
+        paypal_subscription_id: sub || null,
+      });
+    }
+
+    if (!rows.length) {
+      showMsg($('m-csv-msg'), 'error',
+        'メールアドレスとして読み取れる行がありませんでした。1行につき1名、カンマ区切りで貼り付けてください。');
+      return;
+    }
+
+    const btn = $('m-import');
+    btn.disabled = true;
+    btn.textContent = '登録中…';
+
+    // 新規と既存を分ける。
+    // 既存会員には status を触らない ＝ 退会済みの人を CSV 再投入で
+    // うっかり有効に戻してしまう事故を防ぐ。
+    const existing = new Set(allMembers.map((m) => m.email));
+    const newRows = rows
+      .filter((r) => !existing.has(r.email))
+      .map((r) => ({ ...r, status: 'active' }));
+    const updRows = rows.filter((r) => existing.has(r.email));
+
+    let failed = 0;
+
+    if (newRows.length) {
+      const { error } = await supabase.from('members').insert(newRows);
+      if (error) {
+        btn.disabled = false;
+        btn.textContent = 'まとめて追加する';
+        showMsg($('m-csv-msg'), 'error', `登録できませんでした。（${error.message}）`);
+        return;
+      }
+    }
+
+    for (const r of updRows) {
+      const { error } = await supabase
+        .from('members')
+        .update({ display_name: r.display_name, paypal_subscription_id: r.paypal_subscription_id })
+        .eq('email', r.email);
+      if (error) failed++;
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'まとめて追加する';
+
+    const parts = [];
+    if (newRows.length) parts.push(`新規 ${newRows.length}名を追加`);
+    if (updRows.length) parts.push(`既存 ${updRows.length - failed}名の氏名・IDを更新（状態は変更していません）`);
+    if (failed)         parts.push(`${failed}名は更新に失敗`);
+    if (skipped.length) parts.push(`${skipped.length}行は読み取れず除外`);
+
+    showMsg($('m-csv-msg'), failed ? 'info' : 'ok', parts.join('／') + '。');
+    $('m-csv').value = '';
+    await loadMembers();
+  });
+
+  // ================= 起動 =================
+  async function main() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      window.location.replace('index.html');
+      return;
+    }
+
+    const email = (session.user.email || '').toLowerCase();
+    $('logout-btn').hidden = false;
+
+    const { data: me, error } = await supabase
+      .from('members')
+      .select('role, status, display_name')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (error) {
+      showDenied('エラーが発生しました', `権限を確認できませんでした。（${error.message}）`);
+      return;
+    }
+
+    if (!me || me.role !== 'admin') {
+      showDenied('権限がありません',
+        `${email} には運営管理の権限がありません。会員ページをご利用ください。`);
+      return;
+    }
+
+    $('gate').hidden = true;
+    $('app').hidden = false;
+
+    await Promise.all([loadContents(), loadMembers()]);
+  }
+
+  main();
+</script>
+
+</body>
+</html>
