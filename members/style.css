@@ -1,0 +1,209 @@
+/* ============================================================
+   Salon de CRED 会員ページ
+   会員の年齢層を考慮し、文字を大きめ・コントラスト高め・
+   タップ領域を広めに取っている
+   ============================================================ */
+
+:root {
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --text: #1a1d21;
+  --muted: #6b7280;
+  --line: #e3e6ea;
+  --accent: #1f4e79;
+  --accent-hover: #163a5a;
+  --danger: #b42318;
+  --ok: #067647;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans',
+               'Yu Gothic', 'Meiryo', sans-serif;
+  font-size: 17px;
+  line-height: 1.75;
+  -webkit-text-size-adjust: 100%;
+}
+
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+
+header.site {
+  border-bottom: 1px solid var(--line);
+  background: var(--card);
+  padding: 20px;
+}
+
+header.site .inner {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+header.site h1 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: .04em;
+  color: var(--accent);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 28px 24px;
+  margin-bottom: 20px;
+}
+
+h2 { font-size: 21px; margin: 0 0 12px; }
+p  { margin: 0 0 16px; }
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+input[type="email"] {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 17px;
+  border: 1px solid #c3c8cf;
+  border-radius: 8px;
+  background: #fff;
+}
+
+input[type="email"]:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+button {
+  appearance: none;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 14px 22px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+button:hover:not(:disabled) { background: var(--accent-hover); }
+button:disabled { opacity: .5; cursor: default; }
+
+button.ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  font-size: 15px;
+  padding: 10px 16px;
+}
+
+button.ghost:hover:not(:disabled) { background: #f0f2f5; color: var(--text); }
+
+.msg {
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 18px;
+  font-size: 16px;
+  display: none;
+}
+
+.msg.show    { display: block; }
+.msg.ok      { background: #e7f6ee; color: var(--ok);     border: 1px solid #b7e2ca; }
+.msg.error   { background: #fdeceb; color: var(--danger); border: 1px solid #f5c6c2; }
+.msg.info    { background: #eef2f7; color: #33475b;       border: 1px solid #d3dce6; }
+
+.note {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.badge.active { background: #e7f6ee; color: var(--ok); }
+.badge.grace  { background: #fff4e5; color: #a15c07; }
+
+/* コンテンツ一覧 */
+.content-item {
+  border-top: 1px solid var(--line);
+  padding: 22px 0;
+}
+
+.content-item:first-of-type { border-top: 0; padding-top: 4px; }
+
+.content-item h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.content-item .date {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.content-item .body {
+  font-size: 16px;
+  margin-bottom: 14px;
+  white-space: pre-wrap;
+}
+
+a.watch {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 8px;
+}
+
+a.watch:hover { background: var(--accent-hover); }
+
+.skeleton {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+footer.site {
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+  padding: 24px 20px 40px;
+}
+
+@media (max-width: 480px) {
+  .wrap { padding: 20px 14px 60px; }
+  .card { padding: 22px 18px; }
+}

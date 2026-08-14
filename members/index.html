@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>会員ログイン | Salon de CRED</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+
+<header class="site">
+  <div class="inner">
+    <h1 id="salon-name">Salon de CRED</h1>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <h2>会員ログイン</h2>
+    <p class="note">
+      ご登録のメールアドレスを入力してください。<br>
+      そのアドレス宛に<strong>ログイン用のリンク</strong>をお送りします。<br>
+      パスワードは必要ありません。
+    </p>
+
+    <form id="login-form" novalidate>
+      <label for="email">メールアドレス</label>
+      <input type="email" id="email" name="email"
+             autocomplete="email" inputmode="email"
+             placeholder="example@example.com" required>
+      <p style="margin:16px 0 0">
+        <button type="submit" id="submit-btn">ログイン用リンクを送る</button>
+      </p>
+    </form>
+
+    <div class="msg" id="msg" role="status" aria-live="polite"></div>
+  </div>
+
+  <div class="card">
+    <h2>うまくログインできないとき</h2>
+    <p class="note">
+      ・メールが届かない場合は、迷惑メールフォルダをご確認ください。<br>
+      ・会費のお支払いに使っているメールアドレスと、ご連絡先のメールアドレスが
+      　異なる場合、ログインできないことがあります。<br>
+      ・解決しない場合は事務局までご連絡ください。
+    </p>
+    <p class="note">お問い合わせ： <a id="contact-link" href="#">-</a></p>
+  </div>
+</div>
+
+<footer class="site">
+  <span id="footer-name">Salon de CRED</span> 会員ページ
+</footer>
+
+<script type="module">
+  import { supabase, cfg, showMsg, hideMsg, memberPageUrl } from './app.js';
+
+  document.getElementById('salon-name').textContent  = cfg.SALON_NAME;
+  document.getElementById('footer-name').textContent = cfg.SALON_NAME;
+  document.title = `会員ログイン | ${cfg.SALON_NAME}`;
+
+  const contact = document.getElementById('contact-link');
+  contact.textContent = cfg.CONTACT_EMAIL;
+  contact.href = `mailto:${cfg.CONTACT_EMAIL}`;
+
+  const form = document.getElementById('login-form');
+  const emailInput = document.getElementById('email');
+  const btn = document.getElementById('submit-btn');
+  const msg = document.getElementById('msg');
+
+  // すでにログイン済みならそのまま会員ページへ
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    window.location.replace('member.html');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideMsg(msg);
+
+    const email = emailInput.value.trim().toLowerCase();
+    if (!email || !email.includes('@')) {
+      showMsg(msg, 'error', 'メールアドレスの形式をご確認ください。');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '送信中…';
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: memberPageUrl() },
+    });
+
+    btn.disabled = false;
+    btn.textContent = 'ログイン用リンクを送る';
+
+    if (error) {
+      // レート制限（同じアドレスへの連続送信）が最も多い
+      showMsg(msg, 'error',
+        `送信できませんでした。時間をおいて再度お試しください。（${error.message}）`);
+      return;
+    }
+
+    showMsg(msg, 'ok',
+      `${email} 宛にログイン用リンクを送りました。メールを開いてリンクをクリックしてください。`);
+    form.reset();
+  });
+</script>
+
+</body>
+</html>

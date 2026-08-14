@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>会員ページ | Salon de CRED</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+
+<header class="site">
+  <div class="inner">
+    <h1 id="salon-name">Salon de CRED</h1>
+    <button class="ghost" id="logout-btn" hidden>ログアウト</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="card" id="status-card" hidden>
+    <div class="status-line">
+      <span id="member-email">-</span>
+      <span class="badge" id="member-badge" hidden></span>
+    </div>
+    <div class="note" id="member-period"></div>
+  </div>
+
+  <div class="card" id="main-card">
+    <div class="skeleton" id="loading">読み込んでいます…</div>
+
+    <div id="denied" hidden>
+      <h2 id="denied-title">ご利用いただけません</h2>
+      <p id="denied-body" class="note"></p>
+      <p class="note">お問い合わせ： <a id="contact-link" href="#">-</a></p>
+      <p><button class="ghost" id="denied-logout">別のアドレスでログインし直す</button></p>
+    </div>
+
+    <div id="contents" hidden>
+      <h2>例会アーカイブ・お知らせ</h2>
+      <div id="content-list"></div>
+      <p class="note" id="empty-note" hidden>
+        現在、公開中のコンテンツはありません。
+      </p>
+    </div>
+  </div>
+
+  <div class="card" id="notice-card" hidden>
+    <h2 class="note" style="font-size:16px;margin-bottom:8px;">お願い</h2>
+    <p class="note" style="margin:0">
+      配信URLは会員限定です。SNS・グループチャット等への転載はご遠慮ください。
+    </p>
+  </div>
+
+</div>
+
+<footer class="site">
+  <span id="footer-name">Salon de CRED</span> 会員ページ
+</footer>
+
+<script type="module">
+  import { supabase, cfg, formatDate } from './app.js';
+
+  document.getElementById('salon-name').textContent  = cfg.SALON_NAME;
+  document.getElementById('footer-name').textContent = cfg.SALON_NAME;
+  document.title = `会員ページ | ${cfg.SALON_NAME}`;
+
+  const contact = document.getElementById('contact-link');
+  contact.textContent = cfg.CONTACT_EMAIL;
+  contact.href = `mailto:${cfg.CONTACT_EMAIL}`;
+
+  const loading    = document.getElementById('loading');
+  const denied     = document.getElementById('denied');
+  const contentsEl = document.getElementById('contents');
+
+  function showDenied(title, body) {
+    loading.hidden = true;
+    denied.hidden = false;
+    document.getElementById('denied-title').textContent = title;
+    document.getElementById('denied-body').textContent = body;
+  }
+
+  async function logout() {
+    await supabase.auth.signOut();
+    window.location.replace('index.html');
+  }
+  document.getElementById('logout-btn').addEventListener('click', logout);
+  document.getElementById('denied-logout').addEventListener('click', logout);
+
+  function renderContents(contents) {
+    const list = document.getElementById('content-list');
+
+    if (!contents.length) {
+      document.getElementById('empty-note').hidden = false;
+      return;
+    }
+
+    for (const c of contents) {
+      const item = document.createElement('div');
+      item.className = 'content-item';
+
+      const h3 = document.createElement('h3');
+      h3.textContent = c.title;
+      item.appendChild(h3);
+
+      if (c.event_date) {
+        const d = document.createElement('div');
+        d.className = 'date';
+        d.textContent = formatDate(c.event_date);
+        item.appendChild(d);
+      }
+
+      if (c.body) {
+        const b = document.createElement('div');
+        b.className = 'body';
+        b.textContent = c.body;   // textContent なので HTML 混入の心配はない
+        item.appendChild(b);
+      }
+
+      if (c.url) {
+        const a = document.createElement('a');
+        a.className = 'watch';
+        a.href = c.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = c.kind === 'video' ? '動画を見る' : '資料を開く';
+        item.appendChild(a);
+      }
+
+      list.appendChild(item);
+    }
+  }
+
+  async function main() {
+    // ---- 1. ログイン確認 ------------------------------------------------
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      window.location.replace('index.html');
+      return;
+    }
+
+    const email = (session.user.email || '').toLowerCase();
+    document.getElementById('logout-btn').hidden = false;
+
+    // ---- 2. 会員資格の確認 ----------------------------------------------
+    // RLS により、自分の行しか取得できない
+    const { data: member, error: memberErr } = await supabase
+      .from('members')
+      .select('display_name, status, current_period_end')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (memberErr) {
+      showDenied('エラーが発生しました',
+        `会員情報を取得できませんでした。時間をおいてお試しください。（${memberErr.message}）`);
+      return;
+    }
+
+    if (!member) {
+      showDenied('会員として登録されていません',
+        `${email} は会員名簿に登録がありません。` +
+        '会費のお支払いに使っているメールアドレスと異なる可能性があります。' +
+        'お手数ですが事務局までご連絡ください。');
+      return;
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+    const expired = member.current_period_end && member.current_period_end < today;
+    const active = ['active', 'grace'].includes(member.status) && !expired;
+
+    // ステータス表示
+    document.getElementById('status-card').hidden = false;
+    document.getElementById('member-email').textContent =
+      member.display_name ? `${member.display_name} 様（${email}）` : email;
+
+    if (!active) {
+      showDenied('会員資格が有効ではありません',
+        member.status === 'cancelled'
+          ? '退会済みのため、会員限定コンテンツはご覧いただけません。再入会をご希望の場合は事務局までご連絡ください。'
+          : 'お支払いの有効期限が切れています。ご継続の場合は事務局までご連絡ください。');
+      return;
+    }
+
+    const badge = document.getElementById('member-badge');
+    badge.hidden = false;
+    badge.className = `badge ${member.status}`;
+    badge.textContent = member.status === 'grace' ? 'お支払い確認中' : '有効会員';
+    document.getElementById('member-period').textContent =
+      member.current_period_end ? `有効期限：${formatDate(member.current_period_end)}` : '';
+
+    // ---- 3. 会員限定コンテンツの取得 -------------------------------------
+    // 有効会員でなければ RLS が 0 件を返すため、URL が漏れることはない
+    const { data: contents, error: contentsErr } = await supabase
+      .from('contents')
+      .select('title, kind, url, body, event_date')
+      .eq('is_published', true)
+      .order('event_date', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false });
+
+    if (contentsErr) {
+      showDenied('エラーが発生しました',
+        `コンテンツを取得できませんでした。時間をおいてお試しください。（${contentsErr.message}）`);
+      return;
+    }
+
+    loading.hidden = true;
+    contentsEl.hidden = false;
+    document.getElementById('notice-card').hidden = false;
+
+    renderContents(contents);
+  }
+
+  main();
+</script>
+
+</body>
+</html>
