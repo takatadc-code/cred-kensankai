@@ -33,6 +33,16 @@ export function hideMsg(el) {
   el.textContent = '';
 }
 
+/**
+ * 今日の日付を YYYY-MM-DD で返す（閲覧者のローカル時間basis）。
+ * toISOString() は UTC になるため、日本時間の朝は前日扱いになってしまう。
+ */
+export function todayStr() {
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
 /** 2026-08-14 → 2026年8月14日 */
 export function formatDate(iso) {
   if (!iso) return '';

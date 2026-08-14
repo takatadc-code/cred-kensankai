@@ -27,6 +27,9 @@
     <div class="note" id="member-period"></div>
   </div>
 
+  <!-- 本日の例会（該当があるときだけ表示） -->
+  <div id="today-area"></div>
+
   <div class="card" id="main-card">
     <div class="skeleton" id="loading">読み込んでいます…</div>
 
@@ -38,7 +41,7 @@
     </div>
 
     <div id="contents" hidden>
-      <h2>例会アーカイブ・お知らせ</h2>
+      <h2>これまでの例会・お知らせ</h2>
       <div id="content-list"></div>
       <p class="note" id="empty-note" hidden>
         現在、公開中のコンテンツはありません。
@@ -60,7 +63,7 @@
 </footer>
 
 <script type="module">
-  import { supabase, cfg, formatDate } from './app.js';
+  import { supabase, cfg, formatDate, todayStr } from './app.js';
 
   document.getElementById('salon-name').textContent  = cfg.SALON_NAME;
   document.getElementById('footer-name').textContent = cfg.SALON_NAME;
@@ -73,6 +76,7 @@
   const loading    = document.getElementById('loading');
   const denied     = document.getElementById('denied');
   const contentsEl = document.getElementById('contents');
+  const todayArea  = document.getElementById('today-area');
 
   function showDenied(title, body) {
     loading.hidden = true;
@@ -88,15 +92,80 @@
   document.getElementById('logout-btn').addEventListener('click', logout);
   document.getElementById('denied-logout').addEventListener('click', logout);
 
-  function renderContents(contents) {
-    const list = document.getElementById('content-list');
+  function linkButton(href, label, extraClass) {
+    const a = document.createElement('a');
+    a.className = 'watch' + (extraClass ? ` ${extraClass}` : '');
+    a.href = href;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = label;
+    return a;
+  }
 
-    if (!contents.length) {
-      document.getElementById('empty-note').hidden = false;
-      return;
+  // ---- 本日の例会 -------------------------------------------------------
+  // ZOOM の URL は事前に分かるが、YouTube 限定配信の URL は配信開始後にしか
+  // 発行されない。まだ入っていない場合は「配信開始後に表示されます」と案内し、
+  // 30秒ごとの自動更新で、運営が貼った瞬間に視聴ボタンが出るようにする。
+  function renderToday(items) {
+    todayArea.textContent = '';
+    if (!items.length) return;
+
+    for (const c of items) {
+      const card = document.createElement('div');
+      card.className = 'card live';
+
+      const badge = document.createElement('span');
+      badge.className = 'live-badge';
+      badge.textContent = '本日の例会';
+      card.appendChild(badge);
+
+      const h2 = document.createElement('h2');
+      h2.textContent = c.title;
+      card.appendChild(h2);
+
+      if (c.body) {
+        const b = document.createElement('div');
+        b.className = 'body';
+        b.textContent = c.body;
+        card.appendChild(b);
+      }
+
+      const actions = document.createElement('div');
+      actions.className = 'live-actions';
+
+      if (c.zoom_url) actions.appendChild(linkButton(c.zoom_url, 'ZOOMで参加する', 'zoom'));
+      if (c.url)      actions.appendChild(linkButton(c.url, '配信を見る'));
+
+      if (actions.childElementCount) card.appendChild(actions);
+
+      if (!c.url) {
+        const wait = document.createElement('div');
+        wait.className = 'waiting';
+        wait.textContent =
+          '配信の視聴URLは、配信開始後にこの画面に表示されます。' +
+          'この画面は自動で更新されますので、開いたままお待ちください。';
+        card.appendChild(wait);
+      }
+
+      const stamp = document.createElement('div');
+      stamp.className = 'refreshed';
+      const now = new Date();
+      const p = (n) => String(n).padStart(2, '0');
+      stamp.textContent = `最終更新 ${p(now.getHours())}:${p(now.getMinutes())}`;
+      card.appendChild(stamp);
+
+      todayArea.appendChild(card);
     }
+  }
 
-    for (const c of contents) {
+  // ---- これまでの例会 ---------------------------------------------------
+  function renderPast(items) {
+    const list = document.getElementById('content-list');
+    list.textContent = '';
+
+    document.getElementById('empty-note').hidden = items.length > 0;
+
+    for (const c of items) {
       const item = document.createElement('div');
       item.className = 'content-item';
 
@@ -118,18 +187,36 @@
         item.appendChild(b);
       }
 
+      const actions = document.createElement('div');
+      actions.className = 'live-actions';
+      if (c.zoom_url) actions.appendChild(linkButton(c.zoom_url, 'ZOOMで参加する', 'zoom'));
       if (c.url) {
-        const a = document.createElement('a');
-        a.className = 'watch';
-        a.href = c.url;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        a.textContent = c.kind === 'video' ? '動画を見る' : '資料を開く';
-        item.appendChild(a);
+        actions.appendChild(
+          linkButton(c.url, c.kind === 'video' ? '動画を見る' : '資料を開く'));
       }
+      if (actions.childElementCount) item.appendChild(actions);
 
       list.appendChild(item);
     }
+  }
+
+  // ---- 取得 -------------------------------------------------------------
+  // 有効会員でなければ RLS が 0 件を返すため、URL が漏れることはない
+  async function loadContents() {
+    const { data, error } = await supabase
+      .from('contents')
+      .select('title, kind, url, zoom_url, body, event_date')
+      .eq('is_published', true)
+      .order('event_date', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false });
+
+    if (error) return { error };
+
+    const today = todayStr();
+    return {
+      today: data.filter((c) => c.event_date === today),
+      past:  data.filter((c) => c.event_date !== today),
+    };
   }
 
   async function main() {
@@ -165,11 +252,10 @@
       return;
     }
 
-    const today = new Date().toISOString().slice(0, 10);
-    const expired = member.current_period_end && member.current_period_end < today;
+    const expired =
+      member.current_period_end && member.current_period_end < todayStr();
     const active = ['active', 'grace'].includes(member.status) && !expired;
 
-    // ステータス表示
     document.getElementById('status-card').hidden = false;
     document.getElementById('member-email').textContent =
       member.display_name ? `${member.display_name} 様（${email}）` : email;
@@ -189,18 +275,11 @@
     document.getElementById('member-period').textContent =
       member.current_period_end ? `有効期限：${formatDate(member.current_period_end)}` : '';
 
-    // ---- 3. 会員限定コンテンツの取得 -------------------------------------
-    // 有効会員でなければ RLS が 0 件を返すため、URL が漏れることはない
-    const { data: contents, error: contentsErr } = await supabase
-      .from('contents')
-      .select('title, kind, url, body, event_date')
-      .eq('is_published', true)
-      .order('event_date', { ascending: false, nullsFirst: false })
-      .order('created_at', { ascending: false });
-
-    if (contentsErr) {
+    // ---- 3. コンテンツ ---------------------------------------------------
+    const first = await loadContents();
+    if (first.error) {
       showDenied('エラーが発生しました',
-        `コンテンツを取得できませんでした。時間をおいてお試しください。（${contentsErr.message}）`);
+        `コンテンツを取得できませんでした。時間をおいてお試しください。（${first.error.message}）`);
       return;
     }
 
@@ -208,7 +287,18 @@
     contentsEl.hidden = false;
     document.getElementById('notice-card').hidden = false;
 
-    renderContents(contents);
+    renderToday(first.today);
+    renderPast(first.past);
+
+    // 配信開始後に運営が視聴URLを追記したら、待っている会員の画面にも
+    // すぐ反映されるよう定期的に取り直す
+    setInterval(async () => {
+      if (document.hidden) return;          // 裏に回っている間は取りに行かない
+      const r = await loadContents();
+      if (r.error) return;                  // 一時的な失敗は黙って次の周期に任せる
+      renderToday(r.today);
+      renderPast(r.past);
+    }, 30000);
   }
 
   main();

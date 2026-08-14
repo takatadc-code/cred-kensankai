@@ -191,6 +191,50 @@ a.watch {
 
 a.watch:hover { background: var(--accent-hover); }
 
+a.watch.zoom { background: #2d8cff; }
+a.watch.zoom:hover { background: #1a74e2; }
+
+/* 本日の例会 */
+.card.live {
+  border: 2px solid var(--accent);
+  box-shadow: 0 2px 14px rgba(31, 78, 121, .10);
+}
+
+.live-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.live-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.waiting {
+  background: #eef2f7;
+  border: 1px solid #d3dce6;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  font-size: 16px;
+  color: #33475b;
+}
+
+.refreshed {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 12px;
+}
+
 .skeleton {
   color: var(--muted);
   font-size: 16px;
