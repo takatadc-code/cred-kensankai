@@ -834,6 +834,8 @@ PayPal の取引CSV、
     if (/\d/.test(s)) return false;
     // 都道府県名（「神奈川県」等）。※「市川」「村上」等の姓は弾かないよう末尾だけ見る
     if (/[都道府県]$/.test(s) && s.length <= 5) return false;
+    // 商品名・件名（「Salon de CRED月会費」等）
+    if (/会費|Salon de CRED/i.test(s)) return false;
     if (s.length > 20) return false;                             // 説明文などは氏名でない
     return /[A-Za-z぀-ヿ一-龯]/.test(s);
   }
@@ -844,29 +846,60 @@ PayPal の取引CSV、
     const skipped = [];
     const seen = new Set();
 
-    for (const raw of text.split('\n')) {
-      const line = raw.trim();
-      if (!line) continue;
+    const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
+    if (!lines.length) return { rows, skipped };
 
+    // まず見出し行を探し、「名前」「メール」の列番号を確定する（最も確実な方法）。
+    // PayPal の CSV には必ず見出しがある。見出しが見つからない貼り付けは、
+    // 従来どおり各行の中身から推測する
+    const header = splitFields(lines[0]);
+    let nameIdx = -1, emailIdx = -1, headerUsed = false;
+
+    if (!header.some((f) => RE_EMAIL.test(f))) {   // 1行目がデータでない＝見出しらしい
+      const nameRe  = /^(名前|氏名|お名前|name)$/i;
+      const emailRe = /メール|e-?mail/i;
+      const senderRe = /送信者|購入者|支払者|buyer|payer|from/i;   // 会員側
+      const receiverRe = /受信者|受取|recipient|\bto\b/i;         // 自分側（除外）
+
+      nameIdx = header.findIndex((f) => nameRe.test(f));
+      emailIdx = header.findIndex((f) => emailRe.test(f) && senderRe.test(f));
+      if (emailIdx < 0) emailIdx = header.findIndex((f) => emailRe.test(f) && !receiverRe.test(f));
+      headerUsed = emailIdx >= 0;
+    }
+
+    for (const line of (headerUsed ? lines.slice(1) : lines)) {
       const fields = splitFields(line);
-      const emailIdx = fields.findIndex((f) => RE_EMAIL.test(f));
 
-      if (emailIdx < 0) { skipped.push(line); continue; }
+      let email = null;
+      if (headerUsed && RE_EMAIL.test(fields[emailIdx] || '')) {
+        email = fields[emailIdx];
+      } else {
+        const i = fields.findIndex((f) => RE_EMAIL.test(f));
+        if (i >= 0) email = fields[i];
+      }
+      if (!email) { skipped.push(line); continue; }
 
-      const email = fields[emailIdx].toLowerCase();
+      email = email.toLowerCase();
       if (seen.has(email)) continue;                             // 同じ行が二重にあっても1件に
       seen.add(email);
 
       const sub = fields.find((f) => RE_SUBID.test(f)) || null;
 
-      // 氏名は、メールアドレスの列にいちばん近い候補を採る
-      // （PayPal の一覧では氏名とメールが隣り合っているため）
-      let name = null, best = Infinity;
-      fields.forEach((f, i) => {
-        if (i === emailIdx || !looksLikeName(f)) return;
-        const d = Math.abs(i - emailIdx);
-        if (d < best) { best = d; name = f; }
-      });
+      let name = null;
+      if (headerUsed && nameIdx >= 0) {
+        // 見出しで特定した「名前」列をそのまま使う
+        const v = (fields[nameIdx] || '').trim();
+        if (v && !RE_EMAIL.test(v) && !RE_SUBID.test(v)) name = v;
+      } else {
+        // 見出しがない場合だけ、メールアドレスに近い氏名らしい項目を推測
+        const ei = fields.findIndex((f) => RE_EMAIL.test(f));
+        let best = Infinity;
+        fields.forEach((f, i) => {
+          if (i === ei || !looksLikeName(f)) return;
+          const d = Math.abs(i - ei);
+          if (d < best) { best = d; name = f; }
+        });
+      }
 
       rows.push({ email, display_name: name, paypal_subscription_id: sub });
     }
