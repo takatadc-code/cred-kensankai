@@ -807,6 +807,7 @@ PayPal の取引CSV、
     '完了', 'アクティブ', '有効', '無効', '取消', '取り消し', '保留', '処理中', '失敗',
     'JPY', 'USD', '円', 'Completed', 'Active', 'Cancelled', 'Canceled', 'Pending',
     'Suspended', 'Expired', '定期支払い', 'サブスクリプション',
+    '確認済み', '未確認', '本人確認済み', '日本', 'Japan',
   ]);
 
   /** カンマ／タブ区切りを、引用符を考慮して分解する */
@@ -829,11 +830,11 @@ PayPal の取引CSV、
   function looksLikeName(s) {
     if (!s || NOT_NAME.has(s)) return false;
     if (RE_EMAIL.test(s) || RE_SUBID.test(s)) return false;
-    if (/^[\d\s\-\/:.,¥$+()]+$/.test(s)) return false;          // 数値・日付・金額
-    // 取引IDのような「英数字が混ざった塊」を氏名として拾わない。
-    // PayPal の CSV では取引IDがメールアドレスの隣に並ぶため、これがないと誤検出する
-    if (/^[A-Z0-9\-_]+$/.test(s) && /\d/.test(s)) return false;
-    if (s.length > 40) return false;                             // 説明文などは氏名でない
+    // 数字を含む項目は氏名でない（住所・郵便番号・取引ID・金額・日付）
+    if (/\d/.test(s)) return false;
+    // 都道府県名（「神奈川県」等）。※「市川」「村上」等の姓は弾かないよう末尾だけ見る
+    if (/[都道府県]$/.test(s) && s.length <= 5) return false;
+    if (s.length > 20) return false;                             // 説明文などは氏名でない
     return /[A-Za-z぀-ヿ一-龯]/.test(s);
   }
 
