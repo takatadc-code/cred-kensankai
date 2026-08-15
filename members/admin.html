@@ -208,18 +208,43 @@
       </div>
 
       <div class="card">
-        <h2>まとめて追加（CSV貼り付け）</h2>
+        <h2>まとめて追加（貼り付け）</h2>
         <p class="note">
-          1行につき1名。<strong>メールアドレス,氏名,サブスクリプションID</strong> の順にカンマ区切りで貼り付けてください。
-          氏名以降は省略できます。<br>
-          すでに登録済みのメールアドレスは、氏名とIDが上書きされます（状態は変更しません）。
+          <strong>PayPal の一覧やダウンロードした CSV を、そのまま貼り付けてください。</strong>
+          列の順番はそろえなくて構いません。各行からメールアドレス・お名前・
+          サブスクリプションID（<code>I-</code> で始まるもの）を自動で読み取ります。
+          見出し行が含まれていても無視します。<br>
+          <strong>貼り付けたあと、登録される内容を一覧で確認できます。</strong>
+          そこで問題がなければ登録に進んでください。
         </p>
         <div class="field">
-          <textarea id="m-csv" placeholder="yamada@example.com,山田太郎,I-XXXXXXXXXXXX
-suzuki@example.com,鈴木花子"></textarea>
+          <textarea id="m-csv" placeholder="Excel やスプレッドシートからコピーした範囲、
+PayPal の取引CSV、
+「メール, 氏名」だけの行、
+いずれでも読み取れます。"></textarea>
         </div>
-        <button id="m-import">まとめて追加する</button>
+        <button id="m-parse">内容を確認する</button>
         <div class="msg" id="m-csv-msg" role="status" aria-live="polite"></div>
+
+        <div id="m-preview" hidden style="margin-top:22px">
+          <h2 style="font-size:18px" id="m-preview-title"></h2>
+          <p class="note">
+            誤って読み取られている行があれば、貼り付ける内容を直して
+            「内容を確認する」を押し直してください。
+          </p>
+          <div class="table-scroll" style="max-height:360px; overflow-y:auto">
+            <table>
+              <thead>
+                <tr><th>メールアドレス</th><th>氏名</th><th>サブスクリプションID</th><th>登録</th></tr>
+              </thead>
+              <tbody id="m-preview-list"></tbody>
+            </table>
+          </div>
+          <p style="margin-top:16px">
+            <button id="m-import">この内容で登録する</button>
+            <button class="ghost" id="m-cancel" style="margin-left:10px">やめる</button>
+          </p>
+        </div>
       </div>
 
       <div class="card">
@@ -700,40 +725,145 @@ suzuki@example.com,鈴木花子"></textarea>
     await loadMembers();
   });
 
-  $('m-import').addEventListener('click', async () => {
+  // ---- 貼り付けたものから会員情報を読み取る ----
+  // PayPal の CSV や Excel からのコピーをそのまま受け取れるようにする。
+  // 列の順番も列数も決め打ちにせず、各行の中身を見て判定する。
+  const RE_EMAIL = /^[^\s@,"]+@[^\s@,"]+\.[^\s@,"]+$/;
+  const RE_SUBID = /^I-[A-Z0-9]{8,}$/i;
+  // ステータスや通貨など、氏名と紛らわしい語を氏名候補から外す
+  const NOT_NAME = new Set([
+    '完了', 'アクティブ', '有効', '無効', '取消', '取り消し', '保留', '処理中', '失敗',
+    'JPY', 'USD', '円', 'Completed', 'Active', 'Cancelled', 'Canceled', 'Pending',
+    'Suspended', 'Expired', '定期支払い', 'サブスクリプション',
+  ]);
+
+  /** カンマ／タブ区切りを、引用符を考慮して分解する */
+  function splitFields(line) {
+    const out = [];
+    let cur = '', quoted = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (c === '"') {
+        if (quoted && line[i + 1] === '"') { cur += '"'; i++; }
+        else quoted = !quoted;
+      } else if ((c === ',' || c === '\t') && !quoted) {
+        out.push(cur); cur = '';
+      } else cur += c;
+    }
+    out.push(cur);
+    return out.map((s) => s.trim());
+  }
+
+  function looksLikeName(s) {
+    if (!s || NOT_NAME.has(s)) return false;
+    if (RE_EMAIL.test(s) || RE_SUBID.test(s)) return false;
+    if (/^[\d\s\-\/:.,¥$+()]+$/.test(s)) return false;          // 数値・日付・金額
+    // 取引IDのような「英数字が混ざった塊」を氏名として拾わない。
+    // PayPal の CSV では取引IDがメールアドレスの隣に並ぶため、これがないと誤検出する
+    if (/^[A-Z0-9\-_]+$/.test(s) && /\d/.test(s)) return false;
+    if (s.length > 40) return false;                             // 説明文などは氏名でない
+    return /[A-Za-z぀-ヿ一-龯]/.test(s);
+  }
+
+  /** 貼り付けたテキスト → [{email, display_name, paypal_subscription_id}] */
+  function parseRoster(text) {
+    const rows = [];
+    const skipped = [];
+    const seen = new Set();
+
+    for (const raw of text.split('\n')) {
+      const line = raw.trim();
+      if (!line) continue;
+
+      const fields = splitFields(line);
+      const emailIdx = fields.findIndex((f) => RE_EMAIL.test(f));
+
+      if (emailIdx < 0) { skipped.push(line); continue; }
+
+      const email = fields[emailIdx].toLowerCase();
+      if (seen.has(email)) continue;                             // 同じ行が二重にあっても1件に
+      seen.add(email);
+
+      const sub = fields.find((f) => RE_SUBID.test(f)) || null;
+
+      // 氏名は、メールアドレスの列にいちばん近い候補を採る
+      // （PayPal の一覧では氏名とメールが隣り合っているため）
+      let name = null, best = Infinity;
+      fields.forEach((f, i) => {
+        if (i === emailIdx || !looksLikeName(f)) return;
+        const d = Math.abs(i - emailIdx);
+        if (d < best) { best = d; name = f; }
+      });
+
+      rows.push({ email, display_name: name, paypal_subscription_id: sub });
+    }
+    return { rows, skipped };
+  }
+
+  let pendingRows = [];
+
+  $('m-cancel').addEventListener('click', () => {
+    $('m-preview').hidden = true;
+    pendingRows = [];
     hideMsg($('m-csv-msg'));
+  });
 
-    const lines = $('m-csv').value
-      .split('\n')
-      .map((l) => l.trim())
-      .filter(Boolean);
+  $('m-parse').addEventListener('click', () => {
+    hideMsg($('m-csv-msg'));
+    $('m-preview').hidden = true;
 
-    if (!lines.length) {
+    const text = $('m-csv').value;
+    if (!text.trim()) {
       showMsg($('m-csv-msg'), 'error', '貼り付ける内容がありません。');
       return;
     }
 
-    const rows = [];
-    const skipped = [];
-
-    for (const line of lines) {
-      const [email, name, sub] = line.split(',').map((s) => (s || '').trim());
-      if (!email || !email.includes('@')) {
-        skipped.push(line);
-        continue;
-      }
-      rows.push({
-        email: email.toLowerCase(),
-        display_name: name || null,
-        paypal_subscription_id: sub || null,
-      });
-    }
+    const { rows, skipped } = parseRoster(text);
 
     if (!rows.length) {
       showMsg($('m-csv-msg'), 'error',
-        'メールアドレスとして読み取れる行がありませんでした。1行につき1名、カンマ区切りで貼り付けてください。');
+        'メールアドレスが見つかりませんでした。メールアドレスの列を含めて貼り付けてください。');
       return;
     }
+
+    pendingRows = rows;
+
+    const existing = new Set(allMembers.map((m) => m.email));
+    const newCount = rows.filter((r) => !existing.has(r.email)).length;
+
+    $('m-preview-title').textContent =
+      `${rows.length}名を読み取りました（新規 ${newCount}名 / 既存 ${rows.length - newCount}名）`;
+
+    const list = $('m-preview-list');
+    list.textContent = '';
+    for (const r of rows) {
+      const tr = document.createElement('tr');
+      for (const v of [r.email, r.display_name || '—', r.paypal_subscription_id || '—']) {
+        const td = document.createElement('td');
+        td.textContent = v;
+        tr.appendChild(td);
+      }
+      const td = document.createElement('td');
+      const p = document.createElement('span');
+      const isNew = !existing.has(r.email);
+      p.className = `pill ${isNew ? 'active' : 'off'}`;
+      p.textContent = isNew ? '新規' : '更新';
+      td.appendChild(p);
+      tr.appendChild(td);
+      list.appendChild(tr);
+    }
+
+    $('m-preview').hidden = false;
+    if (skipped.length) {
+      showMsg($('m-csv-msg'), 'info',
+        `${skipped.length}行はメールアドレスが見つからなかったため除外しました（見出し行など）。`);
+    }
+  });
+
+  $('m-import').addEventListener('click', async () => {
+    const rows = pendingRows;
+    const skipped = [];
+    if (!rows.length) return;
 
     const btn = $('m-import');
     btn.disabled = true;
@@ -754,7 +884,7 @@ suzuki@example.com,鈴木花子"></textarea>
       const { error } = await supabase.from('members').insert(newRows);
       if (error) {
         btn.disabled = false;
-        btn.textContent = 'まとめて追加する';
+        btn.textContent = 'この内容で登録する';
         showMsg($('m-csv-msg'), 'error', `登録できませんでした。（${error.message}）`);
         return;
       }
@@ -769,16 +899,16 @@ suzuki@example.com,鈴木花子"></textarea>
     }
 
     btn.disabled = false;
-    btn.textContent = 'まとめて追加する';
+    btn.textContent = 'この内容で登録する';
 
     const parts = [];
     if (newRows.length) parts.push(`新規 ${newRows.length}名を追加`);
     if (updRows.length) parts.push(`既存 ${updRows.length - failed}名の氏名・IDを更新（状態は変更していません）`);
     if (failed)         parts.push(`${failed}名は更新に失敗`);
-    if (skipped.length) parts.push(`${skipped.length}行は読み取れず除外`);
-
     showMsg($('m-csv-msg'), failed ? 'info' : 'ok', parts.join('／') + '。');
     $('m-csv').value = '';
+    $('m-preview').hidden = true;
+    pendingRows = [];
     await loadMembers();
   });
 
