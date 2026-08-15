@@ -467,7 +467,7 @@
       member.current_period_end && member.current_period_end < todayStr();
     const active = ['active', 'grace'].includes(member.status) && !expired;
 
-    isPaid = member.plan === 'paid';
+    isPaid = member.plan !== 'free';   // 有料(paid)と招待(comp)は同じ閲覧範囲
 
     // 運営（管理者）のときだけ、管理画面へのリンクを出す。
     // 一般会員にはそもそも表示されず、URLを直接開いても RLS で弾かれる

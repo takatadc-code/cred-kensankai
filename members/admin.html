@@ -211,6 +211,16 @@
           <label for="m-sub">PayPal サブスクリプションID（任意・後から入力可）</label>
           <input type="text" id="m-sub" placeholder="I-XXXXXXXXXXXX">
         </div>
+        <div class="field">
+          <label for="m-plan">会員種別</label>
+          <select id="m-plan">
+            <option value="paid">有料会員（PayPal で会費をお支払いの方）</option>
+            <option value="comp">招待会員（会費なし・有料会員と同じ閲覧が可能）</option>
+          </select>
+          <div class="until-note">
+            招待会員は、毎月の会費確認（PayPalリストとの突合）の対象になりません。
+          </div>
+        </div>
         <button id="m-add">追加する</button>
         <div class="msg" id="m-msg" role="status" aria-live="polite"></div>
       </div>
@@ -650,9 +660,11 @@ PayPal の取引CSV、
       : allMembers;
 
     const paidCount = allMembers.filter((m) => m.plan === 'paid' && m.status === 'active').length;
+    const compCount = allMembers.filter((m) => m.plan === 'comp' && m.status === 'active').length;
     const freeCount = allMembers.filter((m) => m.plan === 'free' && m.status === 'active').length;
     $('m-count').textContent =
-      `有料 ${paidCount}名 / 無料 ${freeCount}名 / 全${allMembers.length}名` + (q ? `（表示 ${rows.length}名）` : '');
+      `有料 ${paidCount}名 / 招待 ${compCount}名 / 無料 ${freeCount}名 / 全${allMembers.length}名` +
+      (q ? `（表示 ${rows.length}名）` : '');
 
     const list = $('m-list');
     list.textContent = '';
@@ -674,6 +686,12 @@ PayPal の取引CSV、
         p.className = 'pill off';
         p.style.marginLeft = '8px';
         p.textContent = '無料';
+        tdName.appendChild(p);
+      } else if (m.plan === 'comp') {
+        const p = document.createElement('span');
+        p.className = 'pill grace';
+        p.style.marginLeft = '8px';
+        p.textContent = '招待';
         tdName.appendChild(p);
       }
       tr.appendChild(tdName);
@@ -724,25 +742,34 @@ PayPal の取引CSV、
       });
       tdAct.appendChild(sel);
 
-      // 無料⇄有料の切替（入金を確認したら「有料に切替」を押す）
-      const planBtn = document.createElement('button');
-      planBtn.className = 'small';
-      planBtn.style.marginLeft = '8px';
-      planBtn.textContent = m.plan === 'free' ? '有料に切替' : '無料に戻す';
-      planBtn.addEventListener('click', async () => {
-        const to = m.plan === 'free' ? 'paid' : 'free';
-        const label = to === 'paid' ? '有料会員' : '無料会員';
-        if (!window.confirm(`${m.email} を${label}に変更します。よろしいですか？`)) return;
-        planBtn.disabled = true;
+      // 会員種別（有料・招待・無料）の切替
+      const planSel = document.createElement('select');
+      planSel.style.width = 'auto';
+      planSel.style.fontSize = '14px';
+      planSel.style.padding = '6px 10px';
+      planSel.style.marginLeft = '8px';
+      for (const [value, label] of [
+        ['paid', '有料'],
+        ['comp', '招待'],
+        ['free', '無料'],
+      ]) {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = label;
+        if (m.plan === value) opt.selected = true;
+        planSel.appendChild(opt);
+      }
+      planSel.addEventListener('change', async () => {
+        planSel.disabled = true;
         const { error } = await supabase
           .from('members')
-          .update({ plan: to })
+          .update({ plan: planSel.value })
           .eq('id', m.id);
         if (error) showMsg($('m-msg'), 'error', `変更できませんでした。（${error.message}）`);
-        else showMsg($('m-msg'), 'ok', `${m.email} を${label}にしました。`);
+        else showMsg($('m-msg'), 'ok', `${m.email} の種別を変更しました。`);
         await loadMembers();
       });
-      tdAct.appendChild(planBtn);
+      tdAct.appendChild(planSel);
       tr.appendChild(tdAct);
 
       list.appendChild(tr);
@@ -777,7 +804,7 @@ PayPal の取引CSV、
       display_name: $('m-name').value.trim() || null,
       paypal_subscription_id: $('m-sub').value.trim() || null,
       status: 'active',
-      plan: 'paid',
+      plan: $('m-plan').value,
     });
 
     btn.disabled = false;
@@ -790,10 +817,12 @@ PayPal の取引CSV、
       return;
     }
 
-    showMsg($('m-msg'), 'ok', `${email} を追加しました。`);
+    showMsg($('m-msg'), 'ok',
+      `${email} を${$('m-plan').value === 'comp' ? '招待会員' : '有料会員'}として追加しました。`);
     $('m-email').value = '';
     $('m-name').value = '';
     $('m-sub').value = '';
+    $('m-plan').value = 'paid';
     await loadMembers();
   });
 
