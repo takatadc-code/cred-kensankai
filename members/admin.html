@@ -105,6 +105,7 @@
             <select id="c-kind">
               <option value="video">例会・動画</option>
               <option value="document">資料</option>
+              <option value="note">note記事</option>
               <option value="notice">お知らせのみ</option>
             </select>
           </div>
@@ -112,6 +113,13 @@
             <label for="c-date">開催日</label>
             <input type="date" id="c-date">
           </div>
+        </div>
+        <div class="field">
+          <label for="c-aud">公開範囲</label>
+          <select id="c-aud">
+            <option value="paid">有料会員のみ（例会・アーカイブ）</option>
+            <option value="all">全会員（note記事・お知らせなど。無料会員にもURLごと公開）</option>
+          </select>
         </div>
         <div class="field">
           <label for="c-zoom">ZOOM 参加URL（事前に入れておく）</label>
@@ -419,7 +427,7 @@ PayPal の取引CSV、
   async function loadContents() {
     const { data, error } = await supabase
       .from('contents')
-      .select('id, title, kind, url, zoom_url, zoom_meeting_id, zoom_passcode, body, event_date, is_published, thumbnail_url, archive_until')
+      .select('id, title, kind, url, zoom_url, zoom_meeting_id, zoom_passcode, body, event_date, is_published, thumbnail_url, archive_until, audience')
       .order('event_date', { ascending: false, nullsFirst: false })
       .order('created_at', { ascending: false });
 
@@ -463,6 +471,12 @@ PayPal の取引CSV、
       exp.className = 'expiry';
       exp.textContent = formatUntil(c.archive_until);
       tdState.appendChild(exp);
+      if (c.audience === 'all') {
+        const aud = document.createElement('span');
+        aud.className = 'expiry';
+        aud.textContent = '全会員に公開';
+        tdState.appendChild(aud);
+      }
       tr.appendChild(tdState);
 
       const tdAct = document.createElement('td');
@@ -523,6 +537,7 @@ PayPal の取引CSV、
     editingId = c.id;
     $('c-title').value = c.title || '';
     $('c-kind').value  = c.kind || 'video';
+    $('c-aud').value   = c.audience || 'paid';
     $('c-date').value  = c.event_date || '';
     $('c-zoom').value      = c.zoom_url || '';
     $('c-zoom-id').value   = c.zoom_meeting_id || '';
@@ -547,6 +562,7 @@ PayPal の取引CSV、
                       'c-url', 'c-body', 'c-until', 'c-thumb-file'])
       $(id).value = '';
     $('c-kind').value = 'video';
+    $('c-aud').value = 'paid';
     $('c-thumb-status').textContent = '';
     showThumb(null);
     $('c-form-title').textContent = '新しく追加する';
@@ -571,6 +587,7 @@ PayPal の取引CSV、
     const payload = {
       title,
       kind: $('c-kind').value,
+      audience: $('c-aud').value,
       zoom_url: $('c-zoom').value.trim() || null,
       // 表示時に整形するので、保存は数字だけにそろえる
       zoom_meeting_id: $('c-zoom-id').value.replace(/\D/g, '') || null,
@@ -613,7 +630,7 @@ PayPal の取引CSV、
   async function loadMembers() {
     const { data, error } = await supabase
       .from('members')
-      .select('id, email, display_name, status, role, current_period_end, paypal_subscription_id')
+      .select('id, email, display_name, status, role, plan, current_period_end, paypal_subscription_id')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -632,9 +649,10 @@ PayPal の取引CSV、
           m.email.includes(q) || (m.display_name || '').toLowerCase().includes(q))
       : allMembers;
 
-    const activeCount = allMembers.filter((m) => m.status === 'active').length;
+    const paidCount = allMembers.filter((m) => m.plan === 'paid' && m.status === 'active').length;
+    const freeCount = allMembers.filter((m) => m.plan === 'free' && m.status === 'active').length;
     $('m-count').textContent =
-      `有効 ${activeCount}名 / 全${allMembers.length}名` + (q ? `（表示 ${rows.length}名）` : '');
+      `有料 ${paidCount}名 / 無料 ${freeCount}名 / 全${allMembers.length}名` + (q ? `（表示 ${rows.length}名）` : '');
 
     const list = $('m-list');
     list.textContent = '';
@@ -649,6 +667,13 @@ PayPal の取引CSV、
         p.className = 'pill admin';
         p.style.marginLeft = '8px';
         p.textContent = '運営';
+        tdName.appendChild(p);
+      }
+      if (m.plan === 'free') {
+        const p = document.createElement('span');
+        p.className = 'pill off';
+        p.style.marginLeft = '8px';
+        p.textContent = '無料';
         tdName.appendChild(p);
       }
       tr.appendChild(tdName);
@@ -698,6 +723,26 @@ PayPal の取引CSV、
         await loadMembers();
       });
       tdAct.appendChild(sel);
+
+      // 無料⇄有料の切替（入金を確認したら「有料に切替」を押す）
+      const planBtn = document.createElement('button');
+      planBtn.className = 'small';
+      planBtn.style.marginLeft = '8px';
+      planBtn.textContent = m.plan === 'free' ? '有料に切替' : '無料に戻す';
+      planBtn.addEventListener('click', async () => {
+        const to = m.plan === 'free' ? 'paid' : 'free';
+        const label = to === 'paid' ? '有料会員' : '無料会員';
+        if (!window.confirm(`${m.email} を${label}に変更します。よろしいですか？`)) return;
+        planBtn.disabled = true;
+        const { error } = await supabase
+          .from('members')
+          .update({ plan: to })
+          .eq('id', m.id);
+        if (error) showMsg($('m-msg'), 'error', `変更できませんでした。（${error.message}）`);
+        else showMsg($('m-msg'), 'ok', `${m.email} を${label}にしました。`);
+        await loadMembers();
+      });
+      tdAct.appendChild(planBtn);
       tr.appendChild(tdAct);
 
       list.appendChild(tr);
@@ -732,6 +777,7 @@ PayPal の取引CSV、
       display_name: $('m-name').value.trim() || null,
       paypal_subscription_id: $('m-sub').value.trim() || null,
       status: 'active',
+      plan: 'paid',
     });
 
     btn.disabled = false;
@@ -898,7 +944,7 @@ PayPal の取引CSV、
     // 運営(admin)は PayPal で会費を払っていないため対象から外す
     const listed = new Set(rows.map((r) => r.email));
     const missing = allMembers.filter((m) =>
-      m.status === 'active' && m.role !== 'admin' && !listed.has(m.email));
+      m.status === 'active' && m.plan === 'paid' && m.role !== 'admin' && !listed.has(m.email));
 
     const mList = $('m-missing-list');
     mList.textContent = '';
@@ -967,7 +1013,7 @@ PayPal の取引CSV、
     const existing = new Set(allMembers.map((m) => m.email));
     const newRows = rows
       .filter((r) => !existing.has(r.email))
-      .map((r) => ({ ...r, status: 'active' }));
+      .map((r) => ({ ...r, status: 'active', plan: 'paid' }));
     const updRows = rows.filter((r) => existing.has(r.email));
 
     let failed = 0;
@@ -983,9 +1029,11 @@ PayPal の取引CSV、
     }
 
     for (const r of updRows) {
+      // PayPal のリストに載っている＝会費を払っている人なので、
+      // 無料会員だった場合はここで有料に引き上がる（入会の反映が自動になる）
       const { error } = await supabase
         .from('members')
-        .update({ display_name: r.display_name, paypal_subscription_id: r.paypal_subscription_id })
+        .update({ display_name: r.display_name, paypal_subscription_id: r.paypal_subscription_id, plan: 'paid' })
         .eq('email', r.email);
       if (error) failed++;
     }

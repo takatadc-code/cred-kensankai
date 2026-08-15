@@ -265,6 +265,37 @@ a.watch.zoom:hover { background: #1a74e2; }
   margin-top: 12px;
 }
 
+/* 無料会員向け：ロックと入会案内 */
+.badge.free { background: #eef2f7; color: #33475b; }
+
+.lock {
+  background: #fbf7ec;
+  border: 1px solid #e6d9b8;
+  border-radius: 10px;
+  padding: 18px;
+  margin-top: 16px;
+}
+
+.lock .head { font-weight: 700; margin-bottom: 6px; }
+.lock .note { margin-bottom: 14px; }
+
+a.join {
+  display: inline-block;
+  background: #a5811f;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 17px;
+  padding: 13px 22px;
+  border-radius: 8px;
+}
+
+a.join:hover { background: #8a6b17; }
+
+.join-sub { font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+.upsell { border-color: #e6d9b8; }
+
 /* サムネイル */
 .thumb {
   display: block;

@@ -30,6 +30,17 @@
     <div class="note" id="member-period"></div>
   </div>
 
+  <!-- 入会のご案内（無料会員のみ） -->
+  <div class="card upsell" id="upsell-card" hidden>
+    <h2 style="font-size:19px">すべての配信・アーカイブを見るには</h2>
+    <p class="note">
+      有料会員になると、例会のZOOM参加・ライブ配信の視聴・過去アーカイブの
+      閲覧がすべてご利用いただけます。
+    </p>
+    <a class="join" id="upsell-join" href="#">入会する（月額 5,500円・税込）</a>
+    <div class="join-sub">PayPal での決済ページに移動します。</div>
+  </div>
+
   <!-- 本日の例会（該当があるときだけ表示） -->
   <div id="today-area"></div>
 
@@ -52,6 +63,13 @@
     </div>
   </div>
 
+  <!-- note・コラム -->
+  <div class="card" id="note-card" hidden>
+    <h2>note・コラム</h2>
+    <p class="note" style="margin-bottom:4px">どなたでもお読みいただけます。</p>
+    <div id="note-list"></div>
+  </div>
+
   <div class="card" id="notice-card" hidden>
     <h2 class="note" style="font-size:16px;margin-bottom:8px;">お願い</h2>
     <p class="note" style="margin:0">
@@ -68,9 +86,12 @@
 <script type="module">
   import { supabase, cfg, formatDate, todayStr } from './app.js';
 
+  const JOIN_URL = 'https://www.takata-dc.jp/paypal-sub/';
+
   document.getElementById('salon-name').textContent  = cfg.SALON_NAME;
   document.getElementById('footer-name').textContent = cfg.SALON_NAME;
   document.title = `会員ページ | ${cfg.SALON_NAME}`;
+  document.getElementById('upsell-join').href = JOIN_URL;
 
   const contact = document.getElementById('contact-link');
   contact.textContent = cfg.CONTACT_EMAIL;
@@ -80,6 +101,8 @@
   const denied     = document.getElementById('denied');
   const contentsEl = document.getElementById('contents');
   const todayArea  = document.getElementById('today-area');
+
+  let isPaid = false;
 
   function showDenied(title, body) {
     loading.hidden = true;
@@ -154,7 +177,6 @@
           btn.textContent = 'コピーしました';
           setTimeout(() => { btn.textContent = 'コピー'; }, 1500);
         } catch {
-          // クリップボードが使えない環境では、選択してもらえば足りる
           btn.textContent = '選択してコピーしてください';
         }
       });
@@ -175,10 +197,33 @@
     return a;
   }
 
+  /** 無料会員向けのロック表示（入会ボタン付き） */
+  function lockBlock(message) {
+    const box = document.createElement('div');
+    box.className = 'lock';
+
+    const head = document.createElement('div');
+    head.className = 'head';
+    head.textContent = '🔒 ' + message;
+    box.appendChild(head);
+
+    const note = document.createElement('div');
+    note.className = 'note';
+    note.textContent = 'ZOOMでの参加・ライブ配信・アーカイブ視聴は、入会後すぐにご利用いただけます。';
+    box.appendChild(note);
+
+    const a = document.createElement('a');
+    a.className = 'join';
+    a.href = JOIN_URL;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = '入会して視聴する';
+    box.appendChild(a);
+
+    return box;
+  }
+
   // ---- 本日の例会 -------------------------------------------------------
-  // ZOOM の URL は事前に分かるが、YouTube 限定配信の URL は配信開始後にしか
-  // 発行されない。まだ入っていない場合は「配信開始後に表示されます」と案内し、
-  // 30秒ごとの自動更新で、運営が貼った瞬間に視聴ボタンが出るようにする。
   function renderToday(items) {
     todayArea.textContent = '';
     if (!items.length) return;
@@ -204,6 +249,13 @@
         b.className = 'body';
         b.textContent = c.body;
         card.appendChild(b);
+      }
+
+      if (!isPaid && c.audience === 'paid') {
+        // 無料会員：URL類は届いていない。入会のご案内を出す
+        card.appendChild(lockBlock('この例会の視聴は有料会員限定です'));
+        todayArea.appendChild(card);
+        continue;
       }
 
       const actions = document.createElement('div');
@@ -244,6 +296,46 @@
     }
   }
 
+  // ---- note・コラム -----------------------------------------------------
+  function renderNotes(items) {
+    const cardEl = document.getElementById('note-card');
+    const list = document.getElementById('note-list');
+    list.textContent = '';
+    cardEl.hidden = items.length === 0;
+
+    for (const c of items) {
+      const item = document.createElement('div');
+      item.className = 'content-item';
+
+      const h3 = document.createElement('h3');
+      h3.textContent = c.title;
+      item.appendChild(h3);
+
+      if (c.event_date) {
+        const d = document.createElement('div');
+        d.className = 'date';
+        d.textContent = formatDate(c.event_date);
+        item.appendChild(d);
+      }
+
+      if (c.body) {
+        const b = document.createElement('div');
+        b.className = 'body';
+        b.textContent = c.body;
+        item.appendChild(b);
+      }
+
+      if (c.url) {
+        const actions = document.createElement('div');
+        actions.className = 'live-actions';
+        actions.appendChild(linkButton(c.url, 'note で読む'));
+        item.appendChild(actions);
+      }
+
+      list.appendChild(item);
+    }
+  }
+
   // ---- これまでの例会 ---------------------------------------------------
   function renderPast(items) {
     const list = document.getElementById('content-list');
@@ -276,6 +368,15 @@
         item.appendChild(b);
       }
 
+      if (!isPaid && c.audience === 'paid' && (c.has_url || c.has_zoom)) {
+        const lockNote = document.createElement('div');
+        lockNote.className = 'note';
+        lockNote.textContent = '🔒 視聴は有料会員限定です';
+        item.appendChild(lockNote);
+        list.appendChild(item);
+        continue;
+      }
+
       const actions = document.createElement('div');
       actions.className = 'live-actions';
       if (c.zoom_url) actions.appendChild(linkButton(c.zoom_url, 'ZOOMで参加する', 'zoom'));
@@ -300,12 +401,12 @@
   }
 
   // ---- 取得 -------------------------------------------------------------
-  // 有効会員でなければ RLS が 0 件を返すため、URL が漏れることはない
+  // 無料会員には、ビュー（contents_feed）がURL列を null にして返す。
+  // 期限切れ・非公開はサーバー側で除外済み
   async function loadContents() {
     const { data, error } = await supabase
-      .from('contents')
-      .select('title, kind, url, zoom_url, zoom_meeting_id, zoom_passcode, body, event_date, thumbnail_url, archive_until')
-      .eq('is_published', true)
+      .from('contents_feed')
+      .select('title, kind, url, zoom_url, zoom_meeting_id, zoom_passcode, body, event_date, thumbnail_url, archive_until, audience, has_url, has_zoom')
       .order('event_date', { ascending: false, nullsFirst: false })
       .order('created_at', { ascending: false });
 
@@ -313,8 +414,9 @@
 
     const today = todayStr();
     return {
-      today: data.filter((c) => c.event_date === today),
-      past:  data.filter((c) => c.event_date !== today),
+      today: data.filter((c) => c.event_date === today && c.kind !== 'note'),
+      notes: data.filter((c) => c.kind === 'note'),
+      past:  data.filter((c) => c.event_date !== today && c.kind !== 'note'),
     };
   }
 
@@ -329,11 +431,11 @@
     const email = (session.user.email || '').toLowerCase();
     document.getElementById('logout-btn').hidden = false;
 
-    // ---- 2. 会員資格の確認 ----------------------------------------------
-    // RLS により、自分の行しか取得できない
-    const { data: member, error: memberErr } = await supabase
+    // ---- 2. 会員の取得（いなければ無料会員として自動登録） ---------------
+    const fields = 'display_name, status, current_period_end, role, plan';
+    let { data: member, error: memberErr } = await supabase
       .from('members')
-      .select('display_name, status, current_period_end, role')
+      .select(fields)
       .eq('email', email)
       .maybeSingle();
 
@@ -344,19 +446,31 @@
     }
 
     if (!member) {
-      showDenied('会員として登録されていません',
-        `${email} は会員名簿に登録がありません。` +
-        '会費のお支払いに使っているメールアドレスと異なる可能性があります。' +
-        'お手数ですが事務局までご連絡ください。');
-      return;
+      const { error: regErr } = await supabase.from('members').insert({
+        email, plan: 'free', status: 'active', role: 'member',
+      });
+      // 23505 = すでに登録済み（同時アクセス等）。それ以外の失敗は案内する
+      if (regErr && regErr.code !== '23505') {
+        showDenied('登録できませんでした',
+          `無料会員としての登録に失敗しました。時間をおいてお試しください。（${regErr.message}）`);
+        return;
+      }
+      ({ data: member } = await supabase
+        .from('members').select(fields).eq('email', email).maybeSingle());
+      if (!member) {
+        showDenied('エラーが発生しました', '登録の確認ができませんでした。事務局までご連絡ください。');
+        return;
+      }
     }
 
     const expired =
       member.current_period_end && member.current_period_end < todayStr();
     const active = ['active', 'grace'].includes(member.status) && !expired;
 
+    isPaid = member.plan === 'paid';
+
     // 運営（管理者）のときだけ、管理画面へのリンクを出す。
-    // 一般会員にはそもそも表示されず、URLを直接開いても RLS で弾かれる。
+    // 一般会員にはそもそも表示されず、URLを直接開いても RLS で弾かれる
     if (member.role === 'admin' && active) {
       document.getElementById('admin-link').hidden = false;
     }
@@ -375,10 +489,18 @@
 
     const badge = document.getElementById('member-badge');
     badge.hidden = false;
-    badge.className = `badge ${member.status}`;
-    badge.textContent = member.status === 'grace' ? 'お支払い確認中' : '有効会員';
-    document.getElementById('member-period').textContent =
-      member.current_period_end ? `有効期限：${formatDate(member.current_period_end)}` : '';
+    if (!isPaid) {
+      badge.className = 'badge free';
+      badge.textContent = '無料会員';
+      document.getElementById('member-period').textContent =
+        '無料会員は、お知らせ・例会情報の一部・note記事をご覧いただけます。';
+      document.getElementById('upsell-card').hidden = false;
+    } else {
+      badge.className = `badge ${member.status}`;
+      badge.textContent = member.status === 'grace' ? 'お支払い確認中' : '有効会員';
+      document.getElementById('member-period').textContent =
+        member.current_period_end ? `有効期限：${formatDate(member.current_period_end)}` : '';
+    }
 
     // ---- 3. コンテンツ ---------------------------------------------------
     const first = await loadContents();
@@ -390,9 +512,10 @@
 
     loading.hidden = true;
     contentsEl.hidden = false;
-    document.getElementById('notice-card').hidden = false;
+    document.getElementById('notice-card').hidden = !isPaid;
 
     renderToday(first.today);
+    renderNotes(first.notes);
     renderPast(first.past);
 
     // 配信開始後に運営が視聴URLを追記したら、待っている会員の画面にも
@@ -402,6 +525,7 @@
       const r = await loadContents();
       if (r.error) return;                  // 一時的な失敗は黙って次の周期に任せる
       renderToday(r.today);
+      renderNotes(r.notes);
       renderPast(r.past);
     }, 30000);
   }
