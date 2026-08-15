@@ -218,6 +218,14 @@
           そこで問題がなければ登録に進んでください。
         </p>
         <div class="field">
+          <label for="m-file">PayPal からダウンロードした CSV ファイル</label>
+          <input type="file" id="m-file" accept=".csv,.txt,text/csv,text/plain">
+          <div class="until-note">
+            ファイルを選ぶと下の欄に内容が入り、自動で読み取ります。
+            コピー＆貼り付けでも構いません。
+          </div>
+        </div>
+        <div class="field">
           <textarea id="m-csv" placeholder="Excel やスプレッドシートからコピーした範囲、
 PayPal の取引CSV、
 「メール, 氏名」だけの行、
@@ -244,6 +252,24 @@ PayPal の取引CSV、
             <button id="m-import">この内容で登録する</button>
             <button class="ghost" id="m-cancel" style="margin-left:10px">やめる</button>
           </p>
+
+          <div id="m-missing" hidden style="margin-top:26px">
+            <h2 style="font-size:18px">今回のリストに見当たらない有効会員</h2>
+            <p class="note">
+              PayPal 側で解約・停止されている可能性があります。PayPal の画面で確認のうえ、
+              該当する方にチェックを入れて「支払い確認中」に変更してください。
+              この画面からいきなり退会にはなりません（閲覧は継続されます）。
+            </p>
+            <div class="table-scroll" style="max-height:280px; overflow-y:auto">
+              <table>
+                <thead><tr><th></th><th>氏名</th><th>メールアドレス</th></tr></thead>
+                <tbody id="m-missing-list"></tbody>
+              </table>
+            </div>
+            <p style="margin-top:14px">
+              <button class="small" id="m-grace">チェックした会員を「支払い確認中」にする</button>
+            </p>
+          </div>
         </div>
       </div>
 
@@ -808,6 +834,21 @@ PayPal の取引CSV、
     hideMsg($('m-csv-msg'));
   });
 
+  $('m-file').addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const buf = await file.arrayBuffer();
+    let text = new TextDecoder('utf-8').decode(buf);
+    // 文字化け（置換文字）が出たら Shift_JIS として読み直す
+    // （PayPal の日本語 CSV は Shift_JIS のことがある）
+    if ((text.match(/\uFFFD/g) || []).length > 0) {
+      try { text = new TextDecoder('shift_jis').decode(buf); } catch {}
+    }
+    $('m-csv').value = text;
+    e.target.value = '';
+    $('m-parse').click();
+  });
+
   $('m-parse').addEventListener('click', () => {
     hideMsg($('m-csv-msg'));
     $('m-preview').hidden = true;
@@ -853,11 +894,62 @@ PayPal の取引CSV、
       list.appendChild(tr);
     }
 
+    // 月次突合：貼り付けたリストに載っていない有効会員を洗い出す。
+    // 運営(admin)は PayPal で会費を払っていないため対象から外す
+    const listed = new Set(rows.map((r) => r.email));
+    const missing = allMembers.filter((m) =>
+      m.status === 'active' && m.role !== 'admin' && !listed.has(m.email));
+
+    const mList = $('m-missing-list');
+    mList.textContent = '';
+    for (const m of missing) {
+      const tr = document.createElement('tr');
+      const tdC = document.createElement('td');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.dataset.email = m.email;
+      tdC.appendChild(cb);
+      tr.appendChild(tdC);
+      for (const v of [m.display_name || '—', m.email]) {
+        const td = document.createElement('td');
+        td.textContent = v;
+        tr.appendChild(td);
+      }
+      mList.appendChild(tr);
+    }
+    $('m-missing').hidden = missing.length === 0;
+
     $('m-preview').hidden = false;
     if (skipped.length) {
       showMsg($('m-csv-msg'), 'info',
         `${skipped.length}行はメールアドレスが見つからなかったため除外しました（見出し行など）。`);
     }
+  });
+
+  $('m-grace').addEventListener('click', async () => {
+    const checked = [...document.querySelectorAll('#m-missing-list input[type=checkbox]:checked')];
+    if (!checked.length) {
+      showMsg($('m-csv-msg'), 'error', '対象の方にチェックを入れてください。');
+      return;
+    }
+    if (!window.confirm(`${checked.length}名を「支払い確認中」に変更します。よろしいですか？`)) return;
+
+    const btn = $('m-grace');
+    btn.disabled = true;
+    let failed = 0;
+    for (const cb of checked) {
+      const { error } = await supabase
+        .from('members')
+        .update({ status: 'grace' })
+        .eq('email', cb.dataset.email);
+      if (error) failed++;
+    }
+    btn.disabled = false;
+    showMsg($('m-csv-msg'), failed ? 'info' : 'ok',
+      `${checked.length - failed}名を「支払い確認中」にしました。` +
+      (failed ? `（${failed}名は変更できませんでした）` : ''));
+    await loadMembers();
+    $('m-parse').click();   // 突合結果を作り直す
   });
 
   $('m-import').addEventListener('click', async () => {
