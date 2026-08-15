@@ -865,6 +865,18 @@ PayPal の取引CSV、
       emailIdx = header.findIndex((f) => emailRe.test(f) && senderRe.test(f));
       if (emailIdx < 0) emailIdx = header.findIndex((f) => emailRe.test(f) && !receiverRe.test(f));
       headerUsed = emailIdx >= 0;
+      var receiverIdx = header.findIndex((f) => emailRe.test(f) && receiverRe.test(f));
+    }
+
+    // 受信者列に出てくるアドレス＝サロン自身のPayPalアドレス。
+    // 出金などの行では自分のアドレスが送信者側に来るため、会員として
+    // 取り込まないよう先に洗い出して除外する
+    const ownEmails = new Set();
+    if (headerUsed && typeof receiverIdx !== 'undefined' && receiverIdx >= 0) {
+      for (const line of lines.slice(1)) {
+        const v = (splitFields(line)[receiverIdx] || '').trim().toLowerCase();
+        if (RE_EMAIL.test(v)) ownEmails.add(v);
+      }
     }
 
     for (const line of (headerUsed ? lines.slice(1) : lines)) {
@@ -880,7 +892,8 @@ PayPal の取引CSV、
       if (!email) { skipped.push(line); continue; }
 
       email = email.toLowerCase();
-      if (seen.has(email)) continue;                             // 同じ行が二重にあっても1件に
+      if (ownEmails.has(email)) { skipped.push(line); continue; }  // サロン自身のアドレス
+      if (seen.has(email)) continue;                             // 同じ会員の複数月分は1件に
       seen.add(email);
 
       const sub = fields.find((f) => RE_SUBID.test(f)) || null;
