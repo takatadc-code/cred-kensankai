@@ -81,6 +81,18 @@
 
   <div id="app" hidden>
 
+    <div class="card" id="todo-card" hidden style="border-color:#cfe0f5">
+      <h2 style="font-size:19px">高橋先生へ — 最初にお願いしたいこと</h2>
+      <p class="note">
+        終わった項目にチェックを入れてください（チェックはこの端末に記録されます。
+        この表示は運営にしか見えません）。
+      </p>
+      <div id="todo-list" style="display:flex; flex-direction:column; gap:12px"></div>
+      <p class="note" id="todo-done" hidden style="margin-top:14px">
+        ✅ すべて完了です。ありがとうございました！
+      </p>
+    </div>
+
     <div class="tabs">
       <button id="tab-contents" class="on">配信・お知らせ</button>
       <button id="tab-members">会員</button>
@@ -1128,6 +1140,62 @@ PayPal の取引CSV、
     await loadMembers();
   });
 
+  // ================= 運営やることリスト =================
+  // 終わったら TODO_ITEMS から項目を消して更新すれば表示も消える
+  const TODO_KEY = 'scred-admin-todo-v1';
+  const TODO_ITEMS = [
+    ['csv',    '会員名簿の取り込み直し',
+     '「会員」タブ →「まとめて追加」→ PayPal の CSV ファイルを選ぶ → 実名が並ぶのを確認して「この内容で登録する」。前回の取り込みで氏名が「Salon de CRED月会費」になっているのを直すためです。'],
+    ['rundom', 'run-dom@takata-dc.jp を「招待」に変更',
+     '会員一覧の検索窓に「run-dom」と入れて、種別のプルダウンを「招待」にしてください（運営のPayPalアドレスなので、会費確認の対象から外すためです）。'],
+    ['comp',   '会費なしでご参加の方を「招待会員」として追加',
+     '「会員を追加する」でメールアドレスと氏名を入れ、会員種別で「招待会員」を選んで追加してください。閲覧は有料会員と同じで、会費確認の対象にはなりません。'],
+    ['test',   'テスト用データの削除',
+     '「配信・お知らせ」タブにある「動作確認用テスト」を「削除」で消してください。'],
+  ];
+
+  function renderTodo() {
+    const saved = new Set(JSON.parse(localStorage.getItem(TODO_KEY) || '[]'));
+    const list = $('todo-list');
+    list.textContent = '';
+
+    for (const [key, title, desc] of TODO_ITEMS) {
+      const label = document.createElement('label');
+      label.style.cssText = 'display:flex; gap:12px; align-items:flex-start; cursor:pointer';
+
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = saved.has(key);
+      cb.style.cssText = 'margin-top:5px; width:18px; height:18px; flex:none';
+      cb.addEventListener('change', () => {
+        if (cb.checked) saved.add(key); else saved.delete(key);
+        localStorage.setItem(TODO_KEY, JSON.stringify([...saved]));
+        renderTodo();
+      });
+      label.appendChild(cb);
+
+      const box = document.createElement('div');
+      const t = document.createElement('div');
+      t.style.fontWeight = '600';
+      t.style.textDecoration = cb.checked ? 'line-through' : 'none';
+      t.style.color = cb.checked ? 'var(--muted)' : 'inherit';
+      t.textContent = title;
+      box.appendChild(t);
+      if (!cb.checked) {
+        const d = document.createElement('div');
+        d.className = 'note';
+        d.textContent = desc;
+        box.appendChild(d);
+      }
+      label.appendChild(box);
+      list.appendChild(label);
+    }
+
+    const allDone = TODO_ITEMS.every(([k]) => saved.has(k));
+    $('todo-done').hidden = !allDone;
+    $('todo-card').hidden = false;
+  }
+
   // ================= 起動 =================
   async function main() {
     const { data: { session } } = await supabase.auth.getSession();
@@ -1159,6 +1227,7 @@ PayPal の取引CSV、
     $('gate').hidden = true;
     $('app').hidden = false;
     $('member-link').hidden = false;
+    renderTodo();
 
     await Promise.all([loadContents(), loadMembers()]);
   }
