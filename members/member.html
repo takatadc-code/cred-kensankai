@@ -30,6 +30,25 @@
     <div class="note" id="member-period"></div>
   </div>
 
+  <!-- 有料会員がアドレス違いでログインした場合の気づき（無料会員のみ表示） -->
+  <div class="card" id="mismatch-card" hidden style="border-color:#f5c6c2">
+    <h2 style="font-size:19px">すでに有料会員の方へ — まずご確認ください</h2>
+    <p class="note">
+      画面に「無料会員」と表示されている場合、会費のお支払い（PayPal）に
+      ご登録のものとは<strong>別のメールアドレス</strong>でログインしています。<br>
+      <strong>再度の入会手続きは不要です。</strong>PayPalにご登録のメールアドレスで
+      ログインし直すと、配信・アーカイブがご覧いただけます。
+    </p>
+    <p style="margin:16px 0 10px">
+      <button id="relogin-btn">PayPalのアドレスでログインし直す</button>
+    </p>
+    <p class="note">
+      PayPalのアドレスが分からない場合や、今のアドレスをお使いになりたい場合は、
+      <a href="https://lin.ee/TfGrFSS" target="_blank" rel="noopener noreferrer">Salon de CRED の LINE</a>
+      のトーク画面からメッセージをお送りください。個別に対応いたします。
+    </p>
+  </div>
+
   <!-- 入会のご案内（無料会員のみ） -->
   <div class="card upsell" id="upsell-card" hidden>
     <h2 style="font-size:19px">すべての配信・アーカイブを見るには</h2>
@@ -494,7 +513,9 @@
       badge.textContent = '無料会員';
       document.getElementById('member-period').textContent =
         '無料会員は、お知らせ・例会情報の一部・note記事をご覧いただけます。';
+      document.getElementById('mismatch-card').hidden = false;
       document.getElementById('upsell-card').hidden = false;
+      document.getElementById('relogin-btn').addEventListener('click', logout);
     } else {
       badge.className = `badge ${member.status}`;
       badge.textContent = member.status === 'grace' ? 'お支払い確認中' : '有効会員';
