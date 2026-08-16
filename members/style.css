@@ -8,7 +8,7 @@
   --bg: #f6f7f9;
   --card: #ffffff;
   --text: #1a1d21;
-  --muted: #6b7280;
+  --muted: #4b5563;
   --line: #e3e6ea;
   --accent: #1f4e79;
   --accent-hover: #163a5a;
@@ -49,6 +49,7 @@ header.site .inner {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  flex-wrap: wrap;
 }
 
 header.site h1 {
@@ -226,13 +227,13 @@ a.watch.zoom:hover { background: #1a74e2; }
 
 /* 本日の例会 */
 .card.live {
-  border: 2px solid var(--accent);
-  box-shadow: 0 2px 14px rgba(31, 78, 121, .10);
+  border: 2px solid #b42318;
+  box-shadow: 0 2px 14px rgba(180, 35, 24, .10);
 }
 
 .live-badge {
   display: inline-block;
-  background: var(--accent);
+  background: #b42318;
   color: #fff;
   font-size: 13px;
   font-weight: 700;
@@ -281,7 +282,7 @@ a.watch.zoom:hover { background: #1a74e2; }
 
 a.join {
   display: inline-block;
-  background: #a5811f;
+  background: #8a6b17;
   color: #fff;
   text-decoration: none;
   font-weight: 700;
@@ -290,11 +291,11 @@ a.join {
   border-radius: 8px;
 }
 
-a.join:hover { background: #8a6b17; }
+a.join:hover { background: #6f5612; }
 
-.join-sub { font-size: 13px; color: var(--muted); margin-top: 8px; }
+.join-sub { font-size: 14px; color: var(--muted); margin-top: 8px; }
 
-.upsell { border-color: #e6d9b8; }
+.upsell { border-color: #e6d9b8; background: #fdfaf1; }
 
 /* サムネイル */
 .thumb {
@@ -335,9 +336,9 @@ a.join:hover { background: #8a6b17; }
 }
 
 .zoom-info .line {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  flex-wrap: wrap;
   gap: 10px;
   padding: 5px 0;
 }
@@ -357,9 +358,10 @@ a.join:hover { background: #8a6b17; }
 }
 
 .zoom-info button {
-  font-size: 13px;
-  padding: 5px 12px;
-  border-radius: 6px;
+  font-size: 15px;
+  padding: 10px 16px;
+  min-height: 44px;
+  border-radius: 8px;
   background: #fff;
   color: var(--accent);
   border: 1px solid #cfe0f5;
@@ -367,6 +369,17 @@ a.join:hover { background: #8a6b17; }
 }
 
 .zoom-info button:hover { background: #e6effb; }
+
+.until-badge {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #a15c07;
+  background: #fff4e5;
+  border-radius: 6px;
+  padding: 4px 10px;
+}
 
 .expiry {
   display: block;

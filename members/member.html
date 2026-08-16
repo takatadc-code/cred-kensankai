@@ -30,23 +30,13 @@
     <div class="note" id="member-period"></div>
   </div>
 
-  <!-- 有料会員がアドレス違いでログインした場合の気づき（無料会員のみ表示） -->
-  <div class="card" id="mismatch-card" hidden style="border-color:#f5c6c2">
-    <h2 style="font-size:19px; color:#b42318">⚠️ すでに有料会員の方へ — まずご確認ください</h2>
-    <p class="note">
-      画面に「無料会員」と表示されている場合、会費のお支払い（PayPal）に
-      ご登録のものとは<strong>別のメールアドレス</strong>でログインしています。<br>
-      <strong style="color:#b42318">再度の入会手続きは不要です。</strong>PayPalにご登録のメールアドレスで
-      ログインし直すと、配信・アーカイブがご覧いただけます。
-    </p>
-    <p style="margin:16px 0 10px">
-      <button id="relogin-btn">PayPalのアドレスでログインし直す</button>
-    </p>
-    <p class="note">
-      PayPalのアドレスが分からない場合や、今のアドレスをお使いになりたい場合は、
-      <a href="https://lin.ee/TfGrFSS" target="_blank" rel="noopener noreferrer">Salon de CRED の LINE</a>
-      のトーク画面からメッセージをお送りください。個別に対応いたします。
-    </p>
+  <!-- 本日の例会（該当があるときだけ表示） -->
+  <div id="today-area"></div>
+
+  <!-- 今後の予定 -->
+  <div class="card" id="upcoming-card" hidden>
+    <h2>今後の予定</h2>
+    <div id="upcoming-list"></div>
   </div>
 
   <!-- 入会のご案内（無料会員のみ） -->
@@ -54,14 +44,42 @@
     <h2 style="font-size:19px">すべての配信・アーカイブを見るには</h2>
     <p class="note">
       有料会員になると、例会のZOOM参加・ライブ配信の視聴・過去アーカイブの
-      閲覧がすべてご利用いただけます。
+      閲覧がすべてご利用いただけます。<br>
+      毎月、各分野のスペシャリストが登壇。歯科医師・歯科衛生士 約70名が
+      参加しています。
     </p>
     <a class="join" id="upsell-join" href="#">入会する（月額 5,500円・税込）</a>
-    <div class="join-sub">PayPal での決済ページに移動します。</div>
+    <div class="join-sub">
+      PayPal の決済ページに移動します。お支払いに使うメールアドレスで、
+      この画面にログインできるようになります。解約はいつでも可能です。
+    </div>
   </div>
 
-  <!-- 本日の例会（該当があるときだけ表示） -->
-  <div id="today-area"></div>
+  <!-- 有料会員がアドレス違いでログインした場合の気づき（無料会員のみ表示） -->
+  <details class="card" id="mismatch-card" hidden style="border-color:#f5c6c2">
+    <summary style="font-size:17px; font-weight:700; color:#b42318; cursor:pointer">
+      すでに会費をお支払いの方で「無料会員」と表示されている場合はこちら
+    </summary>
+    <p class="note" style="margin-top:14px">
+      会費のお支払い（PayPal）にご登録のものとは<strong>別のメールアドレス</strong>で
+      ログインしています。<br>
+      <strong style="color:#b42318">再度の入会手続きは不要です。</strong>PayPalにご登録のメールアドレスで
+      ログインし直すと、配信・アーカイブがご覧いただけます。
+    </p>
+    <p class="note">
+      💡 PayPalのアドレスが分からないときは、お使いのメールアプリで
+      「<strong>PayPal</strong>」と検索してください。毎月「お支払いの受領書」が
+      届いているアドレスが、ご登録のアドレスです。
+    </p>
+    <p style="margin:16px 0 10px">
+      <button id="relogin-btn">PayPalのアドレスでログインし直す</button>
+    </p>
+    <p class="note">
+      解決しない場合や、今のアドレスをお使いになりたい場合は、
+      <a href="https://lin.ee/TfGrFSS" target="_blank" rel="noopener noreferrer">Salon de CRED の LINE</a>
+      のトーク画面からメッセージをお送りください。個別に対応いたします。
+    </p>
+  </details>
 
   <div class="card" id="main-card">
     <div class="skeleton" id="loading">読み込んでいます…</div>
@@ -75,6 +93,9 @@
 
     <div id="contents" hidden>
       <h2>これまでの例会・お知らせ</h2>
+      <p class="note" style="margin-bottom:4px">
+        ※アーカイブにはそれぞれ視聴期限があり、期限を過ぎた回は一覧から外れます。
+      </p>
       <div id="content-list"></div>
       <p class="note" id="empty-note" hidden>
         現在、公開中のコンテンツはありません。
@@ -147,12 +168,12 @@
     return img;
   }
 
-  /** 「8月15日 20:00 まで視聴できます」 */
+  /** 「2026年8月15日 20:00 まで視聴できます」 */
   function untilText(iso) {
     if (!iso) return '';
     const d = new Date(iso);
     const p = (n) => String(n).padStart(2, '0');
-    return `${d.getMonth() + 1}月${d.getDate()}日 ${p(d.getHours())}:${p(d.getMinutes())} まで視聴できます`;
+    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${p(d.getHours())}:${p(d.getMinutes())} まで視聴できます`;
   }
 
   /** 86056300145 → 860 5630 0145（Zoom の表記に合わせる） */
@@ -228,7 +249,7 @@
 
     const note = document.createElement('div');
     note.className = 'note';
-    note.textContent = 'ZOOMでの参加・ライブ配信・アーカイブ視聴は、入会後すぐにご利用いただけます。';
+    note.textContent = '入会すると、この回を含む配信・アーカイブがご覧いただけます（お手続き後、通常当日中に反映されます）。';
     box.appendChild(note);
 
     const a = document.createElement('a');
@@ -299,7 +320,7 @@
 
       if (c.archive_until && c.url) {
         const u = document.createElement('div');
-        u.className = 'refreshed';
+        u.className = 'until-badge';
         u.textContent = untilText(c.archive_until);
         card.appendChild(u);
       }
@@ -355,12 +376,20 @@
     }
   }
 
-  // ---- これまでの例会 ---------------------------------------------------
-  function renderPast(items) {
-    const list = document.getElementById('content-list');
-    list.textContent = '';
+  // ---- 一覧（今後の予定・これまでの例会 共用） --------------------------
+  function renderUpcoming(items) {
+    const card = document.getElementById('upcoming-card');
+    card.hidden = items.length === 0;
+    renderList(items, document.getElementById('upcoming-list'));
+  }
 
+  function renderPast(items) {
     document.getElementById('empty-note').hidden = items.length > 0;
+    renderList(items, document.getElementById('content-list'));
+  }
+
+  function renderList(items, list) {
+    list.textContent = '';
 
     for (const c of items) {
       const item = document.createElement('div');
@@ -388,9 +417,13 @@
       }
 
       if (!isPaid && c.audience === 'paid' && (c.has_url || c.has_zoom)) {
-        const lockNote = document.createElement('div');
+        const lockNote = document.createElement('a');
         lockNote.className = 'note';
-        lockNote.textContent = '🔒 視聴は有料会員限定です';
+        lockNote.style.cssText = 'display:block; text-decoration:underline; color:#8a6b17';
+        lockNote.href = JOIN_URL;
+        lockNote.target = '_blank';
+        lockNote.rel = 'noopener noreferrer';
+        lockNote.textContent = '🔒 視聴は有料会員限定です — 入会はこちら';
         item.appendChild(lockNote);
         list.appendChild(item);
         continue;
@@ -410,7 +443,7 @@
 
       if (c.archive_until && c.url) {
         const u = document.createElement('div');
-        u.className = 'refreshed';
+        u.className = 'until-badge';
         u.textContent = untilText(c.archive_until);
         item.appendChild(u);
       }
@@ -432,14 +465,26 @@
     if (error) return { error };
 
     const today = todayStr();
+    const events = data.filter((c) => c.kind !== 'note');
     return {
-      today: data.filter((c) => c.event_date === today && c.kind !== 'note'),
-      notes: data.filter((c) => c.kind === 'note'),
-      past:  data.filter((c) => c.event_date !== today && c.kind !== 'note'),
+      today:    events.filter((c) => c.event_date === today),
+      upcoming: events.filter((c) => c.event_date && c.event_date > today),
+      notes:    data.filter((c) => c.kind === 'note'),
+      past:     events.filter((c) => !c.event_date || c.event_date < today),
     };
   }
 
   async function main() {
+    // ---- 0. 期限切れ・使用済みリンクのエラーを拾う ------------------------
+    // Supabase はリンク不正時に #error_code=otp_expired 等を付けて戻すが、
+    // 放置すると無言でログイン画面に戻り、会員には原因が分からない
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    if (hashParams.get('error')) {
+      window.location.replace('index.html?authError=' +
+        encodeURIComponent(hashParams.get('error_code') || 'unknown'));
+      return;
+    }
+
     // ---- 1. ログイン確認 ------------------------------------------------
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
@@ -533,22 +578,34 @@
 
     loading.hidden = true;
     contentsEl.hidden = false;
-    document.getElementById('notice-card').hidden = !isPaid;
+    document.getElementById('notice-card').hidden = false;
 
+    let lastJson = JSON.stringify(first);
     renderToday(first.today);
+    renderUpcoming(first.upcoming);
     renderNotes(first.notes);
     renderPast(first.past);
 
     // 配信開始後に運営が視聴URLを追記したら、待っている会員の画面にも
-    // すぐ反映されるよう定期的に取り直す
-    setInterval(async () => {
-      if (document.hidden) return;          // 裏に回っている間は取りに行かない
+    // すぐ反映されるよう定期的に取り直す。
+    // 変化がない周期は再描画しない（コピー操作中に画面が作り直されるのを防ぐ）
+    async function refresh() {
       const r = await loadContents();
       if (r.error) return;                  // 一時的な失敗は黙って次の周期に任せる
+      const json = JSON.stringify(r);
+      if (json === lastJson) return;
+      lastJson = json;
       renderToday(r.today);
+      renderUpcoming(r.upcoming);
       renderNotes(r.notes);
       renderPast(r.past);
-    }, 30000);
+    }
+
+    setInterval(() => { if (!document.hidden) refresh(); }, 30000);
+    // LINEやZoomから戻った瞬間にも取り直す（30秒待たせない）
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) refresh();
+    });
   }
 
   main();

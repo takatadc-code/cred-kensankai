@@ -31,7 +31,7 @@
              autocomplete="email" inputmode="email"
              placeholder="example@example.com" required>
       <p style="margin:16px 0 0">
-        <button type="submit" id="submit-btn">ログイン用リンクを送る</button>
+        <button type="submit" id="submit-btn" style="width:100%">ログイン用リンクを送る</button>
       </p>
     </form>
 
@@ -45,7 +45,10 @@
       ・<strong style="color:#b42318">有料会員なのに「無料会員」と表示される場合</strong>は、
       　<span style="color:#b42318">PayPal にご登録のアドレスと違うアドレスでログインしています。</span>
       　PayPal のアドレスでログインし直すか、事務局までご連絡ください。<br>
-      ・別のメールアドレスでのご利用をご希望の場合も、事務局で変更できます。
+      ・<strong>PayPalのアドレスが分からないとき</strong>は、お使いのメールアプリで
+      　「PayPal」と検索してください。毎月「お支払いの受領書」が届いている
+      　アドレスが、ご登録のアドレスです。<br>
+      ・別のメールアドレスでのご利用をご希望の場合は、事務局で変更できます。
     </p>
     <p class="note">お問い合わせ： <a id="contact-link" href="#">-</a></p>
   </div>
@@ -55,6 +58,14 @@
   <span id="footer-name">Salon de CRED</span> 会員ページ
 </footer>
 
+<script nomodule>
+  (function () {
+    var m = document.getElementById('msg');
+    m.className = 'msg show error';
+    m.textContent = 'お使いの端末のブラウザが古いため、このページをご利用いただけません。' +
+      'iPhoneは「設定→一般→ソフトウェアアップデート」でiOSを更新してからお試しください。';
+  })();
+</script>
 <script type="module">
   import { supabase, cfg, showMsg, hideMsg, memberPageUrl } from './app.js';
 
@@ -70,6 +81,14 @@
   const emailInput = document.getElementById('email');
   const btn = document.getElementById('submit-btn');
   const msg = document.getElementById('msg');
+
+  // 期限切れ・使用済みリンクから戻された場合の案内
+  const query = new URLSearchParams(window.location.search);
+  if (query.get('authError')) {
+    showMsg(msg, 'error',
+      'ログイン用リンクの有効期限が切れたか、すでに使用済みです。' +
+      'お手数ですが、もう一度メールアドレスを入力して、新しいリンクをお受け取りください。');
+  }
 
   // すでにログイン済みならそのまま会員ページへ
   const { data: { session } } = await supabase.auth.getSession();
@@ -100,13 +119,18 @@
 
     if (error) {
       // レート制限（同じアドレスへの連続送信）が最も多い
-      showMsg(msg, 'error',
-        `送信できませんでした。時間をおいて再度お試しください。（${error.message}）`);
+      const rateLimited = error.status === 429 || /second|rate/i.test(error.message || '');
+      showMsg(msg, 'error', rateLimited
+        ? '同じアドレスへ続けて送信できるのは、1分に1回までです。1分ほど待ってから、もう一度お試しください。'
+        : '送信できませんでした。時間をおいて再度お試しください。');
       return;
     }
 
     showMsg(msg, 'ok',
-      `${email} 宛にログイン用リンクを送りました。メールを開いてリンクをクリックしてください。`);
+      `${email} 宛にログイン用リンクを送りました。` +
+      'メールを開いてリンクをタップ（パソコンではクリック）してください。' +
+      '1〜2分待っても届かない場合は、迷惑メールフォルダをご確認ください。' +
+      '件名は「【Salon de CRED】会員ページへのログイン」または「ログイン用リンク」です。');
     form.reset();
   });
 </script>

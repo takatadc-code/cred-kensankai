@@ -312,7 +312,7 @@ PayPal の取引CSV、
         <div class="table-scroll">
           <table>
             <thead>
-              <tr><th>氏名</th><th>メールアドレス</th><th>状態</th><th>有効期限</th><th></th></tr>
+              <tr><th>氏名</th><th>メールアドレス</th><th>状態</th><th>有効期限</th><th>状態変更 / 種別変更</th></tr>
             </thead>
             <tbody id="m-list"></tbody>
           </table>
@@ -504,6 +504,20 @@ PayPal の取引CSV、
       const tdAct = document.createElement('td');
       tdAct.className = 'actions';
 
+      // 配信開始直後に最も使う操作なので、専用ボタンで1タップにする
+      if (!c.url && c.kind === 'video') {
+        const quick = document.createElement('button');
+        quick.className = 'small';
+        quick.style.marginRight = '8px';
+        quick.textContent = '視聴URL追記';
+        quick.addEventListener('click', () => {
+          startEdit(c);
+          $('c-url').focus();
+          $('c-url').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+        tdAct.appendChild(quick);
+      }
+
       const edit = document.createElement('button');
       edit.className = 'small';
       edit.style.marginRight = '8px';
@@ -602,6 +616,11 @@ PayPal の取引CSV、
     const title = $('c-title').value.trim();
     if (!title) {
       showMsg($('c-msg'), 'error', 'タイトルを入力してください。');
+      return;
+    }
+
+    if ($('c-kind').value === 'video' && !$('c-date').value &&
+        !window.confirm('開催日が空です。開催日がないと「本日の例会」として表示されません。このまま登録しますか？')) {
       return;
     }
 
@@ -728,6 +747,8 @@ PayPal の取引CSV、
       tdAct.className = 'actions';
 
       const sel = document.createElement('select');
+      sel.title = '状態';
+      sel.setAttribute('aria-label', '状態');
       sel.style.width = 'auto';
       sel.style.fontSize = '14px';
       sel.style.padding = '6px 10px';
@@ -743,6 +764,11 @@ PayPal の取引CSV、
         sel.appendChild(opt);
       }
       sel.addEventListener('change', async () => {
+        if (sel.value === 'cancelled' &&
+            !window.confirm(`${m.email} を「退会」にします。会員ページを閲覧できなくなります。よろしいですか？`)) {
+          sel.value = m.status;
+          return;
+        }
         sel.disabled = true;
         const { error } = await supabase
           .from('members')
@@ -756,6 +782,8 @@ PayPal の取引CSV、
 
       // 会員種別（有料・招待・無料）の切替
       const planSel = document.createElement('select');
+      planSel.title = '会員種別';
+      planSel.setAttribute('aria-label', '会員種別');
       planSel.style.width = 'auto';
       planSel.style.fontSize = '14px';
       planSel.style.padding = '6px 10px';
