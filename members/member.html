@@ -20,6 +20,10 @@
   </div>
 </header>
 
+<!-- 会員種別の帯（ログイン後、種別に応じてどちらかが表示される） -->
+<div class="plan-strip paid">有料会員ページ　すべての配信・アーカイブをご覧いただけます</div>
+<div class="plan-strip free">無料会員としてご覧いただいています（配信・アーカイブは有料会員限定です）</div>
+
 <div class="wrap">
 
   <div class="card" id="status-card" hidden>
@@ -578,6 +582,9 @@
           : 'お支払いの有効期限が切れています。ご継続の場合は事務局までご連絡ください。');
       return;
     }
+
+    // 会員種別で画面の基調色と上部の帯を切り替える（無料＝アンバー、有料＝通常）
+    document.body.classList.add(isPaid ? 'plan-paid' : 'plan-free');
 
     const badge = document.getElementById('member-badge');
     badge.hidden = false;

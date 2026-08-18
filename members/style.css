@@ -266,8 +266,30 @@ a.watch.zoom:hover { background: #1a74e2; }
   margin-top: 12px;
 }
 
+/* ============================================================
+   会員種別による色分け
+   有料＝紺（通常配色）＋緑の帯 / 無料＝アンバー基調＋金茶の帯。
+   ログイン後に body へ plan-paid / plan-free が付与される
+   ============================================================ */
+.plan-strip {
+  display: none;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  padding: 9px 14px;
+  color: #fff;
+}
+
+body.plan-paid .plan-strip.paid { display: block; background: var(--ok); }
+body.plan-free .plan-strip.free { display: block; background: #8a6b17; }
+
+body.plan-free { background: #f8f3e7; }
+body.plan-free header.site { background: #fdfaf1; }
+body.plan-free .card { border-color: #e6d9b8; }
+
 /* 無料会員向け：ロックと入会案内 */
-.badge.free { background: #eef2f7; color: #33475b; }
+.badge.free { background: #fbf3dd; color: #8a6b17; border: 1px solid #e6d9b8; }
 
 .lock {
   background: #fbf7ec;
