@@ -50,7 +50,21 @@
       　アドレスが、ご登録のアドレスです。<br>
       ・別のメールアドレスでのご利用をご希望の場合は、事務局で変更できます。
     </p>
-    <p class="note">お問い合わせ： <a id="contact-link" href="#">-</a></p>
+    <p class="note" style="margin-bottom:0">
+      解決しないときは、LINE または メールで事務局にご連絡ください。
+      <strong>お名前・ご所属（医院名など）・PayPalにご登録のメールアドレス</strong>を
+      書き添えていただくと、確認がスムーズです。
+    </p>
+    <div class="contact-actions">
+      <a class="watch line-btn" id="contact-line" href="#" target="_blank" rel="noopener noreferrer">LINEで問い合わせる</a>
+      <a class="watch" id="contact-mail" href="#">メールで問い合わせる</a>
+    </div>
+    <p class="note" style="margin:10px 0 0">
+      ・LINE は友だち追加のうえ、トーク画面からメッセージをお送りください
+      （ID検索： <span id="contact-line-id">-</span>）。<br>
+      ・メールのボタンを押すと、件名と記入項目が入った状態でメールが開きます
+      （宛先： <a id="contact-link" href="#">-</a>）。
+    </p>
   </div>
 </div>
 
@@ -67,7 +81,7 @@
   })();
 </script>
 <script type="module">
-  import { supabase, cfg, showMsg, hideMsg, memberPageUrl } from './app.js';
+  import { supabase, cfg, showMsg, hideMsg, memberPageUrl, contactMailto } from './app.js';
 
   document.getElementById('salon-name').textContent  = cfg.SALON_NAME;
   document.getElementById('footer-name').textContent = cfg.SALON_NAME;
@@ -75,7 +89,10 @@
 
   const contact = document.getElementById('contact-link');
   contact.textContent = cfg.CONTACT_EMAIL;
-  contact.href = `mailto:${cfg.CONTACT_EMAIL}`;
+  contact.href = contactMailto();
+  document.getElementById('contact-line').href = cfg.CONTACT_LINE_URL;
+  document.getElementById('contact-line-id').textContent = cfg.CONTACT_LINE_ID;
+  document.getElementById('contact-mail').href = contactMailto();
 
   const form = document.getElementById('login-form');
   const emailInput = document.getElementById('email');

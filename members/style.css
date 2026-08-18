@@ -394,6 +394,17 @@ a.join:hover { background: #6f5612; }
   font-size: 16px;
 }
 
+/* お問い合わせ（LINE・メール） */
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0 4px;
+}
+
+a.watch.line-btn { background: #06c755; }
+a.watch.line-btn:hover { background: #05a648; }
+
 footer.site {
   text-align: center;
   font-size: 14px;

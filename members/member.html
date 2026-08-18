@@ -110,6 +110,25 @@
     <div id="note-list"></div>
   </div>
 
+  <!-- お問い合わせ（全員に表示） -->
+  <div class="card" id="contact-card">
+    <h2 style="font-size:19px">お困りのときは（お問い合わせ）</h2>
+    <p class="note" style="margin-bottom:0">
+      ログインや会員情報のことでお困りの場合は、LINE または メールでご連絡ください。
+      <strong>お名前・ご所属（医院名など）・PayPalにご登録のメールアドレス</strong>を
+      書き添えていただくと、確認がスムーズです。
+    </p>
+    <div class="contact-actions">
+      <a class="watch line-btn" id="contact-line" href="#" target="_blank" rel="noopener noreferrer">LINEで問い合わせる</a>
+      <a class="watch" id="contact-mail" href="#">メールで問い合わせる</a>
+    </div>
+    <p class="note" style="margin:10px 0 0">
+      ・LINE は友だち追加のうえ、トーク画面からメッセージをお送りください
+      （ID検索： <span id="contact-line-id">-</span>）。<br>
+      ・メールのボタンを押すと、件名と記入項目が入った状態でメールが開きます。
+    </p>
+  </div>
+
   <div class="card" id="notice-card" hidden>
     <h2 class="note" style="font-size:16px;margin-bottom:8px;">お願い</h2>
     <p class="note" style="margin:0">
@@ -124,7 +143,7 @@
 </footer>
 
 <script type="module">
-  import { supabase, cfg, formatDate, todayStr } from './app.js';
+  import { supabase, cfg, formatDate, todayStr, contactMailto } from './app.js';
 
   const JOIN_URL = 'https://www.takata-dc.jp/paypal-sub/';
 
@@ -135,7 +154,12 @@
 
   const contact = document.getElementById('contact-link');
   contact.textContent = cfg.CONTACT_EMAIL;
-  contact.href = `mailto:${cfg.CONTACT_EMAIL}`;
+  contact.href = contactMailto();
+
+  // お問い合わせカード（LINE・メール）
+  document.getElementById('contact-line').href = cfg.CONTACT_LINE_URL;
+  document.getElementById('contact-line-id').textContent = cfg.CONTACT_LINE_ID;
+  document.getElementById('contact-mail').href = contactMailto();
 
   const loading    = document.getElementById('loading');
   const denied     = document.getElementById('denied');
@@ -494,6 +518,10 @@
 
     const email = (session.user.email || '').toLowerCase();
     document.getElementById('logout-btn').hidden = false;
+
+    // 問い合わせメールの本文に、ログイン中のアドレスを自動記入しておく
+    document.getElementById('contact-mail').href = contactMailto(email);
+    contact.href = contactMailto(email);
 
     // ---- 2. 会員の取得（いなければ無料会員として自動登録） ---------------
     const fields = 'display_name, status, current_period_end, role, plan';

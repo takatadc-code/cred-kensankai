@@ -54,3 +54,25 @@ export function formatDate(iso) {
 export function memberPageUrl() {
   return new URL('member.html', window.location.href).toString();
 }
+
+/**
+ * 問い合わせメールの mailto: リンクを作る。
+ * 宛先＋CC（運営2名に同時に届く）、件名と記入項目入りの本文をあらかじめセットする。
+ * @param {string} [loginEmail] ログイン中のアドレス（分かる場合は本文に自動記入）
+ */
+export function contactMailto(loginEmail) {
+  const body = [
+    'お名前：',
+    'ご所属（医院名など）：',
+    'PayPalにご登録のメールアドレス：',
+    `ログインに使ったメールアドレス：${loginEmail || ''}`,
+    'お困りの内容：',
+    '',
+  ].join('\n');
+  const params = new URLSearchParams({
+    cc: cfg.CONTACT_CC || '',
+    subject: `【${cfg.SALON_NAME}】お問い合わせ`,
+    body,
+  });
+  return `mailto:${cfg.CONTACT_EMAIL}?${params.toString().replace(/\+/g, '%20')}`;
+}

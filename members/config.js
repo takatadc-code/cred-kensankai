@@ -14,6 +14,11 @@ window.SALON_CONFIG = {
   // サロン名（画面表示用）
   SALON_NAME: 'Salon de CRED',
 
-  // 会員から問い合わせを受けるメールアドレス
-  CONTACT_EMAIL: 'takatadc@gmail.com',
+  // 会員から問い合わせを受けるメールアドレス（CC にも同時送信される）
+  CONTACT_EMAIL: 'info@takata-dc.jp',
+  CONTACT_CC: 'norico.takahashi@gmail.com',
+
+  // 会員から問い合わせを受ける公式LINE
+  CONTACT_LINE_URL: 'https://lin.ee/TfGrFSS',
+  CONTACT_LINE_ID: '@057flcio',
 };
