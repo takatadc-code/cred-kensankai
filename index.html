@@ -178,9 +178,15 @@
   .hamburger {
     display: none;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 5px;
     cursor: pointer;
-    padding: 4px;
+    padding: 12px;
+    min-width: 44px;
+    min-height: 44px;
+    box-sizing: border-box;
+    margin-right: -12px;
     z-index: 110;
     background: none;
     border: none;
@@ -198,6 +204,39 @@
   .hamburger.active span:nth-child(2) { opacity: 0; }
   .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
   body.menu-open { overflow: hidden; }
+
+  /* ─── Mobile sticky apply bar ─── */
+  .mobile-apply-bar { display: none; }
+  @media (max-width: 768px) {
+    .mobile-apply-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 120;
+      min-height: 58px;
+      padding: 0.8rem 1rem;
+      padding-bottom: calc(0.8rem + env(safe-area-inset-bottom, 0px));
+      background: var(--gold);
+      color: var(--brown-dark);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      box-shadow: 0 -4px 20px rgba(60, 36, 21, 0.25);
+    }
+    .mobile-apply-bar span {
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+    body { padding-bottom: 82px; }
+    body.menu-open .mobile-apply-bar { display: none; }
+  }
 
   /* ─── Hero ─── */
   .hero {
@@ -296,6 +335,25 @@
     transform: translateY(-3px);
     box-shadow: 0 8px 30px rgba(197, 160, 89, 0.4);
   }
+  .hero-cta-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hero-cta-ghost {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    animation-delay: 1.65s;
+  }
+  .hero-cta-ghost:hover {
+    background: rgba(197, 160, 89, 0.15);
+  }
+  @media (max-width: 768px) {
+    .hero-cta { padding: 1rem 2rem; font-size: 0.95rem; }
+    .hero-cta-row { gap: 0.75rem; }
+  }
   @keyframes heroFadeUp {
     from { opacity: 0; transform: translateY(25px); }
     to { opacity: 1; transform: translateY(0); }
@@ -309,7 +367,7 @@
     font-family: 'Cinzel', serif;
     font-size: 0.75rem;
     letter-spacing: 0.4em;
-    color: var(--gold);
+    color: #8A6D2F;
     text-transform: uppercase;
     margin-bottom: 0.8rem;
     font-weight: 500;
@@ -503,7 +561,7 @@
     align-items: center;
     gap: 0.35em;
     font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
+    font-size: 0.78rem;
     letter-spacing: 0.06em;
     padding: 0.2em 0.65em;
     border: 1px solid rgba(197, 160, 89, 0.35);
@@ -511,15 +569,15 @@
     background: rgba(250, 246, 240, 0.55);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    color: var(--gold);
+    color: #7A5F28;
     margin-bottom: 0.6rem;
     box-shadow: 0 1px 6px rgba(197, 160, 89, 0.08);
   }
   .mbti-badge .mbti-label {
     font-family: 'Noto Sans JP', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     font-weight: 400;
-    opacity: 0.85;
+    color: #5A4A33;
   }
   .instructor-catchphrase {
     font-size: 0.78rem;
@@ -536,8 +594,8 @@
   }
   .instructor-disclaimer {
     text-align: center;
-    font-size: 0.7rem;
-    color: #aaa;
+    font-size: 0.8rem;
+    color: #6E6E6E;
     margin-top: 2.5rem;
   }
 
@@ -652,17 +710,22 @@
   }
   .new-2027-price {
     font-family: 'Cinzel', serif;
-    font-size: 2.8rem;
+    font-size: clamp(2.1rem, 9vw, 2.8rem);
     font-weight: 600;
     color: var(--gold);
     line-height: 1.3;
+    white-space: nowrap;
   }
   .new-2027-price small {
-    font-size: 0.45em;
-    color: rgba(255,255,255,0.5);
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.42em;
+    color: rgba(255,255,255,0.7);
     font-family: 'Noto Sans JP', sans-serif;
     font-weight: 300;
+    white-space: nowrap;
   }
+  .nw { white-space: nowrap; }
   .new-2027-price-sub {
     font-size: 0.85rem;
     color: rgba(255,255,255,0.6);
@@ -720,13 +783,29 @@
     margin-top: 0.3rem;
   }
   .schedule-status {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
     margin-top: 1rem;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     letter-spacing: 0.1em;
-    padding: 0.3rem 1.5rem;
+    padding: 0.3rem 1.4rem;
     border: 1px solid var(--gold);
     color: var(--gold);
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s, transform 0.3s;
+  }
+  a.schedule-status { cursor: pointer; }
+  a.schedule-status.open:hover {
+    background: var(--brown);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+  a.schedule-status.newcomer-full:hover {
+    background: #c0392b;
+    color: #fff;
+    transform: translateY(-2px);
   }
   .schedule-status.open { border-color: var(--brown); color: var(--brown); }
   .schedule-status.relisten-only { border-color: var(--brown-light); color: var(--brown-light); background: rgba(166, 123, 91, 0.08); }
@@ -1133,7 +1212,10 @@
       定員3名の少人数制ハンズオンセミナー<br>
       2014年から12年の実績
     </p>
-    <a href="#schedule" class="hero-cta">開催日程を見る</a>
+    <div class="hero-cta-row">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSd0A5N2_yn_jDSCJi1hWiOkqQTh7L0yV78x60HpB_ElyTDUnw/viewform?usp=header" target="_blank" rel="noopener" class="hero-cta">お申し込みフォーム</a>
+      <a href="#schedule" class="hero-cta hero-cta-ghost">開催日程を見る</a>
+    </div>
   </div>
 </header>
 
@@ -1198,7 +1280,7 @@
     <div class="section-line"></div>
     <div class="program-days">
       <div class="program-day stagger">
-        <p class="day-label">Day 1 — Saturday <small style="font-weight:300;font-size:0.7em;letter-spacing:0;">(※2027年1月は金曜)</small></p>
+        <p class="day-label">Day 1 — Saturday</p>
         <h3 class="day-title">講義</h3>
         <p class="day-time">11:00 – 19:00（7時間）</p>
         <div class="day-desc">
@@ -1207,7 +1289,7 @@
         </div>
       </div>
       <div class="program-day stagger">
-        <p class="day-label">Day 2 — Sunday <small style="font-weight:300;font-size:0.7em;letter-spacing:0;">(※2027年1月は土曜)</small></p>
+        <p class="day-label">Day 2 — Sunday</p>
         <h3 class="day-title">実習</h3>
         <p class="day-time">9:30 – 16:00</p>
         <div class="day-desc">
@@ -1359,8 +1441,8 @@
       <p class="new-2027-price-label">2027年 受講料（税込）</p>
       <p class="new-2027-price">¥330,000 <small>（初受講）</small></p>
       <p class="new-2027-price-sub">
-        再聴講 ¥55,000｜3回目以降 無料<br>
-        歯科衛生士同伴：土曜のみ +¥66,000 ／ 土日両日 +¥110,000
+        <span class="nw">再聴講 ¥55,000</span>｜<span class="nw">3回目以降 無料</span><br>
+        <span class="nw">歯科衛生士同伴：土曜のみ +¥66,000</span> ／ <span class="nw">土日両日 +¥110,000</span>
       </p>
     </div>
   </div>
@@ -1383,25 +1465,27 @@
         <p class="schedule-month">October</p>
         <p class="schedule-date">3.4</p>
         <p class="schedule-year">2026年 10月3日(土)・4日(日)</p>
-        <span class="schedule-status newcomer-full">満席・再聴講のみ受付中</span>
+        <span class="schedule-note" style="margin-top:0.8rem;color:#c0392b;font-weight:500;">初受講は満席</span>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSd0A5N2_yn_jDSCJi1hWiOkqQTh7L0yV78x60HpB_ElyTDUnw/viewform?usp=header" target="_blank" rel="noopener" class="schedule-status newcomer-full">再聴講を申し込む</a>
       </div>
       <div class="schedule-item newcomer-full stagger">
         <p class="schedule-month">November</p>
         <p class="schedule-date">14.15</p>
         <p class="schedule-year">2026年 11月14日(土)・15日(日)</p>
-        <span class="schedule-status newcomer-full">満席・再聴講のみ受付中</span>
+        <span class="schedule-note" style="margin-top:0.8rem;color:#c0392b;font-weight:500;">初受講は満席</span>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSd0A5N2_yn_jDSCJi1hWiOkqQTh7L0yV78x60HpB_ElyTDUnw/viewform?usp=header" target="_blank" rel="noopener" class="schedule-status newcomer-full">再聴講を申し込む</a>
       </div>
       <div class="schedule-item stagger">
         <p class="schedule-month">January</p>
         <p class="schedule-date">30.31</p>
         <p class="schedule-year">2027年 1月30日(土)・31日(日)</p>
-        <span class="schedule-status open">受付中</span>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSd0A5N2_yn_jDSCJi1hWiOkqQTh7L0yV78x60HpB_ElyTDUnw/viewform?usp=header" target="_blank" rel="noopener" class="schedule-status open">お申し込み →</a>
       </div>
       <div class="schedule-item stagger">
         <p class="schedule-month">February</p>
         <p class="schedule-date">27.28</p>
         <p class="schedule-year">2027年 2月27日(土)・28日(日)</p>
-        <span class="schedule-status open">受付中</span>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSd0A5N2_yn_jDSCJi1hWiOkqQTh7L0yV78x60HpB_ElyTDUnw/viewform?usp=header" target="_blank" rel="noopener" class="schedule-status open">お申し込み →</a>
       </div>
     </div>
   </div>
@@ -1425,10 +1509,10 @@
       <div class="detail-item">
         <span class="detail-label">参加費</span>
         <span class="detail-value">
-          <strong>初受講</strong> 330,000円（税込）<br>
-          <strong>再聴講</strong> 55,000円（税込）<br>
+          <span class="nw"><strong>初受講</strong> 330,000円（税込）</span><br>
+          <span class="nw"><strong>再聴講</strong> 55,000円（税込）</span><br>
           <strong style="color:#c0392b;">3回目以降 無料</strong><br>
-          <small style="font-size:0.85em;color:#555;">○ 歯科衛生士同伴：土曜のみ +66,000円（税込）／土日両日 +110,000円（税込）</small>
+          <small style="font-size:0.9em;color:#4A4A4A;">○ 歯科衛生士同伴：<span class="nw">土曜のみ +66,000円（税込）</span>／<span class="nw">土日両日 +110,000円（税込）</span></small>
         </span>
       </div>
       <div class="detail-item">
@@ -1437,11 +1521,11 @@
       </div>
       <div class="detail-item">
         <span class="detail-label">Day 1</span>
-        <span class="detail-value">土曜 11:00〜19:00（講義 7時間）<br><small style="font-size:0.85em;color:#555;">※2027年1月は金曜開催</small></span>
+        <span class="detail-value">土曜 11:00〜19:00（講義 7時間）</span>
       </div>
       <div class="detail-item">
         <span class="detail-label">Day 2</span>
-        <span class="detail-value">日曜 9:30〜16:00（実習）<br><small style="font-size:0.85em;color:#555;">※2027年1月は土曜開催</small></span>
+        <span class="detail-value">日曜 9:30〜16:00（実習）</span>
       </div>
     </div>
   </div>
@@ -1527,6 +1611,11 @@
   <p>&copy; 2026 C.R.E.D Seminar — Comprehensive Restorative & Esthetic Dentistry</p>
   <p style="margin-top: 0.5rem;">主催：株式会社ランダムコーポレーション（神戸市中央区 高田歯科内）｜<a href="mailto:run-dom@takata-dc.jp">run-dom@takata-dc.jp</a></p>
 </footer>
+
+<!-- Mobile sticky apply bar -->
+<a href="https://docs.google.com/forms/d/e/1FAIpQLSd0A5N2_yn_jDSCJi1hWiOkqQTh7L0yV78x60HpB_ElyTDUnw/viewform?usp=header" target="_blank" rel="noopener" class="mobile-apply-bar">
+  お申し込みフォーム<span>定員3名・先着順</span>
+</a>
 
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox">
